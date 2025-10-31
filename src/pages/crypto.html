@@ -7,93 +7,77 @@
     <title>Guía de Criptomonedas</title>
     <link rel="stylesheet" href="../css/page-specific/info-pages.css">
     <link rel="icon" href="../images/theme.ico">
-    <!-- CSS crítico inline: TOC sticky y layout -->
+    <!-- Reglas críticas del TOC, hr y ajuste puntual de content-shell -->
     <style>
       #toc {
         position: sticky;
-        top: 1rem;
+        top: calc(var(--navbar-h, 64px) + 8px);
         align-self: start;
-        z-index: 20;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 0.75rem;
-        max-width: 100%;
-        max-height: calc(100vh - 2rem);
+        z-index: 30;
+        max-height: calc(100vh - calc(var(--navbar-h, 64px) + 24px));
         overflow: auto;
         overflow-x: hidden;
-        padding: 18px 20px;
-        border-radius: 18px;
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        box-shadow: var(--shadow-1);
-        transition: max-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-      }
-
-      #toc h3 {
-        margin: 0;
-        align-self: center;
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--surface, #fff);
+        transition: max-height 0.24s ease, opacity 0.18s ease, transform 0.18s ease;
       }
 
       #toc-list {
-        grid-column: 1 / -1;
         display: flex;
-        flex-direction: row;
-        gap: 8px;
         flex-wrap: wrap;
-        list-style: none;
-        max-width: 100%;
+        gap: 8px;
         padding: 0;
         margin: 0;
+        list-style: none;
         overflow-x: hidden;
-        transition: opacity 0.2s ease, max-height 0.2s ease;
-      }
-
-      .toc-sub {
-        display: none;
-      }
-
-      .toc-toggle-inline {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 6px;
-        background: transparent;
-        border: none;
-        color: var(--text-strong);
-        cursor: pointer;
-        transition: transform 0.2s ease, opacity 0.2s ease;
-        justify-self: end;
-      }
-
-      .toc-toggle-inline:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-      }
-
-      .toc-toggle-inline:hover {
-        transform: scale(1.05);
+        max-width: 100%;
       }
 
       #toc.toc-collapsed {
-        max-height: 4.5rem;
+        max-height: 4.6rem;
       }
 
       #toc.toc-collapsed #toc-list {
         max-height: 0;
         opacity: 0;
         pointer-events: none;
+        transform: translateY(-4px);
+      }
+
+      .toc-sub {
+        display: none !important;
+      }
+
+      .toc-toggle-inline {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px;
+        margin-left: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
+      .doc-section {
+        scroll-margin-top: calc(var(--navbar-h, 64px) + 16px);
       }
 
       hr.section-sep {
         border: 0;
         height: 1px;
-        background: linear-gradient(90deg, var(--hr-fade, rgba(15, 23, 36, 0.06)), rgba(15, 23, 36, 0.1));
+        background: linear-gradient(90deg, rgba(15, 23, 36, 0.06), rgba(15, 23, 36, 0.1));
         margin: 1.25rem 0;
         opacity: 0.95;
+        border-radius: 1px;
+      }
+
+      body.dark hr.section-sep {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.06));
       }
 
       .content-shell {
-        width: auto !important; /* Corrige el ancho forzado del layout original */
+        width: auto !important; /* !important corrige el ancho inline heredado del layout original */
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
       }
@@ -180,7 +164,7 @@
         border-radius: 12px;
         background: rgba(255, 255, 255, 0.04);
         transition: background-color 0.2s ease, color 0.2s ease;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     #toc .toc-link:hover,
@@ -231,7 +215,7 @@
         border-radius: 8px;
         display: inline-block;
         transition: color 0.2s ease, background-color 0.2s ease;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     #toc .toc-sub a:hover,
@@ -567,34 +551,23 @@
                     <li><a href="./python.html" class="navbutton">Python</a></li>
                     <li><a href="./git.html" class="navbutton">Git</a></li>
                     <li><a href="./raptor.html" class="navbutton">Raptor</a></li>
-                    <!-- <li><a href="./crypto.html" class="navbutton">Crypto</a></li> -->
                     <li><a href="../../index.html#contact" class="navbutton">Contacto</a></li>
                 </ul>
             </nav>
             
-            <!-- Boton hamburguesa -->
             <button class="dropdown-btn" aria-label="Abrir menú">☰</button>
 
-            <!-- Menu desplegable -->
             <div class="dropdown">
                 <ul>
                     <li><a href="../../index.html" class="navbutton">Inicio</a></li>
                     <li><a href="./python.html" class="navbutton">Python</a></li>
-                    <!--<li><a href="./src/pages/javascript.html" class="navbutton">Javascript</a></li>  --- WIP -->
                     <li><a href="./git.html" class="navbutton">Git</a></li>
                     <li><a href="./raptor.html" class="navbutton">Raptor</a></li>
-                    <!-- <li><a href="./crypto.html" class="navbutton">Crypto</a></li> -->
                     <li><a href="../../index.html#contact" class="navbutton">Contacto</a></li>
                 </ul>
             </div>
         </div>
     </div>
-
-    
-    <!-- DISCLAIMER -->
-
-    
-
     <div class="popup-overlay" id="disclaimerPopup">
         <div class="popup-content">
             <button class="popup-close-btn" onclick="ocultarPopup()">&times;</button>
@@ -668,9 +641,6 @@
 
     </script>
 
-    <!-- FIN DISCLAIMER -->
-
-    <!-- Índice de contenidos -->
     <aside
       id="toc"
       class="page-index toc js-toc"
@@ -681,8 +651,7 @@
       data-toc-collapsible="true"
     >
       <!-- Toggle inline junto al título del índice -->
-      <h3>Índice</h3>
-      <button
+      <h3>Índice</h3><button
         id="toc-toggle"
         class="toc-toggle-inline"
         type="button"
@@ -762,14 +731,11 @@
         <li class="toc-item"><a class="toc-link" href="#resources">Recursos adicionales</a></li>
       </ul>
     </aside>
-
-    <!-- Inicio de contenido -->
     <div class="content-shell">
         <main>
             <section id="intro" class="doc-section">
                 <h1>Bitcoin</h1>
                 <p>Bitcoin es un activo escaso (oferta máxima de 21 millones) y descentralizado, considerado "oro digital". Eventos como los halvings, donde se reduce la recompensa por bloque, refuerzan esta escasez y suelen preceder subidas de precio.</p>
-                <!-- HR: introducción -->
                 <hr class="section-sep" data-sep-purpose="intro">
                 <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
 
@@ -780,7 +746,6 @@
 
             </section>
 
-        <!-- Tipos de inversion en Bitcoin -->
         <section id="investment-types" class="doc-section">
             <h2>Tipos de inversión</h2>
             <ul>
@@ -797,7 +762,6 @@
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Gestión de riesgos -->
         <section id="risk-management" class="doc-section">
             <h2>Gestión de riesgos</h2>
             <p>Proteger tu capital es fundamental antes de buscar ganancias. Una gestión de riesgos adecuada puede marcar la diferencia entre un inversor exitoso y uno que sufre pérdidas significativas. Aquí te detallo algunas estrategias y conceptos clave:</p>
@@ -850,7 +814,6 @@
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Análisis técnico -->
         <section id="technical-analysis" class="doc-section">
             <h2>Análisis técnico</h2>
             <ul>
@@ -862,7 +825,6 @@
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Análisis fundamental -->
         <section id="fundamental-analysis" class="doc-section">
             <h2>Análisis fundamental</h2>
             <ul>
@@ -873,7 +835,6 @@
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Futuros y derivados -->
         <section id="derivatives" class="doc-section">
             <h2>Futuros y derivados</h2>
             <ul>
@@ -884,8 +845,6 @@
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Estrategia RSI + Bandas de Bollinger (para BTC Spot) -->
-        <!-- HR: antes de Estrategia práctica -->
         <hr class="section-sep" data-sep-purpose="pre-practical">
         <section id="rsi-bb-strategy" class="doc-section">
           <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
@@ -998,7 +957,6 @@ RSI:    \__/__  \
           <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Sección didáctica: por qué funciona -->
         <section id="why-it-works" class="doc-section">
           <h2>Por qué funciona esta combinación</h2>
           <p>
@@ -1009,7 +967,6 @@ RSI:    \__/__  \
 
         <hr class="section-sep" data-sep-purpose="section">
 
-        <!-- Ejemplo práctico (texto breve) -->
         <section id="example" class="doc-section">
           <h2>Ejemplo práctico (resumen)</h2>
           <p>
@@ -1126,7 +1083,6 @@ RSI:    \__/__  \
             Entras parcial, pones stop por debajo del mínimo reciente (o banda inferior) y TP inicial en banda superior. Si la subida tiene volumen y rompe la banda superior, aplicas trailing stop.
           </p>
 
-          <!-- HR: antes de Checklist -->
           <hr class="section-sep" data-sep-purpose="pre-checklist">
           <h3 id="swing-checklist">Checklist rápido antes de abrir (para pegar como card)</h3>
           <div class="trade-checklist">
@@ -1143,7 +1099,6 @@ RSI:    \__/__  \
         </section>
 
 
-        <!-- Estrategias avanzadas -->
         <section id="advanced-strategies" class="doc-section">
             <h2>Estrategias avanzadas</h2>
             <ul>
@@ -1154,8 +1109,6 @@ RSI:    \__/__  \
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <!-- Recursos adicionales -->
-        <!-- HR: antes de Recursos adicionales -->
         <hr class="section-sep" data-sep-purpose="pre-footer">
         <section id="resources" class="doc-section">
             <h2>Recursos adicionales</h2>
@@ -1177,8 +1130,8 @@ RSI:    \__/__  \
     </footer>
 
     <script src="../JS/navbar.js"></script>
-    <!-- TOC script externalizado: src/JS/crypto-toc.js -->
-    <script src="/src/JS/crypto-toc.js" defer></script>
+    <!-- TOC script externalizado: ../JS/crypto-toc.js -->
+    <script src="../JS/crypto-toc.js" defer></script>
 </body>
 
 </html>
