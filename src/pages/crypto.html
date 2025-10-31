@@ -460,6 +460,177 @@
         color: var(--text-muted);
     }
 </style>
+    <!-- INLINE TOC STYLES/JS: only in crypto.html -->
+    <style>
+      #toc {
+        --toc-default-width: 160px;
+        --toc-collapsed-width: 56px;
+        width: var(--toc-default-width);
+        min-width: var(--toc-default-width);
+        max-width: var(--toc-default-width);
+        padding: 10px;
+        border-radius: 18px;
+        border: 1px solid var(--surface-border);
+        background: var(--surface);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 0.92rem;
+        box-shadow: var(--shadow-1);
+        transition: width 0.24s ease, min-width 0.24s ease, max-width 0.24s ease,
+          box-shadow 0.24s ease;
+        overflow: hidden;
+      }
+
+      #toc h3 {
+        margin: 0;
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-strong);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      #toc #toc-toggle {
+        align-self: flex-end;
+        background: var(--surface-elevated);
+        color: var(--text-body);
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      }
+
+      #toc #toc-toggle:hover,
+      #toc #toc-toggle:focus-visible {
+        background-color: var(--accent-soft);
+        color: var(--text-strong);
+        outline: none;
+        transform: translateY(-1px);
+      }
+
+      #toc #toc-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      #toc .toc-item {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      #toc .toc-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+      }
+
+      #toc .toc-link {
+        color: var(--text-body);
+        text-decoration: none;
+        line-height: 1.4;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s ease;
+      }
+
+      #toc .toc-link::before {
+        content: "•";
+        font-size: 0.8rem;
+        color: var(--accent);
+      }
+
+      #toc .toc-link:hover,
+      #toc .toc-link:focus-visible {
+        color: var(--text-strong);
+        outline: none;
+      }
+
+      #toc .toc-sub-toggle {
+        background: none;
+        border: 1px solid var(--surface-border);
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+
+      #toc .toc-sub-toggle:hover,
+      #toc .toc-sub-toggle:focus-visible {
+        color: var(--text-strong);
+        background-color: var(--accent-soft);
+        outline: none;
+      }
+
+      #toc .toc-sub {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        margin: 0;
+        padding: 0 0 0 12px;
+        border-left: 1px solid rgba(76, 157, 245, 0.22);
+      }
+
+      #toc .toc-sub li {
+        list-style: none;
+      }
+
+      #toc .toc-sub a {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        line-height: 1.3;
+        transition: color 0.2s ease;
+      }
+
+      #toc .toc-sub a:hover,
+      #toc .toc-sub a:focus-visible {
+        color: var(--text-strong);
+        outline: none;
+      }
+
+      #toc li.toc-item-open > .toc-sub {
+        display: flex;
+      }
+
+      #toc.toc-collapsed {
+        width: var(--toc-collapsed-width);
+        min-width: var(--toc-collapsed-width);
+        max-width: var(--toc-collapsed-width);
+        box-shadow: none;
+      }
+
+      #toc.toc-collapsed h3,
+      #toc.toc-collapsed #toc-list {
+        opacity: 0;
+        transform: translateX(-8px);
+        pointer-events: none;
+      }
+
+      #toc.toc-collapsed #toc-toggle {
+        align-self: center;
+      }
+    </style>
 
 <body>
     <header>
@@ -586,21 +757,37 @@
       role="navigation"
       aria-label="Índice de secciones"
       data-toc-default-width="160"
-      data-toc-collapsed-width="48"
+      data-toc-collapsed-width="56"
+      data-toc-collapsible="true"
     >
       <!-- TOC hooks: data-toc-default-width y toc-toggle -->
-      <button id="toc-toggle" class="toc-toggle" aria-expanded="true" aria-controls="toc-list">☰</button>
+      <button
+        id="toc-toggle"
+        class="toc-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="toc-list"
+        aria-label="Colapsar índice"
+      >☰</button>
       <h3>Índice</h3>
       <ul id="toc-list" class="toc-list">
-        <li><a href="#intro">Introducción a Bitcoin</a></li>
-        <li><a href="#investment-types">Tipos de inversión</a></li>
-        <li><a href="#risk-management">Gestión de riesgos</a></li>
-        <li><a href="#technical-analysis">Análisis técnico</a></li>
-        <li><a href="#fundamental-analysis">Análisis fundamental</a></li>
-        <li><a href="#derivatives">Futuros y derivados</a></li>
-        <li>
-          <a href="#rsi-bb-strategy">Estrategia práctica: RSI + Bandas de Bollinger</a>
-          <ul class="toc-sub" data-toc-level="3">
+        <li class="toc-item"><a class="toc-link" href="#investment-types">Tipos de inversión</a></li>
+        <li class="toc-item"><a class="toc-link" href="#risk-management">Gestión de riesgos</a></li>
+        <li class="toc-item"><a class="toc-link" href="#technical-analysis">Análisis técnico</a></li>
+        <li class="toc-item"><a class="toc-link" href="#fundamental-analysis">Análisis fundamental</a></li>
+        <li class="toc-item"><a class="toc-link" href="#derivatives">Futuros y derivados</a></li>
+        <li class="toc-item toc-item-has-sub">
+          <div class="toc-item-header">
+            <a class="toc-link" href="#rsi-bb-strategy">Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</a>
+            <button
+              type="button"
+              class="toc-sub-toggle"
+              aria-expanded="false"
+              aria-controls="toc-sub-rsi-bb"
+              aria-label="Mostrar subsecciones de Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)"
+            >▸</button>
+          </div>
+          <ul id="toc-sub-rsi-bb" class="toc-sub" data-toc-level="3">
             <li><a href="#rsi-resumen-rapido">Resumen rápido</a></li>
             <li><a href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
             <li><a href="#rsi-bandas-bollinger">Explicación de Bandas de Bollinger</a></li>
@@ -610,31 +797,49 @@
             <li><a href="#rsi-alertas-tradingview">Alertas en TradingView</a></li>
           </ul>
         </li>
-        <li><a href="#why-it-works">Por qué funciona esta combinación</a></li>
-        <li><a href="#example">Ejemplo práctico (resumen)</a></li>
-        <li>
-          <a href="#recommended-times">Horarios recomendados</a>
-          <ul class="toc-sub" data-toc-level="3">
+        <li class="toc-item"><a class="toc-link" href="#why-it-works">Por qué funciona esta combinación</a></li>
+        <li class="toc-item"><a class="toc-link" href="#example">Ejemplo práctico (resumen)</a></li>
+        <li class="toc-item toc-item-has-sub">
+          <div class="toc-item-header">
+            <a class="toc-link" href="#recommended-times">Horarios recomendados para revisar (CST, UTC−6)</a>
+            <button
+              type="button"
+              class="toc-sub-toggle"
+              aria-expanded="false"
+              aria-controls="toc-sub-recommended-times"
+              aria-label="Mostrar subsecciones de Horarios recomendados para revisar (CST, UTC−6)"
+            >▸</button>
+          </div>
+          <ul id="toc-sub-recommended-times" class="toc-sub" data-toc-level="3">
             <li><a href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
-            <li><a href="#horarios-concretos">Horarios concretos</a></li>
-            <li><a href="#horarios-checklist">Checklist por chequeo</a></li>
-            <li><a href="#horarios-reglas-practicas">Reglas prácticas</a></li>
-            <li><a href="#horarios-plantilla-compacta">Plantilla de horario</a></li>
+            <li><a href="#horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</a></li>
+            <li><a href="#horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</a></li>
+            <li><a href="#horarios-reglas-practicas">Reglas prácticas para no sobre-operar</a></li>
+            <li><a href="#horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</a></li>
           </ul>
         </li>
-        <li>
-          <a href="#swing-trading-guide">Swing trading — guía práctica</a>
-          <ul class="toc-sub" data-toc-level="3">
+        <li class="toc-item toc-item-has-sub">
+          <div class="toc-item-header">
+            <a class="toc-link" href="#swing-trading-guide">Swing trading — guía práctica</a>
+            <button
+              type="button"
+              class="toc-sub-toggle"
+              aria-expanded="false"
+              aria-controls="toc-sub-swing-trading"
+              aria-label="Mostrar subsecciones de Swing trading — guía práctica"
+            >▸</button>
+          </div>
+          <ul id="toc-sub-swing-trading" class="toc-sub" data-toc-level="3">
             <li><a href="#swing-caracteristicas">Características principales</a></li>
             <li><a href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
-            <li><a href="#swing-proceso">Proceso simplificado</a></li>
-            <li><a href="#swing-reglas-riesgo">Reglas de gestión de riesgo</a></li>
-            <li><a href="#swing-ejemplo">Ejemplo práctico breve</a></li>
-            <li><a href="#swing-checklist">Checklist antes de operar</a></li>
+            <li><a href="#swing-proceso">Proceso simplificado de una operación swing (pasos)</a></li>
+            <li><a href="#swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</a></li>
+            <li><a href="#swing-ejemplo">Ejemplo práctico breve (resumen)</a></li>
+            <li><a href="#swing-checklist">Checklist rápido antes de abrir (para pegar como card)</a></li>
           </ul>
         </li>
-        <li><a href="#advanced-strategies">Estrategias avanzadas</a></li>
-        <li><a href="#resources">Recursos adicionales</a></li>
+        <li class="toc-item"><a class="toc-link" href="#advanced-strategies">Estrategias avanzadas</a></li>
+        <li class="toc-item"><a class="toc-link" href="#resources">Recursos adicionales</a></li>
       </ul>
     </aside>
 
@@ -1052,6 +1257,170 @@ RSI:    \__/__  \
     </footer>
 
     <script src="../JS/navbar.js"></script>
+    <!-- INLINE TOC STYLES/JS: only in crypto.html -->
+    <script>
+      (() => {
+        const toc = document.getElementById('toc');
+        const toggle = document.getElementById('toc-toggle');
+        const tocList = document.getElementById('toc-list');
+        if (!toc || !toggle || !tocList) {
+          return;
+        }
+
+        // --- Init: dataset-driven sizing and base state ---
+        const defaultWidth = parseInt(toc.dataset.tocDefaultWidth, 10) || 160;
+        const collapsedWidth = parseInt(toc.dataset.tocCollapsedWidth, 10) || 56;
+        toc.style.setProperty('--toc-default-width', `${defaultWidth}px`);
+        toc.style.setProperty('--toc-collapsed-width', `${collapsedWidth}px`);
+
+        const subToggles = Array.from(toc.querySelectorAll('.toc-sub-toggle'));
+        subToggles.forEach((btn) => {
+          btn.textContent = '▸';
+          const subId = btn.getAttribute('aria-controls');
+          const sub = subId ? document.getElementById(subId) : null;
+          if (sub) {
+            sub.style.display = 'none';
+          }
+        });
+
+        const collapseClass = 'toc-collapsed';
+        const scrollThreshold = 32;
+        const graceDuration = 300;
+        const autoCollapseEnabled = toc.getAttribute('data-toc-collapsible') !== 'false';
+        let isCollapsed = toc.classList.contains(collapseClass);
+        let graceActive = false;
+        let graceTimer = null;
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        const raf = window.requestAnimationFrame
+          ? window.requestAnimationFrame.bind(window)
+          : (cb) => window.setTimeout(cb, 16);
+
+        const setLinksFocusable = (collapsed) => {
+          const links = tocList.querySelectorAll('a');
+          links.forEach((link) => {
+            if (collapsed) {
+              link.setAttribute('tabindex', '-1');
+            } else {
+              link.removeAttribute('tabindex');
+            }
+          });
+          if (collapsed) {
+            tocList.setAttribute('aria-hidden', 'true');
+          } else {
+            tocList.removeAttribute('aria-hidden');
+          }
+        };
+
+        const updateToggleAria = (collapsed) => {
+          toggle.setAttribute('aria-expanded', String(!collapsed));
+          toggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Colapsar índice');
+        };
+
+        const closeAllSubLists = () => {
+          subToggles.forEach((btn) => {
+            const subId = btn.getAttribute('aria-controls');
+            const sub = subId ? document.getElementById(subId) : null;
+            const parentItem = btn.closest('li');
+            if (parentItem) {
+              parentItem.classList.remove('toc-item-open');
+            }
+            if (sub) {
+              sub.style.display = 'none';
+            }
+            btn.setAttribute('aria-expanded', 'false');
+            btn.textContent = '▸';
+          });
+        };
+
+        const applyCollapseState = (collapsed) => {
+          if (isCollapsed === collapsed) {
+            return;
+          }
+          isCollapsed = collapsed;
+          toc.classList.toggle(collapseClass, collapsed);
+          updateToggleAria(collapsed);
+          setLinksFocusable(collapsed);
+          if (collapsed) {
+            closeAllSubLists();
+          }
+        };
+
+        updateToggleAria(isCollapsed);
+        setLinksFocusable(isCollapsed);
+
+        const startGracePeriod = () => {
+          graceActive = true;
+          if (graceTimer) {
+            clearTimeout(graceTimer);
+          }
+          graceTimer = window.setTimeout(() => {
+            graceActive = false;
+          }, graceDuration);
+        };
+
+        // --- Manual toggle handlers ---
+        toggle.addEventListener('click', () => {
+          applyCollapseState(!isCollapsed);
+          lastScrollY = window.scrollY;
+          startGracePeriod();
+        });
+
+        subToggles.forEach((btn) => {
+          btn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const subId = btn.getAttribute('aria-controls');
+            const sub = subId ? document.getElementById(subId) : null;
+            const parentItem = btn.closest('li');
+            if (!sub || !parentItem) {
+              return;
+            }
+            const willOpen = !parentItem.classList.contains('toc-item-open');
+            parentItem.classList.toggle('toc-item-open', willOpen);
+            sub.style.display = willOpen ? 'flex' : 'none';
+            btn.setAttribute('aria-expanded', String(willOpen));
+            btn.textContent = willOpen ? '▾' : '▸';
+            startGracePeriod();
+          });
+        });
+
+        // --- Scroll-driven collapse/expand ---
+        const handleScrollChange = () => {
+          const currentY = window.scrollY;
+          const delta = currentY - lastScrollY;
+          if (Math.abs(delta) < scrollThreshold) {
+            return;
+          }
+          lastScrollY = currentY;
+          if (!autoCollapseEnabled || graceActive) {
+            return;
+          }
+          if (delta > 0) {
+            applyCollapseState(true);
+          } else {
+            applyCollapseState(false);
+          }
+        };
+
+        const onScroll = () => {
+          if (ticking) {
+            return;
+          }
+          ticking = true;
+          raf(() => {
+            handleScrollChange();
+            ticking = false;
+          });
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+      })();
+    </script>
+    <!-- TOC INLINE SUMMARY:
+         1) Inline style y script añadidos directamente en crypto.html.
+         2) Atributos garantizados: data-toc-default-width, data-toc-collapsed-width, data-toc-collapsible.
+         3) Valores por defecto: expandido 160px, colapsado 56px, umbral scroll 32px, gracia 300ms.
+    -->
 </body>
 
 </html>
