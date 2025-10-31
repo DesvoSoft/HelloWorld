@@ -1,21 +1,28 @@
+/**
+ * Author: OpenAI ChatGPT · Fecha: 2025-02-14
+ * Defaults → mainThreshold: 32, smallThreshold: 8, graceWindowMs: 300, tocScrollLockMs: 200
+ */
 (() => {
+  const DEBUG = false;
+  const mainThreshold = 32;
+  const smallThreshold = 8;
+  const graceWindowMs = 300;
+  const tocScrollLockMs = 200;
+  const transitionDebounceMs = 120;
+
   const doc = document;
   const toc = doc.getElementById('toc');
   const toggle = doc.getElementById('toc-toggle');
   const tocList = doc.getElementById('toc-list');
 
   if (!toc || !toggle || !tocList) {
-    console.warn('TOC: elemento faltante');
+    console.warn('TOC: missing element');
     return;
   }
 
-  // init
   const collapseClass = 'toc-collapsed';
-  const scrollThreshold = 32;
-  const graceDuration = 300;
-  const tocScrollIgnoreDuration = 200;
   const now = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now());
-  const raf = window.requestAnimationFrame
+  const raf = typeof window !== 'undefined' && window.requestAnimationFrame
     ? window.requestAnimationFrame.bind(window)
     : (cb) => window.setTimeout(cb, 16);
 
@@ -30,17 +37,31 @@
     toc.style.setProperty('--toc-collapsed-width', collapsedWidth);
   }
 
+  const subRegistry = new Map();
   const subLists = Array.from(toc.querySelectorAll('.toc-sub'));
-  subLists.forEach((sub) => {
+  const subToggles = Array.from(toc.querySelectorAll('.toc-sub-toggle'));
+
+  const disableSubList = (sub) => {
     try {
       sub.style.setProperty('display', 'none', 'important');
     } catch (error) {
       sub.style.display = 'none';
     }
-  });
+  };
 
-  const subRegistry = new Map();
-  const subToggles = Array.from(toc.querySelectorAll('.toc-sub-toggle'));
+  const enableSubList = (sub) => {
+    try {
+      sub.style.setProperty('display', 'block', 'important');
+    } catch (error) {
+      sub.style.display = 'block';
+    }
+  };
+
+  subLists.forEach(disableSubList);
+
+  const startGracePeriod = () => {
+    lastInteractionTs = now();
+  };
 
   subToggles.forEach((btn) => {
     const subId = btn.getAttribute('aria-controls');
@@ -53,22 +74,14 @@
 
     const hide = () => {
       entry.expanded = false;
-      try {
-        sub.style.setProperty('display', 'none', 'important');
-      } catch (error) {
-        sub.style.display = 'none';
-      }
+      disableSubList(sub);
       btn.setAttribute('aria-expanded', 'false');
       btn.textContent = '▸';
     };
 
     const show = () => {
       entry.expanded = true;
-      try {
-        sub.style.setProperty('display', 'block', 'important');
-      } catch (error) {
-        sub.style.display = 'block';
-      }
+      enableSubList(sub);
       btn.setAttribute('aria-expanded', 'true');
       btn.textContent = '▾';
     };
@@ -97,13 +110,10 @@
     });
   };
 
-  let isCollapsed = toc.classList.contains(collapseClass);
-  let graceActiveUntil = 0;
-  let lastScrollY = window.scrollY || window.pageYOffset || 0;
-  let ticking = false;
-  let tocScrolling = false;
-  let tocScrollTimer = null;
-  let lastFocusTs = 0;
+  const isElementFocusedInside = (el) => {
+    const active = doc.activeElement;
+    return Boolean(active && el.contains(active));
+  };
 
   const setLinksFocusable = (allow) => {
     const links = tocList.querySelectorAll('a');
@@ -116,6 +126,7 @@
         link.setAttribute('aria-hidden', 'true');
       }
     });
+
     if (allow) {
       tocList.removeAttribute('aria-hidden');
     } else {
@@ -123,36 +134,65 @@
     }
   };
 
-  const applyCollapseState = (collapse) => {
+  let isCollapsed = toc.classList.contains(collapseClass);
+  let lastInteractionTs = 0;
+  let lastStateChangeTs = 0;
+  let pendingScrollY = window.scrollY || window.pageYOffset || 0;
+  let lastScrollY = pendingScrollY;
+  let accumulatedDelta = 0;
+  let lastDirection = 0;
+  let frameRequested = false;
+  let tocScrolling = false;
+  let tocScrollTimer = null;
+
+  const applyCollapseState = (collapse, source = 'manual') => {
     if (isCollapsed === collapse) {
       return;
     }
+
+    const timestamp = now();
+    if (timestamp - lastStateChangeTs < transitionDebounceMs && source !== 'manual') {
+      if (DEBUG) {
+        console.info('TOC: skip state change debounce');
+      }
+      return;
+    }
+
     isCollapsed = collapse;
+    lastStateChangeTs = timestamp;
     toc.classList.toggle(collapseClass, collapse);
     toggle.setAttribute('aria-expanded', String(!collapse));
     toggle.setAttribute('aria-label', collapse ? 'Expandir índice' : 'Colapsar índice');
     setLinksFocusable(!collapse);
+
     if (collapse) {
       collapseAllSubLists();
     }
+
+    if (source === 'auto') {
+      accumulatedDelta = 0;
+      lastDirection = 0;
+    }
   };
 
-  const startGracePeriod = () => {
-    graceActiveUntil = now() + graceDuration;
+  const initializeState = () => {
+    toggle.setAttribute('aria-expanded', String(!isCollapsed));
+    toggle.setAttribute('aria-label', isCollapsed ? 'Expandir índice' : 'Colapsar índice');
+    toc.classList.toggle(collapseClass, isCollapsed);
+    setLinksFocusable(!isCollapsed);
   };
 
-  toggle.setAttribute('aria-expanded', String(!isCollapsed));
-  toggle.setAttribute('aria-label', isCollapsed ? 'Expandir índice' : 'Colapsar índice');
-  toc.classList.toggle(collapseClass, isCollapsed);
-  setLinksFocusable(!isCollapsed);
+  initializeState();
 
   const handleManualToggle = () => {
-    applyCollapseState(!isCollapsed);
-    lastScrollY = window.scrollY || window.pageYOffset || 0;
+    applyCollapseState(!isCollapsed, 'manual');
+    pendingScrollY = window.scrollY || window.pageYOffset || 0;
+    lastScrollY = pendingScrollY;
+    accumulatedDelta = 0;
+    lastDirection = 0;
     startGracePeriod();
   };
 
-  // toggle handler
   toggle.addEventListener('click', handleManualToggle);
   toggle.addEventListener('keydown', (event) => {
     const { key } = event;
@@ -162,9 +202,8 @@
     }
   });
 
-  // accessibility helpers
   toc.addEventListener('focusin', () => {
-    lastFocusTs = now();
+    startGracePeriod();
   });
 
   const markTocScroll = () => {
@@ -174,62 +213,109 @@
     }
     tocScrollTimer = window.setTimeout(() => {
       tocScrolling = false;
-    }, tocScrollIgnoreDuration);
+    }, tocScrollLockMs);
   };
 
-  // Auto-collapse ignorado cuando el usuario scrollea dentro del aside
   toc.addEventListener('wheel', markTocScroll, { passive: true });
   toc.addEventListener('touchstart', markTocScroll, { passive: true });
   toc.addEventListener('touchmove', markTocScroll, { passive: true });
   toc.addEventListener('scroll', markTocScroll, { passive: true });
 
-  // scroll handler
-  const handleScrollDelta = () => {
+  const shouldAutoCollapseReact = () => {
     if (!autoCollapseEnabled) {
-      return;
+      return false;
     }
+
     if (tocScrolling) {
-      return;
+      if (DEBUG) {
+        console.info('TOC: auto-collapse skip tocScrolling');
+      }
+      return false;
     }
 
-    const currentTs = now();
-    if (currentTs < graceActiveUntil) {
-      return;
+    const timestamp = now();
+    if (timestamp - lastInteractionTs < graceWindowMs) {
+      if (DEBUG) {
+        console.info('TOC: auto-collapse skip grace window');
+      }
+      return false;
     }
 
-    const activeElement = doc.activeElement;
-    if (activeElement && toc.contains(activeElement) && currentTs - lastFocusTs < graceDuration) {
-      return;
+    if (timestamp - lastStateChangeTs < transitionDebounceMs) {
+      if (DEBUG) {
+        console.info('TOC: auto-collapse skip transition debounce');
+      }
+      return false;
     }
 
-    const currentY = window.scrollY || window.pageYOffset || 0;
+    if (isElementFocusedInside(toc)) {
+      if (DEBUG) {
+        console.info('TOC: auto-collapse skip focused');
+      }
+      return false;
+    }
+
+    return true;
+  };
+
+  const processScrollFrame = () => {
+    frameRequested = false;
+
+    const currentY = pendingScrollY;
     const delta = currentY - lastScrollY;
 
-    if (Math.abs(delta) < scrollThreshold) {
+    if (Math.abs(delta) < smallThreshold) {
       return;
+    }
+
+    const direction = delta > 0 ? 1 : -1;
+
+    if (direction !== lastDirection) {
+      lastDirection = direction;
+      accumulatedDelta = delta;
+    } else {
+      accumulatedDelta += delta;
     }
 
     lastScrollY = currentY;
 
-    if (delta > 0) {
-      applyCollapseState(true);
-    } else if (delta < 0) {
-      applyCollapseState(false);
-    }
-  };
-
-  const onScroll = () => {
-    if (ticking) {
+    if (Math.abs(accumulatedDelta) < mainThreshold) {
       return;
     }
-    ticking = true;
-    raf(() => {
-      ticking = false;
-      handleScrollDelta();
-    });
+
+    if (!shouldAutoCollapseReact()) {
+      accumulatedDelta = 0;
+      return;
+    }
+
+    if (direction > 0) {
+      applyCollapseState(true, 'auto');
+    } else {
+      applyCollapseState(false, 'auto');
+    }
+
+    accumulatedDelta = 0;
+    lastDirection = 0;
+  };
+
+  const scheduleScrollFrame = () => {
+    if (frameRequested) {
+      return;
+    }
+    frameRequested = true;
+    raf(processScrollFrame);
   };
 
   if (autoCollapseEnabled) {
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', () => {
+      pendingScrollY = window.scrollY || window.pageYOffset || 0;
+      scheduleScrollFrame();
+    }, { passive: true });
   }
 })();
+
+/**
+ * Tuning guide: ajusta mainThreshold para mayor/menor distancia de scroll antes de colapsar,
+ * smallThreshold para filtrar micro-movimientos, graceWindowMs para alargar la ventana de interacción,
+ * y tocScrollLockMs para controlar cuánto tiempo se ignoran los scrolls internos del TOC.
+ */
