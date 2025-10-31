@@ -57,8 +57,10 @@
     links.forEach((link) => {
       if (collapsed) {
         link.setAttribute('tabindex', '-1');
+        link.setAttribute('aria-hidden', 'true');
       } else {
         link.removeAttribute('tabindex');
+        link.removeAttribute('aria-hidden');
       }
     });
     if (collapsed) {
@@ -131,8 +133,46 @@
     });
   });
 
-  const handleScrollChange = () => {
+  const elementWithinToc = (element) => Boolean(element) && toc.contains(element);
+
+  let tocScrollLock = false;
+  let tocScrollTimer = null;
+  let lastTocFocusTime = 0;
+
+  const releaseTocScrollLock = () => {
+    tocScrollLock = false;
+    tocScrollTimer = null;
+  };
+
+  const markTocScroll = () => {
+    tocScrollLock = true;
+    if (tocScrollTimer) {
+      clearTimeout(tocScrollTimer);
+    }
+    tocScrollTimer = window.setTimeout(releaseTocScrollLock, graceDuration);
+  };
+
+  toc.addEventListener('scroll', markTocScroll, { passive: true });
+  toc.addEventListener('wheel', markTocScroll, { passive: true });
+  toc.addEventListener('touchmove', markTocScroll, { passive: true });
+  toc.addEventListener('focusin', () => {
+    lastTocFocusTime = Date.now();
+  });
+
+  const handleScrollChange = (event) => {
     // --- Scroll handler para colapso automático ---
+    if (event && event.target === toc) {
+      return;
+    }
+    if (tocScrollLock) {
+      return;
+    }
+    if (elementWithinToc(document.activeElement)) {
+      const focusDelta = Date.now() - lastTocFocusTime;
+      if (focusDelta < graceDuration) {
+        return;
+      }
+    }
     const currentY = window.scrollY;
     const delta = currentY - lastScrollY;
     if (Math.abs(delta) < scrollThreshold) {
@@ -149,13 +189,16 @@
     }
   };
 
-  const onScroll = () => {
+  let lastScrollEvent = null;
+
+  const onScroll = (event) => {
     if (ticking) {
       return;
     }
+    lastScrollEvent = event;
     ticking = true;
     raf(() => {
-      handleScrollChange();
+      handleScrollChange(lastScrollEvent);
       ticking = false;
     });
   };
