@@ -9,70 +9,114 @@
     <link rel="icon" href="../images/theme.ico">
 </head>
 <style>
+    :root {
+        --accent: #4c9df5;
+        --accent-dark: #1f5fbf;
+        --accent-soft: rgba(76, 157, 245, 0.25);
+        --surface: rgba(11, 27, 52, 0.92);
+        --surface-elevated: rgba(14, 36, 70, 0.72);
+        --surface-border: rgba(76, 157, 245, 0.35);
+        --text-strong: #f0f6ff;
+        --text-muted: #c1d0e9;
+    }
+
+    /* Smooth scroll (si no está habilitado) */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    main h2,
+    main h3,
+    main h4 {
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-top: 1.75rem;
+    }
+
+    main h2 {
+        margin-bottom: 1rem;
+    }
+
+    main h3,
+    main h4 {
+        margin-bottom: 0.75rem;
+    }
 
     /* Estilo índice */
     .page-index {
-      background: linear-gradient(135deg, #ffffff 0%, #f3f6ff 100%);
-      border: 1px solid #dbe3ff;
-      padding: 18px;
-      border-radius: 12px;
-      margin-bottom: 28px;
-      box-shadow: 0 10px 25px rgba(10, 45, 99, 0.1);
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        padding: 26px 28px;
+        border-radius: 20px;
+        margin: 0 auto 36px;
+        box-shadow: 0 22px 40px rgba(3, 11, 24, 0.55);
+        backdrop-filter: blur(6px);
     }
+
     .page-index h3 {
-      margin: 0 0 12px 0;
-      font-size: 1.1rem;
-      color: #193566;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+        margin: 0 0 18px 0;
+        font-size: 1.2rem;
+        color: var(--text-strong);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
+
     .page-index h3::before {
-      content: "🧭";
-      font-size: 1.3rem;
+        content: "🧭";
+        font-size: 1.3rem;
     }
+
     .page-index ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 10px 16px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px 18px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
+
     .page-index li {
-      margin: 0;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(27, 77, 158, 0.08);
-      box-shadow: 0 2px 6px rgba(20, 60, 120, 0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: var(--surface-elevated);
+        border: 1px solid transparent;
+        box-shadow: 0 12px 24px rgba(5, 16, 33, 0.45);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
+
     .page-index li:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(20, 60, 120, 0.16);
+        transform: translateY(-3px);
+        box-shadow: 0 18px 32px rgba(5, 16, 33, 0.6);
+        border-color: var(--accent-soft);
     }
+
     .page-index a {
-      color: #163d7a;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+        color: var(--text-strong);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
+
     .page-index a::before {
-      content: "➜";
-      font-size: 0.9rem;
-      color: #4d79ff;
+        content: "➜";
+        font-size: 0.9rem;
+        color: var(--accent);
     }
+
     .page-index a:hover {
-      text-decoration: none;
-      color: #0a58ca;
+        color: #ffffff;
     }
-    
-    /* Smooth scroll (si no está habilitado) */
-    html {
-      scroll-behavior: smooth;
+
+    .page-index a:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+        border-radius: 10px;
     }
 
     .popup-overlay {
@@ -81,24 +125,24 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente */
-        display: none; /* Oculto por defecto */
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
         justify-content: center;
         align-items: center;
-        z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        z-index: 1000;
     }
 
     .popup-content {
-        background: linear-gradient(160deg, #ffffff 0%, #f5f7fb 100%);
+        background: linear-gradient(160deg, rgba(20, 36, 66, 0.98) 0%, rgba(12, 28, 55, 0.94) 100%);
         padding: 36px 32px;
-        border-radius: 16px;
-        box-shadow: 0 20px 45px rgba(13, 42, 89, 0.25);
+        border-radius: 18px;
+        box-shadow: 0 28px 60px rgba(2, 8, 18, 0.75);
         width: 90%;
-        max-width: 520px; /* Ancho máximo del pop-up */
+        max-width: 520px;
         text-align: left;
-        position: relative; /* Para posicionar el botón de cierre */
+        position: relative;
         animation: fadeIn 0.35s ease-out;
-        border: 1px solid rgba(41, 89, 165, 0.15);
+        border: 1px solid var(--surface-border);
     }
 
     @keyframes fadeIn {
@@ -116,29 +160,29 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
     }
 
     .popup-icon {
         font-size: 2.1rem;
-        color: #ff9800;
-        filter: drop-shadow(0 4px 10px rgba(255, 152, 0, 0.35));
+        color: #ffb347;
+        filter: drop-shadow(0 6px 14px rgba(255, 179, 71, 0.4));
     }
 
     .popup-content h2 {
         margin: 0;
-        color: #1f2a44;
+        color: var(--text-strong);
         font-size: 1.6em;
     }
 
     .popup-body {
-        margin-bottom: 26px;
+        margin-bottom: 28px;
     }
 
     .popup-body p {
-        font-size: 0.98em;
+        font-size: 1em;
         line-height: 1.7;
-        color: #475067;
+        color: var(--text-muted);
         margin-bottom: 18px;
     }
 
@@ -150,70 +194,72 @@
         border: none;
         font-size: 1.8em;
         cursor: pointer;
-        color: #888;
+        color: var(--text-muted);
         line-height: 1;
+        transition: color 0.2s ease;
     }
 
-    .popup-close-btn:hover {
-        color: #333;
+    .popup-close-btn:hover,
+    .popup-close-btn:focus-visible {
+        color: var(--text-strong);
     }
 
     .popup-actions {
         text-align: center;
     }
 
-    .popup-accept-btn {
-        background: linear-gradient(135deg, #1b5cff 0%, #639bff 100%);
-        color: white;
-        border: none;
-        padding: 12px 26px;
-        border-radius: 999px;
-        cursor: pointer;
-        font-size: 1.02em;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .popup-accept-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 20px rgba(27, 92, 255, 0.28);
-    }
-
-    /* Estilo para el botón que activa el pop-up (opcional) */
+    .popup-accept-btn,
     .show-popup-btn {
         padding: 12px 32px;
         font-size: 1.02em;
         cursor: pointer;
-        background: linear-gradient(135deg, #2ecc71 0%, #20a859 100%);
-        color: white;
+        color: #ffffff;
         border: none;
         border-radius: 999px;
         font-weight: 600;
         letter-spacing: 0.01em;
-        box-shadow: 0 12px 24px rgba(46, 204, 113, 0.3);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        box-shadow: 0 18px 32px rgba(2, 13, 30, 0.55);
+        background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
     }
 
+    .popup-accept-btn:hover,
     .show-popup-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 30px rgba(32, 168, 89, 0.28);
+        transform: translateY(-3px);
+        box-shadow: 0 22px 38px rgba(2, 13, 30, 0.65);
+        filter: brightness(1.05);
     }
 
-    .disclaimer-btn{
+    .popup-accept-btn:focus-visible,
+    .show-popup-btn:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+    }
+
+    .disclaimer-btn {
         color: black;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 24px auto 18px;
+        margin: 28px auto 22px;
     }
 
     .section-divider {
         border: none;
         height: 1px;
         width: min(420px, 80%);
-        background: linear-gradient(90deg, rgba(12, 38, 79, 0), rgba(12, 38, 79, 0.3), rgba(12, 38, 79, 0));
-        margin: 32px auto;
+        background: linear-gradient(90deg, rgba(12, 38, 79, 0), rgba(12, 38, 79, 0.4), rgba(12, 38, 79, 0));
+        margin: 36px auto;
+    }
+
+    footer {
+        text-align: center;
+    }
+
+    .liability-note {
+        margin-top: 6px;
+        font-size: 0.85em;
+        color: var(--text-muted);
     }
 </style>
 
@@ -518,7 +564,16 @@
             Niveles útiles: <strong>30</strong> (sobreventa) y <strong>70</strong> (sobrecompra).
             En tu configuración verás la <em>línea morada</em> como el valor del RSI y una <em>línea amarilla</em> si añades una media del RSI.
           </p>
-        
+
+          <h4>RSI — escenarios comunes y qué significan</h4>
+          <ul>
+            <li><strong>RSI cerca de 50:</strong> mercado en equilibrio. Espera confirmación antes de entrar con fuerza.</li>
+            <li><strong>RSI por debajo de 30:</strong> posible rebote técnico; busca velas de reversión o volumen que confirme.</li>
+            <li><strong>RSI por encima de 70:</strong> riesgo de corrección; considera asegurar ganancias o ajustar stops.</li>
+            <li><strong>Cruce del RSI con su media:</strong> cruce al alza sugiere mejora de momentum; a la baja indica debilidad.</li>
+            <li><strong>Divergencias:</strong> si el precio marca nuevos mínimos y el RSI no (divergencia alcista) puede anticipar un giro; si marca nuevos máximos y el RSI cae (divergencia bajista) alerta de posibles correcciones.</li>
+          </ul>
+
           <h4>Ajustes recomendados para RSI</h4>
           <ul>
             <li><strong>RSI Length:</strong> 14</li>
@@ -536,7 +591,16 @@
             Las Bandas de Bollinger muestran una SMA central (20) y dos bandas ±2 desviaciones estándar.
             Las bandas se ensanchan con alta volatilidad y se estrechan con baja volatilidad (compresión).
           </p>
-        
+
+          <h4>Bandas de Bollinger — escenarios comunes y acciones</h4>
+          <ul>
+            <li><strong>Precio sobre la SMA 20:</strong> contexto lateral; espera ruptura o patrón claro antes de posicionarte.</li>
+            <li><strong>Precio en banda inferior + RSI bajo:</strong> posible rebote. Opta por entradas parciales y stops ajustados.</li>
+            <li><strong>Precio en banda superior + RSI alto:</strong> terreno para tomar ganancias parciales o ajustar stops.</li>
+            <li><strong>Bandas en compresión:</strong> indican volatilidad contenida; prepara la operativa para la ruptura con confirmación de volumen.</li>
+            <li><strong>Bandas en expansión:</strong> muestran volatilidad creciente; confirma con volumen para validar el movimiento y evitar rupturas falsas.</li>
+          </ul>
+
           <h4>Ajustes recomendados para Bandas de Bollinger</h4>
           <ul>
             <li><strong>SMA period:</strong> 20</li>
@@ -632,6 +696,7 @@
 
     <footer>
         <p>©2025 DesvoSoft</p>
+        <p class="liability-note">Contenido educativo: evalúa tus decisiones y asume la responsabilidad de cada inversión.</p>
     </footer>
 
     <script src="../JS/navbar.js"></script>
