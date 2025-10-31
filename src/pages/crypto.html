@@ -579,43 +579,84 @@
 
     <!-- FIN DISCLAIMER -->
 
-    <!-- Indice de contenidos -->
-    <nav id="page-index" class="page-index">
+    <!-- Índice de contenidos -->
+    <aside
+      id="toc"
+      class="page-index toc js-toc"
+      role="navigation"
+      aria-label="Índice de secciones"
+      data-toc-default-width="160"
+      data-toc-collapsed-width="48"
+    >
+      <!-- TOC hooks: data-toc-default-width y toc-toggle -->
+      <button id="toc-toggle" class="toc-toggle" aria-expanded="true" aria-controls="toc-list">☰</button>
       <h3>Índice</h3>
-      <ul>
+      <ul id="toc-list" class="toc-list">
         <li><a href="#intro">Introducción a Bitcoin</a></li>
         <li><a href="#investment-types">Tipos de inversión</a></li>
         <li><a href="#risk-management">Gestión de riesgos</a></li>
         <li><a href="#technical-analysis">Análisis técnico</a></li>
         <li><a href="#fundamental-analysis">Análisis fundamental</a></li>
         <li><a href="#derivatives">Futuros y derivados</a></li>
+        <li>
+          <a href="#rsi-bb-strategy">Estrategia práctica: RSI + Bandas de Bollinger</a>
+          <ul class="toc-sub" data-toc-level="3">
+            <li><a href="#rsi-resumen-rapido">Resumen rápido</a></li>
+            <li><a href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
+            <li><a href="#rsi-bandas-bollinger">Explicación de Bandas de Bollinger</a></li>
+            <li><a href="#rsi-reglas-estrategia">Reglas claras de la estrategia</a></li>
+            <li><a href="#rsi-gestion-riesgo">Gestión de riesgo</a></li>
+            <li><a href="#rsi-practica-validacion">Práctica y validación</a></li>
+            <li><a href="#rsi-alertas-tradingview">Alertas en TradingView</a></li>
+          </ul>
+        </li>
+        <li><a href="#why-it-works">Por qué funciona esta combinación</a></li>
+        <li><a href="#example">Ejemplo práctico (resumen)</a></li>
+        <li>
+          <a href="#recommended-times">Horarios recomendados</a>
+          <ul class="toc-sub" data-toc-level="3">
+            <li><a href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
+            <li><a href="#horarios-concretos">Horarios concretos</a></li>
+            <li><a href="#horarios-checklist">Checklist por chequeo</a></li>
+            <li><a href="#horarios-reglas-practicas">Reglas prácticas</a></li>
+            <li><a href="#horarios-plantilla-compacta">Plantilla de horario</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#swing-trading-guide">Swing trading — guía práctica</a>
+          <ul class="toc-sub" data-toc-level="3">
+            <li><a href="#swing-caracteristicas">Características principales</a></li>
+            <li><a href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
+            <li><a href="#swing-proceso">Proceso simplificado</a></li>
+            <li><a href="#swing-reglas-riesgo">Reglas de gestión de riesgo</a></li>
+            <li><a href="#swing-ejemplo">Ejemplo práctico breve</a></li>
+            <li><a href="#swing-checklist">Checklist antes de operar</a></li>
+          </ul>
+        </li>
         <li><a href="#advanced-strategies">Estrategias avanzadas</a></li>
         <li><a href="#resources">Recursos adicionales</a></li>
-        <li><a href="#rsi-bb-strategy">Estrategia: RSI + Bandas de Bollinger</a></li>
-        <li><a href="#why-it-works">Por qué funciona</a></li>
-        <li><a href="#example">Ejemplo práctico</a></li>
-        <li><a href="#recommended-times">Horarios recomendados</a></li>
-        <li><a href="#swing-trading-guide">Guía de swing trading</a></li>
       </ul>
-    </nav>
+    </aside>
 
     <!-- Inicio de contenido -->
     <div class="content-shell">
         <main>
-            <section id="intro">
+            <section id="intro" class="doc-section">
                 <h1>Bitcoin</h1>
                 <p>Bitcoin es un activo escaso (oferta máxima de 21 millones) y descentralizado, considerado "oro digital". Eventos como los halvings, donde se reduce la recompensa por bloque, refuerzan esta escasez y suelen preceder subidas de precio.</p>
+                <!-- HR: introducción -->
+                <hr class="section-sep" data-sep-purpose="intro">
                 <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
 
                 <div class="disclaimer-btn">
                     <button class="show-popup-btn" onclick="mostrarPopup()">Ver disclaimer</button>
                 </div>
-                <hr class="section-divider" role="separator" aria-hidden="true">
+                <hr class="section-sep" data-sep-purpose="section">
 
             </section>
 
         <!-- Tipos de inversion en Bitcoin -->
-        <section id="investment-types">
+        <section id="investment-types" class="doc-section">
             <h2>Tipos de inversión</h2>
             <ul>
                 <li><strong>HODLing estratégico (largo plazo):</strong> Comprar y mantener BTC durante años. Es simple y tiene potencial de grandes ganancias, pero requiere disciplina y seguridad.</li>
@@ -628,11 +669,11 @@
                 <li><strong>Ingresos pasivos (yield):</strong> Prestar BTC para ganar intereses (~3–10% anual). Riesgo: quiebra de la plataforma.</li>
                 <li><strong>Cobertura con derivados:</strong> Uso de futuros u opciones para proteger tenencias ante caídas.</li>
             </ul>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Gestión de riesgos -->
-        <section id="risk-management">
+        <section id="risk-management" class="doc-section">
             <h2>Gestión de riesgos</h2>
             <p>Proteger tu capital es fundamental antes de buscar ganancias. Una gestión de riesgos adecuada puede marcar la diferencia entre un inversor exitoso y uno que sufre pérdidas significativas. Aquí te detallo algunas estrategias y conceptos clave:</p>
             <ul>
@@ -681,11 +722,11 @@
                     </ul>
                 </li>
             </ul>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Análisis técnico -->
-        <section id="technical-analysis">
+        <section id="technical-analysis" class="doc-section">
             <h2>Análisis técnico</h2>
             <ul>
                 <li><strong>Patrones de velas japonesas:</strong> Formaciones como "hammer" o "doji" indican reversiones. Confirma con volumen.</li>
@@ -693,47 +734,49 @@
                 <li><strong>Niveles de soporte y resistencia:</strong> Zonas donde el precio históricamente se detuvo. Usa Fibonacci para retrocesos.</li>
             </ul>
             <p><strong>Consejo:</strong> Combina varias herramientas para validar señales y gestiona siempre el riesgo.</p>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Análisis fundamental -->
-        <section id="fundamental-analysis">
+        <section id="fundamental-analysis" class="doc-section">
             <h2>Análisis fundamental</h2>
             <ul>
                 <li><strong>Métricas on-chain:</strong> Datos como el Puell Multiple o SOPR muestran la salud de la red y ciclos de mercado.</li>
                 <li><strong>Eventos macro:</strong> Políticas monetarias, inflación y regulación influyen en el precio de Bitcoin.</li>
                 <li><strong>Minería:</strong> Cambios en dificultad y hashrate reflejan la estabilidad de la red.</li>
             </ul>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Futuros y derivados -->
-        <section id="derivatives">
+        <section id="derivatives" class="doc-section">
             <h2>Futuros y derivados</h2>
             <ul>
                 <li><strong>Futuros perpetuos:</strong> Contratos sin vencimiento con settlement diario. Alta flexibilidad, pero alto riesgo.</li>
                 <li><strong>Opciones:</strong> Contratos call/put para especular o proteger. Estrategias comunes: straddle, iron condor.</li>
             </ul>
             <p><strong>Nota:</strong> Los derivados amplifican tanto ganancias como pérdidas. Requieren estrategias disciplinadas.</p>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Estrategia RSI + Bandas de Bollinger (para BTC Spot) -->
-        <section id="rsi-bb-strategy">
+        <!-- HR: antes de Estrategia práctica -->
+        <hr class="section-sep" data-sep-purpose="pre-practical">
+        <section id="rsi-bb-strategy" class="doc-section">
           <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
           <p>
             Esta estrategia combina un oscilador de momentum (RSI) con un indicador de volatilidad (Bandas de Bollinger).
             Está pensada para traders novatos que operan BTC en mercado spot. Usa marcos temporales de 1H o 4H.
           </p>
         
-          <h3>Resumen rápido</h3>
+          <h3 id="rsi-resumen-rapido">Resumen rápido</h3>
           <ul>
             <li><strong>Indicadores:</strong> RSI (14) + Bandas de Bollinger (SMA 20, ±2σ).</li>
             <li><strong>Temporalidad recomendada:</strong> 1H o 4H.</li>
             <li><strong>Objetivo:</strong> Entrar en rebotes cuando hay sobreventa y tomar ganancias en zonas de sobrecompra o en bandazos de volatilidad.</li>
           </ul>
         
-          <h3>Explicación del RSI</h3>
+          <h3 id="rsi-explicacion-rsi">Explicación del RSI</h3>
           <p>
             El RSI (Relative Strength Index) mide fuerza y momentum en una escala de 0 a 100. Los umbrales comunes son <strong>30</strong> (sobreventa) y <strong>70</strong> (sobrecompra), y muchos traders añaden una media móvil del RSI para suavizar las señales.
             En tu gráfico, configura el RSI con longitud 14 y activa una media simple para evaluar cruces.
@@ -766,7 +809,7 @@ RSI:    \__/__  \
             <li><strong>Inputs in status line:</strong> Activado</li>
           </ul>
         
-          <h3>Explicación de Bandas de Bollinger</h3>
+          <h3 id="rsi-bandas-bollinger">Explicación de Bandas de Bollinger</h3>
           <p>
             Las Bandas de Bollinger muestran una SMA central (20) y dos bandas ±2 desviaciones estándar.
             Las bandas se ensanchan con alta volatilidad y se estrechan con baja volatilidad (compresión).
@@ -790,7 +833,7 @@ RSI:    \__/__  \
             <li><strong>Source:</strong> Close</li>
           </ul>
         
-          <h3>Reglas claras de la estrategia (entrada / salida)</h3>
+          <h3 id="rsi-reglas-estrategia">Reglas claras de la estrategia (entrada / salida)</h3>
           <h4>Señal de Entrada (Compra)</h4>
           <ul>
             <li>RSI <strong>&lt; 30</strong> (zona de sobreventa).</li>
@@ -806,7 +849,7 @@ RSI:    \__/__  \
             <li>Si ocurre ruptura de banda con volumen alto, dejar correr parte de la posición con trailing stop.</li>
           </ul>
         
-          <h3>Gestión de riesgo</h3>
+          <h3 id="rsi-gestion-riesgo">Gestión de riesgo</h3>
           <ul>
             <li><strong>Tamaño de posición:</strong> no arriesgar más del 1–2% del portafolio por operación.</li>
             <li><strong>Stop-loss:</strong> colocar por debajo de la banda inferior (si entras en rebote) o según un % de pérdida máxima predefinida.</li>
@@ -814,32 +857,35 @@ RSI:    \__/__  \
             <li><strong>Apalancamiento:</strong> evitar en spot; si usas margin, mantén apalancamiento muy moderado y stops ajustados.</li>
           </ul>
         
-          <h3>Práctica y validación</h3>
+          <h3 id="rsi-practica-validacion">Práctica y validación</h3>
           <ul>
             <li>Usa <strong>paper trading</strong> o el modo replay en TradingView para testear la estrategia durante al menos 30 operaciones.</li>
             <li>Lleva un <strong>diario de operaciones</strong>: fecha, marco temporal, razón de entrada, precio de entrada, stop, take, resultado y lecciones.</li>
             <li>Evita operar en noticias de alto impacto; las rupturas durante noticias pueden generar falsas señales y gran slippage.</li>
           </ul>
         
-          <h3>Alertas sugeridas en TradingView</h3>
+          <h3 id="rsi-alertas-tradingview">Alertas sugeridas en TradingView</h3>
           <ul>
             <li>Alerta cuando <strong>RSI cruza por debajo de 30</strong>.</li>
             <li>Alerta cuando <strong>RSI cruza por encima de 70</strong>.</li>
             <li>Alerta visual cuando el <strong>precio toca banda inferior/superior</strong> (price crossing line of BB).</li>
           </ul>
+          <hr class="section-sep" data-sep-purpose="section">
         </section>
-        
+
         <!-- Sección didáctica: por qué funciona -->
-        <section id="why-it-works">
+        <section id="why-it-works" class="doc-section">
           <h2>Por qué funciona esta combinación</h2>
           <p>
             El RSI identifica condiciones extremas de momentum, mientras que las Bandas de Bollinger contextualizan esas señales dentro de la volatilidad.
             Juntos reducen señales falsas: RSI te dice cuándo el mercado está "exagerado" y las Bandas te muestran zonas de precio con probabilidad de rebote o ruptura.
           </p>
         </section>
-        
+
+        <hr class="section-sep" data-sep-purpose="section">
+
         <!-- Ejemplo práctico (texto breve) -->
-        <section id="example">
+        <section id="example" class="doc-section">
           <h2>Ejemplo práctico (resumen)</h2>
           <p>
             Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior. En la siguiente vela aparece un martillo con mayor volumen: entrada parcial.
@@ -847,21 +893,23 @@ RSI:    \__/__  \
           </p>
         </section>
 
+        <hr class="section-sep" data-sep-purpose="section">
 
-        <section id="recommended-times">
+
+        <section id="recommended-times" class="doc-section">
           <h2>Horarios recomendados para revisar (CST, UTC−6)</h2>
           <p>
             Aquí tienes una guía práctica para revisar tus gráficos en timeframe 1H sin estar pegado a la pantalla.
             Revisa justo después del cierre de la vela horaria (ej. 01:05) para evitar señales parciales mientras la vela se forma.
           </p>
 
-          <h3>Frecuencia sugerida</h3>
+          <h3 id="horarios-frecuencia-sugerida">Frecuencia sugerida</h3>
           <ul>
             <li>Revisiones diarias: <strong>3–4 veces al día</strong>. Duración: 5–15 minutos por chequeo.</li>
             <li>Usa alertas automáticas (RSI cruces, toque de Bandas de Bollinger, rupturas) para reducir la supervisión continua.</li>
           </ul>
 
-          <h3>Horarios concretos (CST, UTC−6) y por qué</h3>
+          <h3 id="horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</h3>
           <ul>
             <li>
               <strong>18:00–20:00 CST</strong> — Sesión asiática / pre-actividad americana<br>
@@ -881,7 +929,7 @@ RSI:    \__/__  \
             </li>
           </ul>
 
-          <h3>Qué mirar en cada chequeo (checklist rápido)</h3>
+          <h3 id="horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</h3>
           <ul>
             <li>Cierre de la vela 1H: ¿confirmó la señal (RSI + Bandas) tras el cierre?</li>
             <li>Volumen: ¿la vela de confirmación trae volumen mayor al promedio reciente?</li>
@@ -891,29 +939,31 @@ RSI:    \__/__  \
             <li>Noticias programadas: si hay evento macro, reducir exposición o evitar abrir nuevas posiciones.</li>
           </ul>
 
-          <h3>Reglas prácticas para no sobre-operar</h3>
+          <h3 id="horarios-reglas-practicas">Reglas prácticas para no sobre-operar</h3>
           <ul>
             <li>No entrar solo por una vela incompleta; esperar cierre horario.</li>
             <li>Si recibes una alerta fuera de tus ventanas, esperar el siguiente cierre de 1H para confirmar.</li>
             <li>Máximo recomendado mientras aprendes: 1–2 operaciones simultáneas en spot.</li>
           </ul>
 
-          <h3>Plantilla de horario compacta (ejemplo)</h3>
+          <h3 id="horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</h3>
           <ul>
             <li>Opción 3 checks: <strong>20:05, 01:05, 09:05 CST</strong>.</li>
             <li>Opción 4 checks: <strong>20:05, 01:05, 09:05, 14:05 CST</strong>.</li>
           </ul>
         </section>
 
+        <hr class="section-sep" data-sep-purpose="section">
 
-        <section id="swing-trading-guide">
+
+        <section id="swing-trading-guide" class="doc-section">
           <h2>Swing trading — guía práctica</h2>
           <p>
             El swing trading busca capturar movimientos intermedios (desde horas hasta semanas). No es scalping ni inversión a muy largo plazo.
             Se basa en identificar tendencias, rebotes y rupturas, gestionando riesgo con stops y tamaño de posición adecuados.
           </p>
 
-          <h3>Características principales</h3>
+          <h3 id="swing-caracteristicas">Características principales</h3>
           <ul>
             <li>Horizonte típico: varias horas hasta semanas.</li>
             <li>Timeframes usados comúnmente: <strong>1H, 4H, diario</strong>. Tú usarás 1H para entradas y 4H para confirmaciones mayores.</li>
@@ -921,13 +971,13 @@ RSI:    \__/__  \
             <li>Gestión de riesgo: stops claros, tamaño de posición controlado (1–2% del portafolio por operación).</li>
           </ul>
 
-          <h3>Ventajas y desventajas</h3>
+          <h3 id="swing-ventajas-desventajas">Ventajas y desventajas</h3>
           <ul>
             <li><strong>Ventajas:</strong> más oportunidades que el swing a diario; permite sacar provecho de movimientos significativos sin vigilar todo el día.</li>
             <li><strong>Desventajas:</strong> requiere disciplina con stops; movimientos grandes pueden generar mayor drawdown temporal.</li>
           </ul>
 
-          <h3>Proceso simplificado de una operación swing (pasos)</h3>
+          <h3 id="swing-proceso">Proceso simplificado de una operación swing (pasos)</h3>
           <ol>
             <li>Identificar setup: RSI y Bandas de Bollinger muestran condición (ej. RSI &lt; 30 + toque banda inferior).</li>
             <li>Confirmar: espera cierre de vela 1H; revisa volumen y estructura (soporte/resistencia).</li>
@@ -937,7 +987,7 @@ RSI:    \__/__  \
             <li>Salir o trailing: si ruptura con volumen, usar trailing stop; si señal se invalida (RSI cruza en sentido contrario), cerrar parcialmente o totalmente.</li>
           </ol>
 
-          <h3>Reglas de gestión de riesgo (esenciales)</h3>
+          <h3 id="swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</h3>
           <ul>
             <li>Riesgo por operación: ≤ 1–2% del portafolio.</li>
             <li>Stop-loss: colocarlo según soporte técnico o por debajo de la banda inferior si entras en rebote.</li>
@@ -945,13 +995,15 @@ RSI:    \__/__  \
             <li>Registro: llevar un diario con marco temporal, razón de entrada, stop, take, resultado y lección.</li>
           </ul>
 
-          <h3>Ejemplo práctico breve (resumen)</h3>
+          <h3 id="swing-ejemplo">Ejemplo práctico breve (resumen)</h3>
           <p>
             BTC en 1H: RSI baja a 28 y la vela toca la banda inferior. Esperas el cierre de la vela 1H; aparece una vela martillo con volumen mayor.
             Entras parcial, pones stop por debajo del mínimo reciente (o banda inferior) y TP inicial en banda superior. Si la subida tiene volumen y rompe la banda superior, aplicas trailing stop.
           </p>
 
-          <h3>Checklist rápido antes de abrir (para pegar como card)</h3>
+          <!-- HR: antes de Checklist -->
+          <hr class="section-sep" data-sep-purpose="pre-checklist">
+          <h3 id="swing-checklist">Checklist rápido antes de abrir (para pegar como card)</h3>
           <div class="trade-checklist">
             <h4>Checklist antes de operar</h4>
             <ul>
@@ -962,22 +1014,25 @@ RSI:    \__/__  \
               <li>Stop-loss y tamaño de posición definidos (≤ 2% riesgo).</li>
             </ul>
           </div>
+          <hr class="section-sep" data-sep-purpose="section">
         </section>
 
 
         <!-- Estrategias avanzadas -->
-        <section id="advanced-strategies">
+        <section id="advanced-strategies" class="doc-section">
             <h2>Estrategias avanzadas</h2>
             <ul>
                 <li><strong>Comprar en capitulación:</strong> Usar indicadores como Hash Ribbons para identificar oportunidades en pánico.</li>
                 <li><strong>Arbitraje entre exchanges:</strong> Aprovechar diferencias de precios en mercados.</li>
                 <li><strong>Seguimiento de rupturas:</strong> Detectar rompimientos de resistencias con alto volumen para entrar en tendencia.</li>
             </ul>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <!-- Recursos adicionales -->
-        <section id="resources">
+        <!-- HR: antes de Recursos adicionales -->
+        <hr class="section-sep" data-sep-purpose="pre-footer">
+        <section id="resources" class="doc-section">
             <h2>Recursos adicionales</h2>
             <ul>
                 <li><strong>Documentación:</strong> <a href="https://www.investopedia.com/bitcoin-halving-4843769" target="_blank">Bitcoin Halving (Investopedia)</a></li>
@@ -985,7 +1040,7 @@ RSI:    \__/__  \
                 <li><strong>Reportes:</strong> <a href="https://bitcoinmagazine.com/markets/exploring-six-on-chain-indicators-to-understand-the-bitcoin-market-cycle" target="_blank">Indicadores on-chain (Bitcoin Magazine)</a></li>
             </ul>
             <p>Consulta estas fuentes para mejorar tu conocimiento y estrategias.</p>
-            <hr class="section-divider" role="separator" aria-hidden="true">
+            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
     </main>
