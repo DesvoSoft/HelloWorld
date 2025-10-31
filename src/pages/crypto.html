@@ -12,18 +12,27 @@
     :root {
         --accent: #4c9df5;
         --accent-dark: #1f5fbf;
-        --accent-soft: rgba(76, 157, 245, 0.25);
+        --accent-soft: rgba(76, 157, 245, 0.18);
         --surface: rgba(11, 27, 52, 0.92);
         --surface-elevated: rgba(14, 36, 70, 0.72);
         --surface-border: rgba(76, 157, 245, 0.35);
         --text-strong: #f1f7ff;
-        --text-muted: #c1d0e9;
-        --text-subtle: rgba(193, 208, 233, 0.82);
+        --text-body: #e6eefc;
+        --text-muted: #cbd6e6;
+        --hr-fade: rgba(15, 23, 36, 0.12);
+        --shadow-1: 0 18px 32px rgba(5, 16, 33, 0.28);
+        --shadow-2: 0 28px 60px rgba(2, 8, 18, 0.45);
     }
 
     /* Smooth scroll (si no está habilitado) */
     html {
         scroll-behavior: smooth;
+    }
+
+    body {
+        font-size: 1rem;
+        color: var(--text-body);
+        line-height: 1.7;
     }
 
     main h1,
@@ -38,20 +47,21 @@
     main h1 {
         font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
         margin-bottom: 0.85rem;
+        letter-spacing: normal;
     }
 
     main h2 {
-        font-size: clamp(1.85rem, 1.1rem + 1.4vw, 2.35rem);
+        font-size: clamp(1.95rem, 1.2rem + 1.6vw, 2.45rem);
         margin-bottom: 1rem;
     }
 
     main h3 {
-        font-size: clamp(1.45rem, 1rem + 0.8vw, 1.8rem);
+        font-size: clamp(1.55rem, 1.05rem + 0.9vw, 1.9rem);
         margin-bottom: 0.8rem;
     }
 
     main h4 {
-        font-size: clamp(1.18rem, 0.95rem + 0.5vw, 1.4rem);
+        font-size: clamp(1.24rem, 0.98rem + 0.55vw, 1.48rem);
         margin-bottom: 0.75rem;
     }
 
@@ -59,12 +69,12 @@
     .page-index {
         background: var(--surface);
         border: 1px solid var(--surface-border);
-        padding: 32px 36px;
+        padding: 40px;
         border-radius: 22px;
-        margin: 32px auto 52px;
-        box-shadow: 0 26px 44px rgba(3, 11, 24, 0.6);
+        margin: 40px auto 56px;
+        box-shadow: var(--shadow-1);
         backdrop-filter: blur(8px);
-        max-width: 960px;
+        max-width: min(920px, 100%);
     }
 
     .page-index h3 {
@@ -98,24 +108,29 @@
         border-radius: 16px;
         background: var(--surface-elevated);
         border: 1px solid transparent;
-        box-shadow: 0 14px 26px rgba(5, 16, 33, 0.48);
+        box-shadow: var(--shadow-1);
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .page-index li:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 18px 32px rgba(5, 16, 33, 0.6);
+    .page-index li:hover,
+    .page-index li:focus-within {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 40px rgba(5, 16, 33, 0.38);
         border-color: var(--accent-soft);
+        background: rgba(18, 42, 78, 0.82);
     }
 
     .page-index a {
-        color: var(--text-strong);
+        color: var(--text-body);
         text-decoration: none;
         font-weight: 600;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         line-height: 1.5;
+        padding: 6px 10px;
+        border-radius: 12px;
+        transition: color 0.2s ease, background-color 0.2s ease;
     }
 
     .page-index a::before {
@@ -125,13 +140,27 @@
     }
 
     .page-index a:hover {
-        color: #ffffff;
+        color: var(--text-strong);
     }
 
     .page-index a:focus-visible {
-        outline: 3px solid var(--accent);
+        outline: 3px solid rgba(76, 157, 245, 0.55);
         outline-offset: 4px;
-        border-radius: 10px;
+        border-radius: 12px;
+        background-color: rgba(76, 157, 245, 0.08);
+    }
+
+    .section-divider {
+        width: min(760px, 90%);
+        height: 1px;
+        margin: 36px auto;
+        background: linear-gradient(90deg, rgba(52, 152, 219, 1) 0%, rgb(134, 255, 245) 50%, rgba(52, 152, 219, 1) 100%);
+        border-radius: 100%;
+        box-shadow: 0 0 10px rgba(52, 152, 219, 0.5),
+            0 0 20px rgba(52, 152, 219, 0.5),
+            0 0 30px rgba(52, 152, 219, 0.5),
+            0 0 40px rgba(52, 152, 219, 0.5),
+            0 0 50px rgba(52, 152, 219, 0.5);
     }
 
     .popup-overlay {
@@ -151,7 +180,7 @@
         background: linear-gradient(160deg, rgba(20, 36, 66, 0.98) 0%, rgba(12, 28, 55, 0.94) 100%);
         padding: 36px 32px;
         border-radius: 18px;
-        box-shadow: 0 28px 60px rgba(2, 8, 18, 0.75);
+        box-shadow: var(--shadow-2);
         width: 90%;
         max-width: 520px;
         text-align: left;
@@ -234,21 +263,28 @@
         font-weight: 600;
         letter-spacing: 0.01em;
         transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-        box-shadow: 0 18px 32px rgba(2, 13, 30, 0.55);
+        box-shadow: var(--shadow-1);
         background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
     }
 
     .popup-accept-btn:hover,
     .show-popup-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 22px 38px rgba(2, 13, 30, 0.65);
+        box-shadow: 0 22px 38px rgba(2, 13, 30, 0.4);
         filter: brightness(1.05);
     }
 
     .popup-accept-btn:focus-visible,
     .show-popup-btn:focus-visible {
-        outline: 3px solid var(--accent);
+        outline: 3px solid rgba(76, 157, 245, 0.55);
         outline-offset: 4px;
+    }
+
+    @media (min-width: 1200px) {
+        .page-index {
+            position: sticky;
+            top: 24px;
+        }
     }
 
     .disclaimer-btn {
@@ -263,22 +299,29 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        padding: 0 1.5rem;
     }
 
     main {
-        width: min(1024px, 100%);
-        padding: 0 1.75rem 5rem;
+        width: min(1100px, 100%);
+        padding: 0 28px 5rem;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 3.5rem;
+        gap: 3rem;
     }
 
     main section {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        color: var(--text-subtle);
-        line-height: 1.8;
+        gap: 1.1rem;
+        color: var(--text-body);
+        line-height: 1.75;
+        margin-bottom: 34px;
+    }
+
+    main section:last-of-type {
+        margin-bottom: 0;
     }
 
     main > section > ul {
@@ -287,6 +330,7 @@
         padding-left: 1.2rem;
         margin: 0;
         list-style: disc;
+        color: var(--text-body);
     }
 
     main ul ul {
@@ -295,10 +339,11 @@
         margin-top: 0.65rem;
         padding-left: 1.1rem;
         list-style: circle;
+        color: var(--text-body);
     }
 
     main li {
-        color: var(--text-subtle);
+        color: var(--text-body);
         list-style-position: outside;
         list-style-type: disc;
     }
@@ -309,7 +354,7 @@
 
     main p {
         margin: 0;
-        color: var(--text-subtle);
+        color: var(--text-body);
     }
 
     .mini-diagram {
@@ -320,7 +365,7 @@
         padding: 16px 18px;
         line-height: 1.4;
         color: var(--text-muted);
-        box-shadow: 0 18px 32px rgba(5, 16, 33, 0.55);
+        box-shadow: var(--shadow-1);
         margin: 0;
     }
 
@@ -328,9 +373,10 @@
         border-left: 3px solid var(--accent);
         padding: 18px 20px;
         border-radius: 12px;
-        background: rgba(19, 44, 82, 0.55);
+        background: rgba(19, 44, 82, 0.6);
         display: grid;
         gap: 0.85rem;
+        box-shadow: var(--shadow-1);
     }
 
     .scenario-callout strong {
@@ -346,8 +392,8 @@
         border: 1px solid var(--surface-border);
         border-radius: 16px;
         padding: 22px 24px;
-        background: rgba(10, 30, 58, 0.75);
-        box-shadow: 0 18px 32px rgba(5, 16, 33, 0.5);
+        background: rgba(10, 30, 58, 0.78);
+        box-shadow: var(--shadow-1);
         display: grid;
         gap: 1rem;
     }
@@ -358,6 +404,11 @@
         font-size: clamp(1.1rem, 0.95rem + 0.4vw, 1.35rem);
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        background: rgba(76, 157, 245, 0.12);
+        border: 1px solid var(--surface-border);
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-weight: 600;
     }
 
     .trade-checklist ul {
@@ -559,7 +610,7 @@
                 <div class="disclaimer-btn">
                     <button class="show-popup-btn" onclick="mostrarPopup()">Ver disclaimer</button>
                 </div>
-                <hr>
+                <hr class="section-divider" role="separator" aria-hidden="true">
 
             </section>
 
@@ -577,7 +628,7 @@
                 <li><strong>Ingresos pasivos (yield):</strong> Prestar BTC para ganar intereses (~3–10% anual). Riesgo: quiebra de la plataforma.</li>
                 <li><strong>Cobertura con derivados:</strong> Uso de futuros u opciones para proteger tenencias ante caídas.</li>
             </ul>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Gestión de riesgos -->
@@ -630,7 +681,7 @@
                     </ul>
                 </li>
             </ul>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Análisis técnico -->
@@ -642,7 +693,7 @@
                 <li><strong>Niveles de soporte y resistencia:</strong> Zonas donde el precio históricamente se detuvo. Usa Fibonacci para retrocesos.</li>
             </ul>
             <p><strong>Consejo:</strong> Combina varias herramientas para validar señales y gestiona siempre el riesgo.</p>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Análisis fundamental -->
@@ -653,7 +704,7 @@
                 <li><strong>Eventos macro:</strong> Políticas monetarias, inflación y regulación influyen en el precio de Bitcoin.</li>
                 <li><strong>Minería:</strong> Cambios en dificultad y hashrate reflejan la estabilidad de la red.</li>
             </ul>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Futuros y derivados -->
@@ -664,7 +715,7 @@
                 <li><strong>Opciones:</strong> Contratos call/put para especular o proteger. Estrategias comunes: straddle, iron condor.</li>
             </ul>
             <p><strong>Nota:</strong> Los derivados amplifican tanto ganancias como pérdidas. Requieren estrategias disciplinadas.</p>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Estrategia RSI + Bandas de Bollinger (para BTC Spot) -->
@@ -922,7 +973,7 @@ RSI:    \__/__  \
                 <li><strong>Arbitraje entre exchanges:</strong> Aprovechar diferencias de precios en mercados.</li>
                 <li><strong>Seguimiento de rupturas:</strong> Detectar rompimientos de resistencias con alto volumen para entrar en tendencia.</li>
             </ul>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
         <!-- Recursos adicionales -->
@@ -934,7 +985,7 @@ RSI:    \__/__  \
                 <li><strong>Reportes:</strong> <a href="https://bitcoinmagazine.com/markets/exploring-six-on-chain-indicators-to-understand-the-bitcoin-market-cycle" target="_blank">Indicadores on-chain (Bitcoin Magazine)</a></li>
             </ul>
             <p>Consulta estas fuentes para mejorar tu conocimiento y estrategias.</p>
-            <hr>
+            <hr class="section-divider" role="separator" aria-hidden="true">
         </section>
 
     </main>
