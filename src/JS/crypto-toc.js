@@ -137,6 +137,7 @@
 
   let tocScrollLock = false;
   let tocScrollTimer = null;
+  let lastTocFocusTime = 0;
 
   const releaseTocScrollLock = () => {
     tocScrollLock = false;
@@ -154,6 +155,9 @@
   toc.addEventListener('scroll', markTocScroll, { passive: true });
   toc.addEventListener('wheel', markTocScroll, { passive: true });
   toc.addEventListener('touchmove', markTocScroll, { passive: true });
+  toc.addEventListener('focusin', () => {
+    lastTocFocusTime = Date.now();
+  });
 
   const handleScrollChange = (event) => {
     // --- Scroll handler para colapso automático ---
@@ -164,7 +168,10 @@
       return;
     }
     if (elementWithinToc(document.activeElement)) {
-      return;
+      const focusDelta = Date.now() - lastTocFocusTime;
+      if (focusDelta < graceDuration) {
+        return;
+      }
     }
     const currentY = window.scrollY;
     const delta = currentY - lastScrollY;
