@@ -12,30 +12,62 @@
 
     /* Estilo índice */
     .page-index {
-      background: #f7f7f7;
-      border: 1px solid #e2e2e2;
-      padding: 14px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #f3f6ff 100%);
+      border: 1px solid #dbe3ff;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(10, 45, 99, 0.1);
     }
     .page-index h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.05rem;
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      color: #193566;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .page-index h3::before {
+      content: "🧭";
+      font-size: 1.3rem;
     }
     .page-index ul {
       list-style: none;
       padding: 0;
       margin: 0;
+      display: grid;
+      gap: 10px 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
     .page-index li {
-      margin: 6px 0;
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(27, 77, 158, 0.08);
+      box-shadow: 0 2px 6px rgba(20, 60, 120, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .page-index li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(20, 60, 120, 0.16);
     }
     .page-index a {
-      color: #0a58ca;
+      color: #163d7a;
       text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .page-index a::before {
+      content: "➜";
+      font-size: 0.9rem;
+      color: #4d79ff;
     }
     .page-index a:hover {
-      text-decoration: underline;
+      text-decoration: none;
+      color: #0a58ca;
     }
     
     /* Smooth scroll (si no está habilitado) */
@@ -57,15 +89,16 @@
     }
 
     .popup-content {
-        background-color: hsl(0, 0%, 61%);
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(160deg, #ffffff 0%, #f5f7fb 100%);
+        padding: 36px 32px;
+        border-radius: 16px;
+        box-shadow: 0 20px 45px rgba(13, 42, 89, 0.25);
         width: 90%;
-        max-width: 500px; /* Ancho máximo del pop-up */
+        max-width: 520px; /* Ancho máximo del pop-up */
         text-align: left;
         position: relative; /* Para posicionar el botón de cierre */
-        animation: fadeIn 0.3s ease-out;
+        animation: fadeIn 0.35s ease-out;
+        border: 1px solid rgba(41, 89, 165, 0.15);
     }
 
     @keyframes fadeIn {
@@ -79,20 +112,34 @@
         }
     }
 
-    .popup-content h2 {
-        margin-top: 0;
-        color: #333;
-        font-size: 1.5em;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
+    .popup-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
     }
 
-    .popup-content p {
-        font-size: 0.95em;
-        line-height: 1.6;
-        color: #555;
-        margin-bottom: 20px;
+    .popup-icon {
+        font-size: 2.1rem;
+        color: #ff9800;
+        filter: drop-shadow(0 4px 10px rgba(255, 152, 0, 0.35));
+    }
+
+    .popup-content h2 {
+        margin: 0;
+        color: #1f2a44;
+        font-size: 1.6em;
+    }
+
+    .popup-body {
+        margin-bottom: 26px;
+    }
+
+    .popup-body p {
+        font-size: 0.98em;
+        line-height: 1.7;
+        color: #475067;
+        margin-bottom: 18px;
     }
 
     .popup-close-btn {
@@ -112,37 +159,61 @@
     }
 
     .popup-actions {
-        text-align: right;
+        text-align: center;
     }
 
     .popup-accept-btn {
-        background-color: #007bff;
+        background: linear-gradient(135deg, #1b5cff 0%, #639bff 100%);
         color: white;
         border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
+        padding: 12px 26px;
+        border-radius: 999px;
         cursor: pointer;
-        font-size: 1em;
-        transition: background-color 0.3s ease;
+        font-size: 1.02em;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .popup-accept-btn:hover {
-        background-color: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 20px rgba(27, 92, 255, 0.28);
     }
 
     /* Estilo para el botón que activa el pop-up (opcional) */
     .show-popup-btn {
-        padding: 10px 20px;
-        font-size: 1em;
+        padding: 12px 32px;
+        font-size: 1.02em;
         cursor: pointer;
-        background-color: #28a745;
+        background: linear-gradient(135deg, #2ecc71 0%, #20a859 100%);
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        box-shadow: 0 12px 24px rgba(46, 204, 113, 0.3);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .show-popup-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 30px rgba(32, 168, 89, 0.28);
     }
 
     .disclaimer-btn{
         color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 24px auto 18px;
+    }
+
+    .section-divider {
+        border: none;
+        height: 1px;
+        width: min(420px, 80%);
+        background: linear-gradient(90deg, rgba(12, 38, 79, 0), rgba(12, 38, 79, 0.3), rgba(12, 38, 79, 0));
+        margin: 32px auto;
     }
 </style>
 
@@ -192,15 +263,20 @@
     <div class="popup-overlay" id="disclaimerPopup">
         <div class="popup-content">
             <button class="popup-close-btn" onclick="ocultarPopup()">&times;</button>
-            <h2>Aviso Importante</h2>
-            <p>
-                La información proporcionada en este sitio es únicamente con fines educativos e informativos. No debe considerarse como asesoramiento financiero, de inversión o de otro tipo. Las inversiones en criptomonedas pueden ser volátiles y conllevan riesgos. Te recomiendo encarecidamente que realices tu propia investigación y consultes a un profesional financiero antes de tomar decisiones de inversión.
-            </p>
-            <p>
-                La información proporcionada en este sitio web es solo para fines informativos generales. Recuerda que cada persona tiene una situación financiera única, y lo que funciona para uno puede no ser adecuado para otro. La responsabilidad de tus decisiones de inversión es exclusivamente tuya.
-            </p>
+            <div class="popup-header">
+                <span class="popup-icon" aria-hidden="true">⚠️</span>
+                <h2>Aviso Importante</h2>
+            </div>
+            <div class="popup-body">
+                <p>
+                    La información proporcionada en este sitio es únicamente con fines educativos e informativos. No debe considerarse como asesoramiento financiero, de inversión o de otro tipo. Las inversiones en criptomonedas pueden ser volátiles y conllevan riesgos. Te recomiendo encarecidamente que realices tu propia investigación y consultes a un profesional financiero antes de tomar decisiones de inversión.
+                </p>
+                <p>
+                    La información proporcionada en este sitio web es solo para fines informativos generales. Recuerda que cada persona tiene una situación financiera única, y lo que funciona para uno puede no ser adecuado para otro. La responsabilidad de tus decisiones de inversión es exclusivamente tuya.
+                </p>
+            </div>
             <div class="popup-actions">
-                <button class="popup-accept-btn" onclick="aceptarDisclaimer()">Aceptar y Cerrar</button>
+                <button class="popup-accept-btn" onclick="aceptarDisclaimer()">Aceptar y cerrar</button>
             </div>
         </div>
     </div>
@@ -286,8 +362,9 @@
             <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
             
             <div class="disclaimer-btn">
-                <button class="show-popup-btn" onclick="mostrarPopup()">Disclaimer</button><hr><br>
+                <button class="show-popup-btn" onclick="mostrarPopup()">Ver disclaimer</button>
             </div>
+            <hr class="section-divider">
 
         </section>
 
