@@ -367,6 +367,111 @@
             <br><hr><br>
         </section>
 
+        <!-- Estrategia RSI + Bandas de Bollinger (para BTC Spot) -->
+        <section id="rsi-bb-strategy">
+          <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
+          <p>
+            Esta estrategia combina un oscilador de momentum (RSI) con un indicador de volatilidad (Bandas de Bollinger).
+            Está pensada para traders novatos que operan BTC en mercado spot. Usa marcos temporales de 1H o 4H.
+          </p>
+        
+          <h3>Resumen rápido</h3>
+          <ul>
+            <li><strong>Indicadores:</strong> RSI (14) + Bandas de Bollinger (SMA 20, ±2σ).</li>
+            <li><strong>Temporalidad recomendada:</strong> 1H o 4H.</li>
+            <li><strong>Objetivo:</strong> Entrar en rebotes cuando hay sobreventa y tomar ganancias en zonas de sobrecompra o en bandazos de volatilidad.</li>
+          </ul>
+        
+          <h3>Explicación del RSI</h3>
+          <p>
+            El RSI (Relative Strength Index) mide fuerza y momentum en una escala de 0 a 100.
+            Niveles útiles: <strong>30</strong> (sobreventa) y <strong>70</strong> (sobrecompra).
+            En tu configuración verás la <em>línea morada</em> como el valor del RSI y una <em>línea amarilla</em> si añades una media del RSI.
+          </p>
+        
+          <h4>Ajustes recomendados para RSI</h4>
+          <ul>
+            <li><strong>RSI Length:</strong> 14</li>
+            <li><strong>Source:</strong> Close</li>
+            <li><strong>Calculate Divergence:</strong> Desactivado</li>
+            <li><strong>Smoothing Type:</strong> SMA</li>
+            <li><strong>Smoothing Length:</strong> 14</li>
+            <li><strong>Timeframe:</strong> Chart (usar la temporalidad del gráfico)</li>
+            <li><strong>Wait for timeframe closes:</strong> Activado</li>
+            <li><strong>Inputs in status line:</strong> Activado</li>
+          </ul>
+        
+          <h3>Explicación de Bandas de Bollinger</h3>
+          <p>
+            Las Bandas de Bollinger muestran una SMA central (20) y dos bandas ±2 desviaciones estándar.
+            Las bandas se ensanchan con alta volatilidad y se estrechan con baja volatilidad (compresión).
+          </p>
+        
+          <h4>Ajustes recomendados para Bandas de Bollinger</h4>
+          <ul>
+            <li><strong>SMA period:</strong> 20</li>
+            <li><strong>StdDev:</strong> 2</li>
+            <li><strong>Source:</strong> Close</li>
+          </ul>
+        
+          <h3>Reglas claras de la estrategia (entrada / salida)</h3>
+          <h4>Señal de Entrada (Compra)</h4>
+          <ul>
+            <li>RSI <strong>&lt; 30</strong> (zona de sobreventa).</li>
+            <li>Precio toca o prueba la <strong>banda inferior</strong> de Bollinger.</li>
+            <li>Confirmación opcional: vela de reversal (hammer) o aumento de volumen en el rebote.</li>
+            <li>Abrir posición parcial (ej. 50% del tamaño planeado) y mover el resto según confirmaciones adicionales.</li>
+          </ul>
+        
+          <h4>Señal de Salida (Venta / cierre parcial)</h4>
+          <ul>
+            <li>RSI se aproxima o supera <strong>70</strong>.</li>
+            <li>Precio toca la <strong>banda superior</strong> de Bollinger.</li>
+            <li>Si ocurre ruptura de banda con volumen alto, dejar correr parte de la posición con trailing stop.</li>
+          </ul>
+        
+          <h3>Gestión de riesgo</h3>
+          <ul>
+            <li><strong>Tamaño de posición:</strong> no arriesgar más del 1–2% del portafolio por operación.</li>
+            <li><strong>Stop-loss:</strong> colocar por debajo de la banda inferior (si entras en rebote) o según un % de pérdida máxima predefinida.</li>
+            <li><strong>Take-profit:</strong> objetivo inicial cerca de la banda superior o cuando RSI ~70; considerar salida parcial y trailing stop para el resto.</li>
+            <li><strong>Apalancamiento:</strong> evitar en spot; si usas margin, mantén apalancamiento muy moderado y stops ajustados.</li>
+          </ul>
+        
+          <h3>Práctica y validación</h3>
+          <ul>
+            <li>Usa <strong>paper trading</strong> o el modo replay en TradingView para testear la estrategia durante al menos 30 operaciones.</li>
+            <li>Lleva un <strong>diario de operaciones</strong>: fecha, marco temporal, razón de entrada, precio de entrada, stop, take, resultado y lecciones.</li>
+            <li>Evita operar en noticias de alto impacto; las rupturas durante noticias pueden generar falsas señales y gran slippage.</li>
+          </ul>
+        
+          <h3>Alertas sugeridas en TradingView</h3>
+          <ul>
+            <li>Alerta cuando <strong>RSI cruza por debajo de 30</strong>.</li>
+            <li>Alerta cuando <strong>RSI cruza por encima de 70</strong>.</li>
+            <li>Alerta visual cuando el <strong>precio toca banda inferior/superior</strong> (price crossing line of BB).</li>
+          </ul>
+        </section>
+        
+        <!-- Sección didáctica: por qué funciona -->
+        <section id="why-it-works">
+          <h2>Por qué funciona esta combinación</h2>
+          <p>
+            El RSI identifica condiciones extremas de momentum, mientras que las Bandas de Bollinger contextualizan esas señales dentro de la volatilidad.
+            Juntos reducen señales falsas: RSI te dice cuándo el mercado está "exagerado" y las Bandas te muestran zonas de precio con probabilidad de rebote o ruptura.
+          </p>
+        </section>
+        
+        <!-- Ejemplo práctico (texto breve) -->
+        <section id="example">
+          <h2>Ejemplo práctico (resumen)</h2>
+          <p>
+            Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior. En la siguiente vela aparece un martillo con mayor volumen: entrada parcial.
+            Pones stop justo por debajo de la banda inferior y take-profit cerca de la banda superior. Si la subida tiene volumen y rompe la banda superior, pasas a trailing stop para capturar más ganancia.
+          </p>
+        </section>
+
+
         <!-- Estrategias avanzadas -->
         <section id="advanced-strategies">
             <h2>Estrategias avanzadas</h2>
