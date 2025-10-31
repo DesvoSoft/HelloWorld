@@ -7,43 +7,45 @@
     <title>Guía de Criptomonedas</title>
     <link rel="stylesheet" href="../css/page-specific/info-pages.css">
     <link rel="icon" href="../images/theme.ico">
-    <!-- CSS inline específico para TOC horizontal -->
+    <!-- CSS crítico inline: TOC sticky y layout -->
     <style>
       #toc {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: nowrap;
+        position: sticky;
+        top: 1rem;
+        align-self: start;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.75rem;
         max-width: 100%;
-        position: relative;
+        max-height: calc(100vh - 2rem);
+        overflow: auto;
+        overflow-x: hidden;
         padding: 18px 20px;
         border-radius: 18px;
         background: var(--surface);
         border: 1px solid var(--surface-border);
         box-shadow: var(--shadow-1);
         transition: max-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-        --toc-list-max-height: 48px;
-        --toc-list-opacity: 1;
-        --toc-list-pointer: auto;
-        overflow: hidden;
+      }
+
+      #toc h3 {
+        margin: 0;
+        align-self: center;
       }
 
       #toc-list {
+        grid-column: 1 / -1;
         display: flex;
         flex-direction: row;
-        gap: 10px;
-        flex: 1 1 auto;
-        min-width: 0;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        gap: 8px;
+        flex-wrap: wrap;
+        list-style: none;
+        max-width: 100%;
         padding: 0;
         margin: 0;
-        list-style: none;
-        max-height: var(--toc-list-max-height);
-        opacity: var(--toc-list-opacity);
-        pointer-events: var(--toc-list-pointer);
-        transition: max-height 0.2s ease, opacity 0.2s ease;
+        overflow-x: hidden;
+        transition: opacity 0.2s ease, max-height 0.2s ease;
       }
 
       .toc-sub {
@@ -60,6 +62,7 @@
         color: var(--text-strong);
         cursor: pointer;
         transition: transform 0.2s ease, opacity 0.2s ease;
+        justify-self: end;
       }
 
       .toc-toggle-inline:focus-visible {
@@ -71,26 +74,28 @@
         transform: scale(1.05);
       }
 
+      #toc.toc-collapsed {
+        max-height: 4.5rem;
+      }
+
+      #toc.toc-collapsed #toc-list {
+        max-height: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+
       hr.section-sep {
         border: 0;
         height: 1px;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.05));
-        margin: 1rem 0;
-        visibility: visible;
-      }
-
-      .toc-collapsed {
-        --toc-list-max-height: 0;
-        --toc-list-opacity: 0;
-        --toc-list-pointer: none;
-        max-height: 40px;
+        background: linear-gradient(90deg, var(--hr-fade, rgba(15, 23, 36, 0.06)), rgba(15, 23, 36, 0.1));
+        margin: 1.25rem 0;
+        opacity: 0.95;
       }
 
       .content-shell {
-        width: auto !important; /* Se fuerza para corregir el desbordamiento del layout original */
+        width: auto !important; /* Corrige el ancho forzado del layout original */
         max-width: var(--content-max-width, 1100px);
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
       }
     </style>
     <style>
@@ -369,7 +374,7 @@
     @media (min-width: 1200px) {
         .page-index {
             position: sticky;
-            top: 24px;
+            top: 1rem;
         }
     }
 
@@ -382,7 +387,6 @@
     }
 
     .content-shell {
-        width: 100%;
         display: flex;
         justify-content: center;
         padding: 0 1.5rem;
