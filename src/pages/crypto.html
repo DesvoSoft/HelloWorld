@@ -7,8 +7,93 @@
     <title>Guía de Criptomonedas</title>
     <link rel="stylesheet" href="../css/page-specific/info-pages.css">
     <link rel="icon" href="../images/theme.ico">
-</head>
-<style>
+    <!-- CSS inline específico para TOC horizontal -->
+    <style>
+      #toc {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
+        max-width: 100%;
+        position: relative;
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        box-shadow: var(--shadow-1);
+        transition: max-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+        --toc-list-max-height: 48px;
+        --toc-list-opacity: 1;
+        --toc-list-pointer: auto;
+        overflow: hidden;
+      }
+
+      #toc-list {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        max-height: var(--toc-list-max-height);
+        opacity: var(--toc-list-opacity);
+        pointer-events: var(--toc-list-pointer);
+        transition: max-height 0.2s ease, opacity 0.2s ease;
+      }
+
+      .toc-sub {
+        display: none;
+      }
+
+      .toc-toggle-inline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        background: transparent;
+        border: none;
+        color: var(--text-strong);
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .toc-toggle-inline:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .toc-toggle-inline:hover {
+        transform: scale(1.05);
+      }
+
+      hr.section-sep {
+        border: 0;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.05));
+        margin: 1rem 0;
+        visibility: visible;
+      }
+
+      .toc-collapsed {
+        --toc-list-max-height: 0;
+        --toc-list-opacity: 0;
+        --toc-list-pointer: none;
+        max-height: 40px;
+      }
+
+      .content-shell {
+        width: auto !important; /* Se fuerza para corregir el desbordamiento del layout original */
+        max-width: var(--content-max-width, 1100px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+    <style>
     :root {
         --accent: #4c9df5;
         --accent-dark: #1f5fbf;
@@ -65,89 +150,90 @@
         margin-bottom: 0.75rem;
     }
 
-    /* Estilo índice */
     .page-index {
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        padding: 40px;
-        border-radius: 22px;
-        margin: 40px auto 56px;
-        box-shadow: var(--shadow-1);
-        backdrop-filter: blur(8px);
-        max-width: min(920px, 100%);
+        margin: 32px auto 48px;
+        width: min(1100px, 100%);
     }
 
-    .page-index h3 {
-        margin: 0 0 18px 0;
-        font-size: 1.2rem;
-        color: var(--text-strong);
+    #toc .toc-item {
         display: flex;
         align-items: center;
-        gap: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+        gap: 6px;
     }
 
-    .page-index h3::before {
-        content: "🧭";
-        font-size: 1.3rem;
+    #toc .toc-item-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    .page-index ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        gap: 18px 22px;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    .page-index li {
-        margin: 0;
-        padding: 16px 18px;
-        border-radius: 16px;
-        background: var(--surface-elevated);
-        border: 1px solid transparent;
-        box-shadow: var(--shadow-1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-
-    .page-index li:hover,
-    .page-index li:focus-within {
-        transform: translateY(-2px);
-        box-shadow: 0 22px 40px rgba(5, 16, 33, 0.38);
-        border-color: var(--accent-soft);
-        background: rgba(18, 42, 78, 0.82);
-    }
-
-    .page-index a {
+    #toc .toc-link {
         color: var(--text-body);
         text-decoration: none;
         font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        line-height: 1.5;
         padding: 6px 10px;
         border-radius: 12px;
-        transition: color 0.2s ease, background-color 0.2s ease;
+        background: rgba(255, 255, 255, 0.04);
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
     }
 
-    .page-index a::before {
-        content: "➜";
-        font-size: 0.9rem;
-        color: var(--accent);
-    }
-
-    .page-index a:hover {
+    #toc .toc-link:hover,
+    #toc .toc-link:focus-visible {
         color: var(--text-strong);
+        background: rgba(76, 157, 245, 0.14);
+        outline: none;
     }
 
-    .page-index a:focus-visible {
-        outline: 3px solid rgba(76, 157, 245, 0.55);
-        outline-offset: 4px;
-        border-radius: 12px;
-        background-color: rgba(76, 157, 245, 0.08);
+    #toc .toc-sub-toggle {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--surface-border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    #toc .toc-sub-toggle:hover,
+    #toc .toc-sub-toggle:focus-visible {
+        background: rgba(76, 157, 245, 0.2);
+        color: var(--text-strong);
+        outline: none;
+    }
+
+    #toc .toc-sub {
+        margin-top: 8px;
+        padding: 8px 0 0;
+        list-style: none;
+        gap: 6px;
+        flex-direction: column;
+    }
+
+    #toc .toc-sub li {
+        display: block;
+    }
+
+    #toc .toc-sub a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        border-radius: 8px;
+        display: inline-block;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        white-space: nowrap;
+    }
+
+    #toc .toc-sub a:hover,
+    #toc .toc-sub a:focus-visible {
+        color: var(--text-strong);
+        background: rgba(76, 157, 245, 0.12);
+        outline: none;
     }
 
     .section-divider {
@@ -460,177 +546,7 @@
         color: var(--text-muted);
     }
 </style>
-    <!-- INLINE TOC STYLES/JS: only in crypto.html -->
-    <style>
-      #toc {
-        --toc-default-width: 160px;
-        --toc-collapsed-width: 56px;
-        width: var(--toc-default-width);
-        min-width: var(--toc-default-width);
-        max-width: var(--toc-default-width);
-        padding: 10px;
-        border-radius: 18px;
-        border: 1px solid var(--surface-border);
-        background: var(--surface);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        font-size: 0.92rem;
-        box-shadow: var(--shadow-1);
-        transition: width 0.24s ease, min-width 0.24s ease, max-width 0.24s ease,
-          box-shadow 0.24s ease;
-        overflow: hidden;
-      }
-
-      #toc h3 {
-        margin: 0;
-        font-size: 0.92rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-strong);
-        transition: opacity 0.2s ease, transform 0.2s ease;
-      }
-
-      #toc #toc-toggle {
-        align-self: flex-end;
-        background: var(--surface-elevated);
-        color: var(--text-body);
-        border: 1px solid var(--surface-border);
-        border-radius: 12px;
-        width: 36px;
-        height: 36px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-      }
-
-      #toc #toc-toggle:hover,
-      #toc #toc-toggle:focus-visible {
-        background-color: var(--accent-soft);
-        color: var(--text-strong);
-        outline: none;
-        transform: translateY(-1px);
-      }
-
-      #toc #toc-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-      }
-
-      #toc .toc-item {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      #toc .toc-item-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-      }
-
-      #toc .toc-link {
-        color: var(--text-body);
-        text-decoration: none;
-        line-height: 1.4;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: color 0.2s ease;
-      }
-
-      #toc .toc-link::before {
-        content: "•";
-        font-size: 0.8rem;
-        color: var(--accent);
-      }
-
-      #toc .toc-link:hover,
-      #toc .toc-link:focus-visible {
-        color: var(--text-strong);
-        outline: none;
-      }
-
-      #toc .toc-sub-toggle {
-        background: none;
-        border: 1px solid var(--surface-border);
-        border-radius: 50%;
-        width: 26px;
-        height: 26px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.82rem;
-        color: var(--text-muted);
-        cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease;
-      }
-
-      #toc .toc-sub-toggle:hover,
-      #toc .toc-sub-toggle:focus-visible {
-        color: var(--text-strong);
-        background-color: var(--accent-soft);
-        outline: none;
-      }
-
-      #toc .toc-sub {
-        display: none;
-        flex-direction: column;
-        gap: 6px;
-        margin: 0;
-        padding: 0 0 0 12px;
-        border-left: 1px solid rgba(76, 157, 245, 0.22);
-      }
-
-      #toc .toc-sub li {
-        list-style: none;
-      }
-
-      #toc .toc-sub a {
-        font-size: 0.88rem;
-        color: var(--text-muted);
-        text-decoration: none;
-        line-height: 1.3;
-        transition: color 0.2s ease;
-      }
-
-      #toc .toc-sub a:hover,
-      #toc .toc-sub a:focus-visible {
-        color: var(--text-strong);
-        outline: none;
-      }
-
-      #toc li.toc-item-open > .toc-sub {
-        display: flex;
-      }
-
-      #toc.toc-collapsed {
-        width: var(--toc-collapsed-width);
-        min-width: var(--toc-collapsed-width);
-        max-width: var(--toc-collapsed-width);
-        box-shadow: none;
-      }
-
-      #toc.toc-collapsed h3,
-      #toc.toc-collapsed #toc-list {
-        opacity: 0;
-        transform: translateX(-8px);
-        pointer-events: none;
-      }
-
-      #toc.toc-collapsed #toc-toggle {
-        align-self: center;
-      }
-    </style>
+</head>
 
 <body>
     <header>
@@ -760,16 +676,16 @@
       data-toc-collapsed-width="56"
       data-toc-collapsible="true"
     >
-      <!-- TOC hooks: data-toc-default-width y toc-toggle -->
+      <!-- Toggle inline junto al título del índice -->
+      <h3>Índice</h3>
       <button
         id="toc-toggle"
-        class="toc-toggle"
+        class="toc-toggle-inline"
         type="button"
         aria-expanded="true"
         aria-controls="toc-list"
         aria-label="Colapsar índice"
       >☰</button>
-      <h3>Índice</h3>
       <ul id="toc-list" class="toc-list">
         <li class="toc-item"><a class="toc-link" href="#investment-types">Tipos de inversión</a></li>
         <li class="toc-item"><a class="toc-link" href="#risk-management">Gestión de riesgos</a></li>
@@ -1257,170 +1173,8 @@ RSI:    \__/__  \
     </footer>
 
     <script src="../JS/navbar.js"></script>
-    <!-- INLINE TOC STYLES/JS: only in crypto.html -->
-    <script>
-      (() => {
-        const toc = document.getElementById('toc');
-        const toggle = document.getElementById('toc-toggle');
-        const tocList = document.getElementById('toc-list');
-        if (!toc || !toggle || !tocList) {
-          return;
-        }
-
-        // --- Init: dataset-driven sizing and base state ---
-        const defaultWidth = parseInt(toc.dataset.tocDefaultWidth, 10) || 160;
-        const collapsedWidth = parseInt(toc.dataset.tocCollapsedWidth, 10) || 56;
-        toc.style.setProperty('--toc-default-width', `${defaultWidth}px`);
-        toc.style.setProperty('--toc-collapsed-width', `${collapsedWidth}px`);
-
-        const subToggles = Array.from(toc.querySelectorAll('.toc-sub-toggle'));
-        subToggles.forEach((btn) => {
-          btn.textContent = '▸';
-          const subId = btn.getAttribute('aria-controls');
-          const sub = subId ? document.getElementById(subId) : null;
-          if (sub) {
-            sub.style.display = 'none';
-          }
-        });
-
-        const collapseClass = 'toc-collapsed';
-        const scrollThreshold = 32;
-        const graceDuration = 300;
-        const autoCollapseEnabled = toc.getAttribute('data-toc-collapsible') !== 'false';
-        let isCollapsed = toc.classList.contains(collapseClass);
-        let graceActive = false;
-        let graceTimer = null;
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-        const raf = window.requestAnimationFrame
-          ? window.requestAnimationFrame.bind(window)
-          : (cb) => window.setTimeout(cb, 16);
-
-        const setLinksFocusable = (collapsed) => {
-          const links = tocList.querySelectorAll('a');
-          links.forEach((link) => {
-            if (collapsed) {
-              link.setAttribute('tabindex', '-1');
-            } else {
-              link.removeAttribute('tabindex');
-            }
-          });
-          if (collapsed) {
-            tocList.setAttribute('aria-hidden', 'true');
-          } else {
-            tocList.removeAttribute('aria-hidden');
-          }
-        };
-
-        const updateToggleAria = (collapsed) => {
-          toggle.setAttribute('aria-expanded', String(!collapsed));
-          toggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Colapsar índice');
-        };
-
-        const closeAllSubLists = () => {
-          subToggles.forEach((btn) => {
-            const subId = btn.getAttribute('aria-controls');
-            const sub = subId ? document.getElementById(subId) : null;
-            const parentItem = btn.closest('li');
-            if (parentItem) {
-              parentItem.classList.remove('toc-item-open');
-            }
-            if (sub) {
-              sub.style.display = 'none';
-            }
-            btn.setAttribute('aria-expanded', 'false');
-            btn.textContent = '▸';
-          });
-        };
-
-        const applyCollapseState = (collapsed) => {
-          if (isCollapsed === collapsed) {
-            return;
-          }
-          isCollapsed = collapsed;
-          toc.classList.toggle(collapseClass, collapsed);
-          updateToggleAria(collapsed);
-          setLinksFocusable(collapsed);
-          if (collapsed) {
-            closeAllSubLists();
-          }
-        };
-
-        updateToggleAria(isCollapsed);
-        setLinksFocusable(isCollapsed);
-
-        const startGracePeriod = () => {
-          graceActive = true;
-          if (graceTimer) {
-            clearTimeout(graceTimer);
-          }
-          graceTimer = window.setTimeout(() => {
-            graceActive = false;
-          }, graceDuration);
-        };
-
-        // --- Manual toggle handlers ---
-        toggle.addEventListener('click', () => {
-          applyCollapseState(!isCollapsed);
-          lastScrollY = window.scrollY;
-          startGracePeriod();
-        });
-
-        subToggles.forEach((btn) => {
-          btn.addEventListener('click', (event) => {
-            event.preventDefault();
-            const subId = btn.getAttribute('aria-controls');
-            const sub = subId ? document.getElementById(subId) : null;
-            const parentItem = btn.closest('li');
-            if (!sub || !parentItem) {
-              return;
-            }
-            const willOpen = !parentItem.classList.contains('toc-item-open');
-            parentItem.classList.toggle('toc-item-open', willOpen);
-            sub.style.display = willOpen ? 'flex' : 'none';
-            btn.setAttribute('aria-expanded', String(willOpen));
-            btn.textContent = willOpen ? '▾' : '▸';
-            startGracePeriod();
-          });
-        });
-
-        // --- Scroll-driven collapse/expand ---
-        const handleScrollChange = () => {
-          const currentY = window.scrollY;
-          const delta = currentY - lastScrollY;
-          if (Math.abs(delta) < scrollThreshold) {
-            return;
-          }
-          lastScrollY = currentY;
-          if (!autoCollapseEnabled || graceActive) {
-            return;
-          }
-          if (delta > 0) {
-            applyCollapseState(true);
-          } else {
-            applyCollapseState(false);
-          }
-        };
-
-        const onScroll = () => {
-          if (ticking) {
-            return;
-          }
-          ticking = true;
-          raf(() => {
-            handleScrollChange();
-            ticking = false;
-          });
-        };
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-      })();
-    </script>
-    <!-- TOC INLINE SUMMARY:
-         1) Inline style y script añadidos directamente en crypto.html.
-         2) Atributos garantizados: data-toc-default-width, data-toc-collapsed-width, data-toc-collapsible.
-         3) Valores por defecto: expandido 160px, colapsado 56px, umbral scroll 32px, gracia 300ms.
-    -->
+    <!-- TOC script externalizado: src/JS/crypto-toc.js -->
+    <script src="/src/JS/crypto-toc.js" defer></script>
 </body>
 
 </html>
