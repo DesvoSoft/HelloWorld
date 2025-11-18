@@ -1,301 +1,28 @@
-/**
- * Crypto TOC module
- * - Accessible, responsive table of contents with scroll collapse, off-canvas mobile drawer and scrollspy.
- * - Vanilla JS, no globals exposed.
- */
 (() => {
   const nav = document.querySelector('nav.toc[data-toc-scope="crypto"]');
   if (!nav) {
     return;
   }
 
-  const toggleBtn = nav.querySelector('#toc-toggle');
-  const list = nav.querySelector('#toc-list');
-  const panel = nav.querySelector('.toc-panel');
-  const inner = nav.querySelector('.toc-inner');
-  const overlay = nav.querySelector('[data-toc-overlay]');
-  const STORAGE_KEY = 'crypto.toc.state';
-  const SCROLL_THRESHOLD = 120;
-  const MOBILE_MEDIA = window.matchMedia('(max-width: 768px)');
-
+  const track = nav.querySelector('.toc-track');
+  const trackShell = nav.querySelector('.toc-track-shell');
+  const scrollButtons = Array.from(nav.querySelectorAll('.toc-scroll-btn'));
   const tocLinks = Array.from(nav.querySelectorAll('.toc-link[data-toc-id]'));
   const sections = Array.from(document.querySelectorAll('.doc-section[id]'));
 
-  if (!toggleBtn || !list || !panel || tocLinks.length === 0) {
+  if (!track || tocLinks.length === 0 || sections.length === 0) {
     return;
   }
 
   const linkMap = new Map();
   tocLinks.forEach((link) => {
-    linkMap.set(link.getAttribute('href').replace('#', ''), link);
+    const id = link.dataset.tocId || link.getAttribute('href')?.replace('#', '');
+    if (id) {
+      linkMap.set(id, link);
+    }
   });
 
-  const subToggles = Array.from(nav.querySelectorAll('.toc-sub-toggle'));
-  const labelEl = toggleBtn.querySelector('.toc-toggle-label');
-
-  const safeStorage = {
-    get() {
-      try {
-        return localStorage.getItem(STORAGE_KEY);
-      } catch (error) {
-        return null;
-      }
-    },
-    set(value) {
-      try {
-        localStorage.setItem(STORAGE_KEY, value);
-      } catch (error) {
-        /* noop */
-      }
-    },
-    remove() {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (error) {
-        /* noop */
-      }
-    },
-  };
-
-  let manualPreference = safeStorage.get();
-  let collapsed = false;
-  let tickingScroll = false;
-  let tickingResize = false;
-  let lastKnownScrollY = window.scrollY || 0;
   let activeId = null;
-
-  const emit = (name, detail) => {
-    const event = new CustomEvent(name, {
-      detail,
-      bubbles: true,
-    });
-    nav.dispatchEvent(event);
-  };
-
-  const setLinksFocusable = (allow) => {
-    tocLinks.forEach((link) => {
-      if (allow) {
-        link.removeAttribute('tabindex');
-        link.removeAttribute('aria-hidden');
-      } else {
-        link.setAttribute('tabindex', '-1');
-        link.setAttribute('aria-hidden', 'true');
-      }
-    });
-    if (allow) {
-      list.removeAttribute('aria-hidden');
-    } else {
-      list.setAttribute('aria-hidden', 'true');
-    }
-  };
-
-  const applyToggleLabel = (isCollapsed) => {
-    if (!labelEl) {
-      return;
-    }
-    const expandedLabel = labelEl.dataset.labelExpanded || 'Ocultar índice';
-    const collapsedLabel = labelEl.dataset.labelCollapsed || 'Mostrar índice';
-    labelEl.textContent = isCollapsed ? collapsedLabel : expandedLabel;
-  };
-
-  const lockScroll = (shouldLock) => {
-    document.body.classList.toggle('toc-lock-scroll', shouldLock);
-    if (!shouldLock) {
-      document.body.style.removeProperty('touch-action');
-    } else {
-      document.body.style.setProperty('touch-action', 'none');
-    }
-  };
-
-  const setCollapsed = (shouldCollapse, source = 'auto') => {
-    if (collapsed === shouldCollapse) {
-      return;
-    }
-    collapsed = shouldCollapse;
-
-    nav.classList.toggle('toc-collapsed', shouldCollapse);
-    toggleBtn.setAttribute('aria-expanded', String(!shouldCollapse));
-    applyToggleLabel(shouldCollapse);
-
-    if (MOBILE_MEDIA.matches) {
-      nav.classList.toggle('toc-open', !shouldCollapse);
-      if (overlay) {
-        overlay.hidden = shouldCollapse;
-      }
-      lockScroll(!shouldCollapse);
-    } else {
-      nav.classList.remove('toc-open');
-      if (overlay) {
-        overlay.hidden = true;
-      }
-      lockScroll(false);
-    }
-
-    setLinksFocusable(!shouldCollapse);
-    emit('toc:toggle', { collapsed: shouldCollapse, source });
-  };
-
-  const storedPreference = manualPreference === 'collapsed' || manualPreference === 'expanded'
-    ? manualPreference
-    : null;
-
-  if (storedPreference) {
-    setCollapsed(storedPreference === 'collapsed', 'restore');
-  } else {
-    setCollapsed(MOBILE_MEDIA.matches, 'init');
-  }
-
-  const persistManualPreference = (state) => {
-    manualPreference = state;
-    if (state) {
-      safeStorage.set(state);
-    } else {
-      safeStorage.remove();
-    }
-  };
-
-  const closeOnMobile = () => {
-    if (MOBILE_MEDIA.matches) {
-      setCollapsed(true, 'manual');
-    }
-  };
-
-  toggleBtn.addEventListener('click', () => {
-    const nextCollapsed = !collapsed;
-    setCollapsed(nextCollapsed, 'manual');
-    persistManualPreference(nextCollapsed ? 'collapsed' : 'expanded');
-  });
-
-  toggleBtn.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
-      event.preventDefault();
-      toggleBtn.click();
-    }
-  });
-
-  if (overlay) {
-    overlay.addEventListener('click', closeOnMobile);
-  }
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeOnMobile();
-    }
-  });
-
-  const handleSubToggle = (btn) => {
-    const controls = btn.getAttribute('aria-controls');
-    if (!controls) {
-      return;
-    }
-    const subList = nav.querySelector(`#${CSS.escape(controls)}`);
-    if (!subList) {
-      return;
-    }
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    const next = !expanded;
-    btn.setAttribute('aria-expanded', String(next));
-    subList.toggleAttribute('hidden', !next);
-  };
-
-  subToggles.forEach((btn) => {
-    const controls = btn.getAttribute('aria-controls');
-    if (controls) {
-      const subList = nav.querySelector(`#${CSS.escape(controls)}`);
-      if (subList) {
-        subList.setAttribute('hidden', '');
-      }
-    }
-    btn.setAttribute('aria-expanded', 'false');
-    btn.addEventListener('click', () => {
-      handleSubToggle(btn);
-    });
-    btn.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
-        event.preventDefault();
-        handleSubToggle(btn);
-      }
-    });
-  });
-
-  const updatePanelMaxHeight = () => {
-    if (!inner || !panel) {
-      return;
-    }
-    if (MOBILE_MEDIA.matches) {
-      panel.style.removeProperty('max-height');
-      return;
-    }
-    const rect = inner.getBoundingClientRect();
-    const available = window.innerHeight - rect.top - 24;
-    const maxHeight = Math.max(160, Math.round(available));
-    panel.style.maxHeight = `${maxHeight}px`;
-  };
-
-  const onResize = () => {
-    if (!tickingResize) {
-      tickingResize = true;
-      window.requestAnimationFrame(() => {
-        tickingResize = false;
-        if (!MOBILE_MEDIA.matches && collapsed && manualPreference !== 'collapsed') {
-          setCollapsed(false, 'resize');
-        }
-        if (MOBILE_MEDIA.matches && !collapsed) {
-          nav.classList.add('toc-open');
-          if (overlay) {
-            overlay.hidden = false;
-          }
-        } else if (!MOBILE_MEDIA.matches) {
-          nav.classList.remove('toc-open');
-          if (overlay) {
-            overlay.hidden = true;
-          }
-          lockScroll(false);
-        }
-        updatePanelMaxHeight();
-      });
-    }
-  };
-
-  const autoToggleOnScroll = () => {
-    if (manualPreference) {
-      return;
-    }
-    if (MOBILE_MEDIA.matches) {
-      return;
-    }
-    const currentY = window.scrollY || 0;
-    const delta = currentY - lastKnownScrollY;
-    const scrollingDown = delta > 12;
-    const scrollingUp = delta < -12;
-
-    if (currentY > SCROLL_THRESHOLD && scrollingDown && !collapsed) {
-      setCollapsed(true, 'auto');
-    } else if (scrollingUp && collapsed) {
-      setCollapsed(false, 'auto');
-    }
-
-    lastKnownScrollY = currentY;
-  };
-
-  const onScroll = () => {
-    if (!tickingScroll) {
-      tickingScroll = true;
-      window.requestAnimationFrame(() => {
-        tickingScroll = false;
-        autoToggleOnScroll();
-      });
-    }
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onResize);
-  if (typeof MOBILE_MEDIA.addEventListener === 'function') {
-    MOBILE_MEDIA.addEventListener('change', onResize);
-  } else if (typeof MOBILE_MEDIA.addListener === 'function') {
-    MOBILE_MEDIA.addListener(onResize);
-  }
-
   const setActiveLink = (id) => {
     if (activeId === id) {
       return;
@@ -309,29 +36,31 @@
     activeId = id;
   };
 
+  const observerOptions = {
+    rootMargin: '-45% 0px -45% 0px',
+    threshold: [0.2, 0.4, 0.6],
+  };
+
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
-      let visibleEntry = null;
+      let mostVisible = null;
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          if (!visibleEntry || entry.intersectionRatio > visibleEntry.intersectionRatio) {
-            visibleEntry = entry;
+          if (!mostVisible || entry.intersectionRatio > mostVisible.intersectionRatio) {
+            mostVisible = entry;
           }
         }
       });
-      if (visibleEntry && visibleEntry.target.id) {
-        setActiveLink(visibleEntry.target.id);
+      if (mostVisible?.target?.id) {
+        setActiveLink(mostVisible.target.id);
       }
-    }, {
-      rootMargin: '-40% 0px -50% 0px',
-      threshold: [0.2, 0.4, 0.6],
-    });
+    }, observerOptions);
     sections.forEach((section) => observer.observe(section));
   } else {
     window.addEventListener('scroll', () => {
       const current = sections.reduce((closest, section) => {
         const rect = section.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.4 && rect.top > -rect.height) {
+        if (rect.top < window.innerHeight * 0.45 && rect.bottom > window.innerHeight * 0.15) {
           const distance = Math.abs(rect.top);
           if (!closest || distance < closest.distance) {
             return { id: section.id, distance };
@@ -345,25 +74,133 @@
     }, { passive: true });
   }
 
-  nav.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) {
+  const applyScrollState = () => {
+    if (!trackShell) {
       return;
     }
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const atStart = track.scrollLeft <= 2 || maxScroll <= 0;
+    const atEnd = track.scrollLeft >= maxScroll - 2 && maxScroll > 0;
+    let state = 'middle';
+    if (atStart && atEnd) {
+      state = 'full';
+    } else if (atStart) {
+      state = 'start';
+    } else if (atEnd) {
+      state = 'end';
+    }
+    trackShell.dataset.scrollState = state;
+    scrollButtons.forEach((btn) => {
+      const dir = Number(btn.dataset.dir) || 0;
+      const disable = (dir < 0 && (atStart || maxScroll <= 0)) || (dir > 0 && (atEnd || maxScroll <= 0));
+      btn.toggleAttribute('disabled', disable);
+    });
+  };
 
-    const link = target.closest('.toc-link');
-    if (link) {
-      emit('toc:click', {
-        id: link.dataset.tocId,
-        href: link.getAttribute('href'),
+  let scrollRaf = false;
+  track.addEventListener('scroll', () => {
+    if (!scrollRaf) {
+      scrollRaf = true;
+      window.requestAnimationFrame(() => {
+        scrollRaf = false;
+        applyScrollState();
       });
-      if (MOBILE_MEDIA.matches) {
-        setTimeout(() => {
-          setCollapsed(true, 'manual');
-        }, 200);
-      }
     }
   });
 
-  updatePanelMaxHeight();
+  window.addEventListener('resize', () => applyScrollState());
+  applyScrollState();
+
+  scrollButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) {
+        return;
+      }
+      const dir = Number(btn.dataset.dir) || 1;
+      const distance = track.clientWidth * 0.75 * Math.sign(dir || 1);
+      track.scrollBy({ left: distance, behavior: 'smooth' });
+    });
+  });
+
+  const subTriggers = Array.from(nav.querySelectorAll('.toc-sub-trigger'));
+  let openTrigger = null;
+
+  const getMenuFromTrigger = (trigger) => {
+    const controls = trigger?.getAttribute('aria-controls');
+    if (!controls) {
+      return null;
+    }
+    return nav.querySelector(`#${CSS.escape(controls)}`);
+  };
+
+  const closeSubmenu = (trigger = openTrigger) => {
+    if (!trigger) {
+      return;
+    }
+    const menu = getMenuFromTrigger(trigger);
+    if (menu) {
+      menu.hidden = true;
+    }
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.closest('.toc-item')?.removeAttribute('data-open');
+    if (openTrigger === trigger) {
+      openTrigger = null;
+    }
+  };
+
+  const openSubmenu = (trigger) => {
+    if (!trigger) {
+      return;
+    }
+    const menu = getMenuFromTrigger(trigger);
+    if (!menu) {
+      return;
+    }
+    if (openTrigger && openTrigger !== trigger) {
+      closeSubmenu(openTrigger);
+    }
+    trigger.setAttribute('aria-expanded', 'true');
+    menu.hidden = false;
+    trigger.closest('.toc-item')?.setAttribute('data-open', 'true');
+    openTrigger = trigger;
+  };
+
+  const toggleSubmenu = (trigger) => {
+    if (trigger.getAttribute('aria-expanded') === 'true') {
+      closeSubmenu(trigger);
+    } else {
+      openSubmenu(trigger);
+    }
+  };
+
+  subTriggers.forEach((trigger) => {
+    const menu = getMenuFromTrigger(trigger);
+    if (menu) {
+      menu.hidden = true;
+    }
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      toggleSubmenu(trigger);
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (openTrigger && !nav.contains(event.target)) {
+      closeSubmenu(openTrigger);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeSubmenu(openTrigger);
+    }
+  });
+
+  nav.addEventListener('click', (event) => {
+    const link = event.target.closest('.toc-link');
+    if (link) {
+      window.requestAnimationFrame(() => closeSubmenu());
+    }
+  });
 })();

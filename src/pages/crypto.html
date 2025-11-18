@@ -306,13 +306,6 @@
         outline-offset: 4px;
     }
 
-    @media (min-width: 1200px) {
-        .page-index {
-            position: sticky;
-            top: 1rem;
-        }
-    }
-
     .disclaimer-btn {
         color: black;
         display: flex;
@@ -597,93 +590,128 @@
       aria-label="Índice del artículo"
       data-toc-scope="crypto"
     >
-      <button
-        id="toc-toggle"
-        class="toc-toggle"
-        type="button"
-        aria-expanded="true"
-        aria-controls="toc-list"
-        data-analytics-action="toggle"
-      >
-        <span class="toc-toggle-icon" aria-hidden="true"></span>
-        <span class="toc-toggle-label" data-label-expanded="Ocultar índice" data-label-collapsed="Mostrar índice">Ocultar índice</span>
-      </button>
-      <div class="toc-inner">
-        <div class="toc-header">
-          <h2 class="toc-title" id="toc-title">Índice</h2>
+      <div class="toc-ribbon" role="navigation" aria-label="Índice navegable">
+        <div class="toc-head">
+          <p class="toc-eyebrow">Índice</p>
+          <div class="toc-scroll-controls" aria-hidden="true">
+            <button
+              class="toc-scroll-btn"
+              type="button"
+              data-dir="-1"
+              aria-label="Desplazar índice hacia la izquierda"
+            ></button>
+            <button
+              class="toc-scroll-btn"
+              type="button"
+              data-dir="1"
+              aria-label="Desplazar índice hacia la derecha"
+            ></button>
+          </div>
         </div>
-        <div class="toc-panel" id="toc-panel">
-          <ul id="toc-list" class="toc-list" role="list" aria-labelledby="toc-title">
-            <li class="toc-item"><a class="toc-link" data-toc-id="investment-types" href="#investment-types">Tipos de inversión</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="risk-management" href="#risk-management">Gestión de riesgos</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="technical-analysis" href="#technical-analysis">Análisis técnico</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="fundamental-analysis" href="#fundamental-analysis">Análisis fundamental</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="derivatives" href="#derivatives">Futuros y derivados</a></li>
-            <li class="toc-item toc-item-has-sub">
-              <button
-                type="button"
-                class="toc-sub-toggle"
-                aria-expanded="false"
-                aria-controls="toc-sub-rsi-bb"
-              >
-                <span class="toc-sub-toggle-icon" aria-hidden="true"></span>
-                <span class="toc-sub-toggle-label">Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</span>
-              </button>
-              <ul id="toc-sub-rsi-bb" class="toc-sub-list" role="list">
-                <li><a class="toc-link" data-toc-id="rsi-resumen-rapido" href="#rsi-resumen-rapido">Resumen rápido</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-explicacion-rsi" href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-bandas-bollinger" href="#rsi-bandas-bollinger">Explicación de Bandas de Bollinger</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-reglas-estrategia" href="#rsi-reglas-estrategia">Reglas claras de la estrategia</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-gestion-riesgo" href="#rsi-gestion-riesgo">Gestión de riesgo</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-practica-validacion" href="#rsi-practica-validacion">Práctica y validación</a></li>
-                <li><a class="toc-link" data-toc-id="rsi-alertas-tradingview" href="#rsi-alertas-tradingview">Alertas en TradingView</a></li>
-              </ul>
+        <div class="toc-track-shell" data-scroll-state="start">
+          <ul id="toc-list" class="toc-track" role="list" aria-label="Secciones de la guía">
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="investment-types" href="#investment-types">Tipos de inversión</a>
             </li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="why-it-works" href="#why-it-works">Por qué funciona esta combinación</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="example" href="#example">Ejemplo práctico (resumen)</a></li>
-            <li class="toc-item toc-item-has-sub">
-              <button
-                type="button"
-                class="toc-sub-toggle"
-                aria-expanded="false"
-                aria-controls="toc-sub-recommended-times"
-              >
-                <span class="toc-sub-toggle-icon" aria-hidden="true"></span>
-                <span class="toc-sub-toggle-label">Horarios recomendados para revisar (CST, UTC−6)</span>
-              </button>
-              <ul id="toc-sub-recommended-times" class="toc-sub-list" role="list">
-                <li><a class="toc-link" data-toc-id="horarios-frecuencia-sugerida" href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
-                <li><a class="toc-link" data-toc-id="horarios-concretos" href="#horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</a></li>
-                <li><a class="toc-link" data-toc-id="horarios-checklist" href="#horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</a></li>
-                <li><a class="toc-link" data-toc-id="horarios-reglas-practicas" href="#horarios-reglas-practicas">Reglas prácticas para no sobre-operar</a></li>
-                <li><a class="toc-link" data-toc-id="horarios-plantilla-compacta" href="#horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</a></li>
-              </ul>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="risk-management" href="#risk-management">Gestión de riesgos</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="technical-analysis" href="#technical-analysis">Análisis técnico</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="fundamental-analysis" href="#fundamental-analysis">Análisis fundamental</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="derivatives" href="#derivatives">Futuros y derivados</a>
             </li>
             <li class="toc-item toc-item-has-sub">
-              <button
-                type="button"
-                class="toc-sub-toggle"
-                aria-expanded="false"
-                aria-controls="toc-sub-swing-trading"
-              >
-                <span class="toc-sub-toggle-icon" aria-hidden="true"></span>
-                <span class="toc-sub-toggle-label">Swing trading — guía práctica</span>
-              </button>
-              <ul id="toc-sub-swing-trading" class="toc-sub-list" role="list">
-                <li><a class="toc-link" data-toc-id="swing-caracteristicas" href="#swing-caracteristicas">Características principales</a></li>
-                <li><a class="toc-link" data-toc-id="swing-ventajas-desventajas" href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
-                <li><a class="toc-link" data-toc-id="swing-proceso" href="#swing-proceso">Proceso simplificado de una operación swing (pasos)</a></li>
-                <li><a class="toc-link" data-toc-id="swing-reglas-riesgo" href="#swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</a></li>
-                <li><a class="toc-link" data-toc-id="swing-ejemplo" href="#swing-ejemplo">Ejemplo práctico breve (resumen)</a></li>
-                <li><a class="toc-link" data-toc-id="swing-checklist" href="#swing-checklist">Checklist rápido antes de abrir (para pegar como card)</a></li>
-              </ul>
+              <div class="toc-chip-shell">
+                <a class="toc-chip toc-link" data-toc-id="rsi-bb-strategy" href="#rsi-bb-strategy">Estrategia práctica: RSI + BB</a>
+                <button
+                  class="toc-sub-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="toc-sub-rsi-bb"
+                  aria-label="Mostrar subapartados de Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)"
+                >
+                  <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div id="toc-sub-rsi-bb" class="toc-submenu" hidden>
+                <ul class="toc-sub-list" role="list">
+                  <li><a class="toc-link" data-toc-id="rsi-resumen-rapido" href="#rsi-resumen-rapido">Resumen rápido</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-explicacion-rsi" href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-bandas-bollinger" href="#rsi-bandas-bollinger">Explicación de Bandas de Bollinger</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-reglas-estrategia" href="#rsi-reglas-estrategia">Reglas claras de la estrategia</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-gestion-riesgo" href="#rsi-gestion-riesgo">Gestión de riesgo</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-practica-validacion" href="#rsi-practica-validacion">Práctica y validación</a></li>
+                  <li><a class="toc-link" data-toc-id="rsi-alertas-tradingview" href="#rsi-alertas-tradingview">Alertas en TradingView</a></li>
+                </ul>
+              </div>
             </li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="advanced-strategies" href="#advanced-strategies">Estrategias avanzadas</a></li>
-            <li class="toc-item"><a class="toc-link" data-toc-id="resources" href="#resources">Recursos adicionales</a></li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="why-it-works" href="#why-it-works">Por qué funciona esta combinación</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="example" href="#example">Ejemplo práctico (resumen)</a>
+            </li>
+            <li class="toc-item toc-item-has-sub">
+              <div class="toc-chip-shell">
+                <a class="toc-chip toc-link" data-toc-id="recommended-times" href="#recommended-times">Horarios recomendados</a>
+                <button
+                  class="toc-sub-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="toc-sub-recommended-times"
+                  aria-label="Mostrar subapartados de Horarios recomendados para revisar"
+                >
+                  <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div id="toc-sub-recommended-times" class="toc-submenu" hidden>
+                <ul class="toc-sub-list" role="list">
+                  <li><a class="toc-link" data-toc-id="horarios-frecuencia-sugerida" href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
+                  <li><a class="toc-link" data-toc-id="horarios-concretos" href="#horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</a></li>
+                  <li><a class="toc-link" data-toc-id="horarios-checklist" href="#horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</a></li>
+                  <li><a class="toc-link" data-toc-id="horarios-reglas-practicas" href="#horarios-reglas-practicas">Reglas prácticas para no sobre-operar</a></li>
+                  <li><a class="toc-link" data-toc-id="horarios-plantilla-compacta" href="#horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="toc-item toc-item-has-sub">
+              <div class="toc-chip-shell">
+                <a class="toc-chip toc-link" data-toc-id="swing-trading-guide" href="#swing-trading-guide">Swing trading</a>
+                <button
+                  class="toc-sub-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="toc-sub-swing-trading"
+                  aria-label="Mostrar subapartados de Swing trading — guía práctica"
+                >
+                  <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div id="toc-sub-swing-trading" class="toc-submenu" hidden>
+                <ul class="toc-sub-list" role="list">
+                  <li><a class="toc-link" data-toc-id="swing-caracteristicas" href="#swing-caracteristicas">Características principales</a></li>
+                  <li><a class="toc-link" data-toc-id="swing-ventajas-desventajas" href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
+                  <li><a class="toc-link" data-toc-id="swing-proceso" href="#swing-proceso">Proceso simplificado de una operación swing (pasos)</a></li>
+                  <li><a class="toc-link" data-toc-id="swing-reglas-riesgo" href="#swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</a></li>
+                  <li><a class="toc-link" data-toc-id="swing-ejemplo" href="#swing-ejemplo">Ejemplo práctico breve (resumen)</a></li>
+                  <li><a class="toc-link" data-toc-id="swing-checklist" href="#swing-checklist">Checklist rápido antes de abrir (para pegar como card)</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="advanced-strategies" href="#advanced-strategies">Estrategias avanzadas</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="resources" href="#resources">Recursos adicionales</a>
+            </li>
           </ul>
         </div>
       </div>
-      <div class="toc-overlay" data-toc-overlay hidden></div>
     </nav>
     <div class="content-shell">
         <main>
