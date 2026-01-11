@@ -1,20 +1,20 @@
 :root {
-  --toc-ribbon-bg: rgba(7, 11, 22, 0.9);
-  --toc-ribbon-border: rgba(76, 157, 245, 0.35);
-  --toc-ribbon-shadow: 0 24px 60px rgba(2, 6, 16, 0.55);
-  --toc-chip-bg: rgba(255, 255, 255, 0.05);
-  --toc-chip-border: rgba(255, 255, 255, 0.12);
-  --toc-chip-hover: rgba(76, 157, 245, 0.16);
-  --toc-chip-active: rgba(76, 157, 245, 0.28);
-  --toc-chip-text: #f7fbff;
-  --toc-chip-muted: rgba(247, 251, 255, 0.7);
-  --toc-submenu-bg: rgba(4, 8, 20, 0.96);
-  --toc-submenu-border: rgba(76, 157, 245, 0.2);
-  --toc-scroll-btn-bg: rgba(255, 255, 255, 0.08);
-  --toc-scroll-btn-hover: rgba(76, 157, 245, 0.25);
-  --toc-scroll-btn-icon: rgba(255, 255, 255, 0.8);
-  --toc-eyebrow: rgba(255, 255, 255, 0.7);
-  --toc-transition: 0.25s ease;
+  --toc-ribbon-bg: rgba(11, 27, 52, 0.85);
+  --toc-ribbon-border: rgba(76, 157, 245, 0.3);
+  --toc-ribbon-shadow: 0 20px 50px rgba(2, 8, 20, 0.6);
+  --toc-chip-bg: rgba(255, 255, 255, 0.04);
+  --toc-chip-border: rgba(255, 255, 255, 0.1);
+  --toc-chip-hover: rgba(76, 157, 245, 0.12);
+  --toc-chip-active: rgba(76, 157, 245, 0.25);
+  --toc-chip-text: #f1f7ff;
+  --toc-chip-muted: rgba(241, 247, 255, 0.65);
+  --toc-submenu-bg: rgba(10, 25, 48, 0.98);
+  --toc-submenu-border: rgba(76, 157, 245, 0.25);
+  --toc-scroll-btn-bg: rgba(255, 255, 255, 0.06);
+  --toc-scroll-btn-hover: rgba(76, 157, 245, 0.2);
+  --toc-scroll-btn-icon: rgba(255, 255, 255, 0.85);
+  --toc-eyebrow: rgba(255, 255, 255, 0.6);
+  --toc-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.light .toc-ribbon,
@@ -39,9 +39,10 @@ body.light .toc-scroll-btn {
 }
 
 .page-index.toc {
-  width: min(1100px, 100%);
-  margin: 0 auto 2.5rem;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  padding: 0;
   position: sticky;
   top: calc(var(--navbar-h, 64px) + 12px);
   z-index: 20;
@@ -64,7 +65,8 @@ body.light .toc-scroll-btn {
 }
 
 .toc-eyebrow {
-  font: 600 0.78rem/1 "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 600 0.78rem/1 "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--toc-eyebrow);
@@ -88,11 +90,12 @@ body.light .toc-scroll-btn {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color var(--toc-transition), color var(--toc-transition), opacity var(--toc-transition);
+  transition: background-color var(--toc-transition),
+    color var(--toc-transition), opacity var(--toc-transition);
 }
 
 .toc-scroll-btn::before {
-  content: '';
+  content: "";
   width: 12px;
   height: 12px;
   border-bottom: 2px solid currentColor;
@@ -123,7 +126,7 @@ body.light .toc-scroll-btn {
 
 .toc-track-shell::before,
 .toc-track-shell::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0.35rem;
   bottom: 0.35rem;
@@ -143,17 +146,17 @@ body.light .toc-scroll-btn {
   background: linear-gradient(-90deg, var(--toc-ribbon-bg), rgba(0, 0, 0, 0));
 }
 
-.toc-track-shell[data-scroll-state='start']::before,
-.toc-track-shell[data-scroll-state='end']::after,
-.toc-track-shell[data-scroll-state='full']::before,
-.toc-track-shell[data-scroll-state='full']::after {
+.toc-track-shell[data-scroll-state="start"]::before,
+.toc-track-shell[data-scroll-state="end"]::after,
+.toc-track-shell[data-scroll-state="full"]::before,
+.toc-track-shell[data-scroll-state="full"]::after {
   opacity: 0;
 }
 
-.toc-track-shell[data-scroll-state='start']::after,
-.toc-track-shell[data-scroll-state='end']::before,
-.toc-track-shell[data-scroll-state='middle']::before,
-.toc-track-shell[data-scroll-state='middle']::after {
+.toc-track-shell[data-scroll-state="start"]::after,
+.toc-track-shell[data-scroll-state="end"]::before,
+.toc-track-shell[data-scroll-state="middle"]::before,
+.toc-track-shell[data-scroll-state="middle"]::after {
   opacity: 0.95;
 }
 
@@ -194,20 +197,24 @@ body.light .toc-scroll-btn {
   color: var(--toc-chip-text);
   font: 600 0.92rem/1.3 "Inter", system-ui, sans-serif;
   text-decoration: none;
-  transition: background-color var(--toc-transition), color var(--toc-transition), border-color var(--toc-transition);
+  transition: background-color var(--toc-transition),
+    color var(--toc-transition), border-color var(--toc-transition);
   white-space: nowrap;
 }
 
 .toc-chip:hover,
 .toc-chip:focus-visible {
   background: var(--toc-chip-hover);
+  border-color: var(--toc-ribbon-border);
+  transform: translateY(-1px);
   outline: none;
 }
 
 .toc-chip.toc-link-active {
   background: var(--toc-chip-active);
-  border-color: rgba(76, 157, 245, 0.45);
-  color: var(--toc-chip-text);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(76, 157, 245, 0.2);
 }
 
 .toc-chip-shell {
@@ -227,27 +234,26 @@ body.light .toc-scroll-btn {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color var(--toc-transition), color var(--toc-transition), transform var(--toc-transition);
+  transition: background-color var(--toc-transition),
+    color var(--toc-transition), transform var(--toc-transition);
 }
 
 .toc-sub-trigger-icon {
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 2px;
-  background:
-    linear-gradient(currentColor 0 0) center/100% 2px no-repeat,
+  background: linear-gradient(currentColor 0 0) center/100% 2px no-repeat,
     linear-gradient(currentColor 0 0) center/2px 100% no-repeat;
 }
 
-.toc-sub-trigger[aria-expanded='true'] .toc-sub-trigger-icon {
-  background:
-    linear-gradient(currentColor 0 0) center/100% 2px no-repeat;
+.toc-sub-trigger[aria-expanded="true"] .toc-sub-trigger-icon {
+  background: linear-gradient(currentColor 0 0) center/100% 2px no-repeat;
   transform: rotate(90deg);
 }
 
 .toc-sub-trigger:hover,
 .toc-sub-trigger:focus-visible,
-.toc-item[data-open='true'] .toc-sub-trigger {
+.toc-item[data-open="true"] .toc-sub-trigger {
   background: var(--toc-chip-hover);
   color: var(--toc-chip-text);
   outline: none;
@@ -258,7 +264,7 @@ body.light .toc-scroll-btn {
   z-index: 10;
 }
 
-.toc-item[data-open='true'] > .toc-submenu {
+.toc-item[data-open="true"] > .toc-submenu {
   display: block;
 }
 
@@ -270,7 +276,7 @@ body.light .toc-scroll-btn {
 }
 
 .toc-submenu::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10px;
   left: 32px;
@@ -302,7 +308,8 @@ body.light .toc-scroll-btn {
   font: 500 0.88rem/1.4 "Inter", system-ui, sans-serif;
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  transition: background-color var(--toc-transition), color var(--toc-transition);
+  transition: background-color var(--toc-transition),
+    color var(--toc-transition);
 }
 
 .toc-submenu .toc-link:hover,
