@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Guía de Criptomonedas</title>
-    <link rel="stylesheet" href="../css/page-specific/info-pages.css">
-    <link rel="stylesheet" href="../css/crypto-toc.css">
-    <link rel="icon" href="../images/theme.ico">
+    <link rel="stylesheet" href="../css/page-specific/info-pages.css" />
+    <link rel="stylesheet" href="../css/crypto-toc.css" />
+    <link rel="icon" href="../images/theme.ico" />
     <!-- Ajustes puntuales del contenido -->
     <style>
       .doc-section {
@@ -17,14 +16,22 @@
       hr.section-sep {
         border: 0;
         height: 1px;
-        background: linear-gradient(90deg, rgba(15, 23, 36, 0.06), rgba(15, 23, 36, 0.1));
+        background: linear-gradient(
+          90deg,
+          rgba(15, 23, 36, 0.06),
+          rgba(15, 23, 36, 0.1)
+        );
         margin: 1.25rem 0;
         opacity: 0.95;
         border-radius: 1px;
       }
 
       body.dark hr.section-sep {
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.06));
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.06)
+        );
       }
 
       .content-shell {
@@ -34,7 +41,7 @@
       }
     </style>
     <style>
-    :root {
+      :root {
         --accent: #4c9df5;
         --accent-dark: #1f5fbf;
         --accent-soft: rgba(76, 157, 245, 0.18);
@@ -47,67 +54,67 @@
         --hr-fade: rgba(15, 23, 36, 0.12);
         --shadow-1: 0 18px 32px rgba(5, 16, 33, 0.28);
         --shadow-2: 0 28px 60px rgba(2, 8, 18, 0.45);
-    }
+      }
 
-    /* Smooth scroll (si no está habilitado) */
-    html {
+      /* Smooth scroll (si no está habilitado) */
+      html {
         scroll-behavior: smooth;
-    }
+      }
 
-    body {
+      body {
         font-size: 1rem;
         color: var(--text-body);
         line-height: 1.7;
-    }
+      }
 
-    main h1,
-    main h2,
-    main h3,
-    main h4 {
+      main h1,
+      main h2,
+      main h3,
+      main h4 {
         font-weight: 650;
         letter-spacing: 0.01em;
         color: var(--text-strong);
-    }
+      }
 
-    main h1 {
+      main h1 {
         font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
         margin-bottom: 0.85rem;
         letter-spacing: normal;
-    }
+      }
 
-    main h2 {
+      main h2 {
         font-size: clamp(1.95rem, 1.2rem + 1.6vw, 2.45rem);
         margin-bottom: 1rem;
-    }
+      }
 
-    main h3 {
+      main h3 {
         font-size: clamp(1.55rem, 1.05rem + 0.9vw, 1.9rem);
         margin-bottom: 0.8rem;
-    }
+      }
 
-    main h4 {
+      main h4 {
         font-size: clamp(1.24rem, 0.98rem + 0.55vw, 1.48rem);
         margin-bottom: 0.75rem;
-    }
+      }
 
-    .page-index {
+      .page-index {
         margin: 32px auto 48px;
         width: min(1100px, 100%);
-    }
+      }
 
-    #toc .toc-item {
+      #toc .toc-item {
         display: flex;
         align-items: center;
         gap: 6px;
-    }
+      }
 
-    #toc .toc-item-header {
+      #toc .toc-item-header {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-    }
+      }
 
-    #toc .toc-link {
+      #toc .toc-link {
         color: var(--text-body);
         text-decoration: none;
         font-weight: 600;
@@ -116,16 +123,16 @@
         background: rgba(255, 255, 255, 0.04);
         transition: background-color 0.2s ease, color 0.2s ease;
         white-space: normal;
-    }
+      }
 
-    #toc .toc-link:hover,
-    #toc .toc-link:focus-visible {
+      #toc .toc-link:hover,
+      #toc .toc-link:focus-visible {
         color: var(--text-strong);
         background: rgba(76, 157, 245, 0.14);
         outline: none;
-    }
+      }
 
-    #toc .toc-sub-toggle {
+      #toc .toc-sub-toggle {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--surface-border);
         border-radius: 999px;
@@ -137,28 +144,28 @@
         justify-content: center;
         cursor: pointer;
         transition: background-color 0.2s ease, color 0.2s ease;
-    }
+      }
 
-    #toc .toc-sub-toggle:hover,
-    #toc .toc-sub-toggle:focus-visible {
+      #toc .toc-sub-toggle:hover,
+      #toc .toc-sub-toggle:focus-visible {
         background: rgba(76, 157, 245, 0.2);
         color: var(--text-strong);
         outline: none;
-    }
+      }
 
-    #toc .toc-sub {
+      #toc .toc-sub {
         margin-top: 8px;
         padding: 8px 0 0;
         list-style: none;
         gap: 6px;
         flex-direction: column;
-    }
+      }
 
-    #toc .toc-sub li {
+      #toc .toc-sub li {
         display: block;
-    }
+      }
 
-    #toc .toc-sub a {
+      #toc .toc-sub a {
         color: var(--text-muted);
         text-decoration: none;
         font-size: 0.9rem;
@@ -167,29 +174,32 @@
         display: inline-block;
         transition: color 0.2s ease, background-color 0.2s ease;
         white-space: normal;
-    }
+      }
 
-    #toc .toc-sub a:hover,
-    #toc .toc-sub a:focus-visible {
+      #toc .toc-sub a:hover,
+      #toc .toc-sub a:focus-visible {
         color: var(--text-strong);
         background: rgba(76, 157, 245, 0.12);
         outline: none;
-    }
+      }
 
-    .section-divider {
+      .section-divider {
         width: min(760px, 90%);
         height: 1px;
         margin: 36px auto;
-        background: linear-gradient(90deg, rgba(52, 152, 219, 1) 0%, rgb(134, 255, 245) 50%, rgba(52, 152, 219, 1) 100%);
+        background: linear-gradient(
+          90deg,
+          rgba(52, 152, 219, 1) 0%,
+          rgb(134, 255, 245) 50%,
+          rgba(52, 152, 219, 1) 100%
+        );
         border-radius: 100%;
         box-shadow: 0 0 10px rgba(52, 152, 219, 0.5),
-            0 0 20px rgba(52, 152, 219, 0.5),
-            0 0 30px rgba(52, 152, 219, 0.5),
-            0 0 40px rgba(52, 152, 219, 0.5),
-            0 0 50px rgba(52, 152, 219, 0.5);
-    }
+          0 0 20px rgba(52, 152, 219, 0.5), 0 0 30px rgba(52, 152, 219, 0.5),
+          0 0 40px rgba(52, 152, 219, 0.5), 0 0 50px rgba(52, 152, 219, 0.5);
+      }
 
-    .popup-overlay {
+      .popup-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -200,10 +210,14 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
-    }
+      }
 
-    .popup-content {
-        background: linear-gradient(160deg, rgba(20, 36, 66, 0.98) 0%, rgba(12, 28, 55, 0.94) 100%);
+      .popup-content {
+        background: linear-gradient(
+          160deg,
+          rgba(20, 36, 66, 0.98) 0%,
+          rgba(12, 28, 55, 0.94) 100%
+        );
         padding: 36px 32px;
         border-radius: 18px;
         box-shadow: var(--shadow-2);
@@ -213,50 +227,50 @@
         position: relative;
         animation: fadeIn 0.35s ease-out;
         border: 1px solid var(--surface-border);
-    }
+      }
 
-    @keyframes fadeIn {
+      @keyframes fadeIn {
         from {
-            opacity: 0;
-            transform: scale(0.9);
+          opacity: 0;
+          transform: scale(0.9);
         }
         to {
-            opacity: 1;
-            transform: scale(1);
+          opacity: 1;
+          transform: scale(1);
         }
-    }
+      }
 
-    .popup-header {
+      .popup-header {
         display: flex;
         align-items: center;
         gap: 14px;
         margin-bottom: 18px;
-    }
+      }
 
-    .popup-icon {
+      .popup-icon {
         font-size: 2.1rem;
         color: #ffb347;
         filter: drop-shadow(0 6px 14px rgba(255, 179, 71, 0.4));
-    }
+      }
 
-    .popup-content h2 {
+      .popup-content h2 {
         margin: 0;
         color: var(--text-strong);
         font-size: 1.6em;
-    }
+      }
 
-    .popup-body {
+      .popup-body {
         margin-bottom: 28px;
-    }
+      }
 
-    .popup-body p {
+      .popup-body p {
         font-size: 1em;
         line-height: 1.7;
         color: var(--text-muted);
         margin-bottom: 18px;
-    }
+      }
 
-    .popup-close-btn {
+      .popup-close-btn {
         position: absolute;
         top: 15px;
         right: 15px;
@@ -267,19 +281,19 @@
         color: var(--text-muted);
         line-height: 1;
         transition: color 0.2s ease;
-    }
+      }
 
-    .popup-close-btn:hover,
-    .popup-close-btn:focus-visible {
+      .popup-close-btn:hover,
+      .popup-close-btn:focus-visible {
         color: var(--text-strong);
-    }
+      }
 
-    .popup-actions {
+      .popup-actions {
         text-align: center;
-    }
+      }
 
-    .popup-accept-btn,
-    .show-popup-btn {
+      .popup-accept-btn,
+      .show-popup-btn {
         padding: 12px 32px;
         font-size: 1.02em;
         cursor: pointer;
@@ -290,93 +304,98 @@
         letter-spacing: 0.01em;
         transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
         box-shadow: var(--shadow-1);
-        background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
-    }
+        background: linear-gradient(
+          135deg,
+          var(--accent-dark) 0%,
+          var(--accent) 100%
+        );
+      }
 
-    .popup-accept-btn:hover,
-    .show-popup-btn:hover {
+      .popup-accept-btn:hover,
+      .show-popup-btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 22px 38px rgba(2, 13, 30, 0.4);
         filter: brightness(1.05);
-    }
+      }
 
-    .popup-accept-btn:focus-visible,
-    .show-popup-btn:focus-visible {
+      .popup-accept-btn:focus-visible,
+      .show-popup-btn:focus-visible {
         outline: 3px solid rgba(76, 157, 245, 0.55);
         outline-offset: 4px;
-    }
+      }
 
-    .disclaimer-btn {
+      .disclaimer-btn {
         color: black;
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 28px auto;
-    }
+      }
 
-    .content-shell {
+      .content-shell {
         display: flex;
         justify-content: center;
         padding: 0 1.5rem;
-    }
+      }
 
-    main {
+      main {
         width: min(1100px, 100%);
         padding: 0 28px 5rem;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         gap: 3rem;
-    }
+      }
 
-    main section {
+      main section {
         display: flex;
         flex-direction: column;
         gap: 1.1rem;
         color: var(--text-body);
         line-height: 1.75;
         margin-bottom: 34px;
-    }
+      }
 
-    main section:last-of-type {
+      main section:last-of-type {
         margin-bottom: 0;
-    }
+      }
 
-    main > section > ul {
+      main > section > ul {
         display: grid;
         gap: 0.85rem;
         padding-left: 1.2rem;
         margin: 0;
         list-style: disc;
         color: var(--text-body);
-    }
+      }
 
-    main ul ul {
+      main ul ul {
         display: grid;
         gap: 0.6rem;
         margin-top: 0.65rem;
         padding-left: 1.1rem;
         list-style: circle;
         color: var(--text-body);
-    }
+      }
 
-    main li {
+      main li {
         color: var(--text-body);
         list-style-position: outside;
         list-style-type: disc;
-    }
+      }
 
-    main ul ul > li {
+      main ul ul > li {
         list-style-type: circle;
-    }
+      }
 
-    main p {
+      main p {
         margin: 0;
         color: var(--text-body);
-    }
+      }
 
-    .mini-diagram {
-        font-family: "Fira Code", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      .mini-diagram {
+        font-family: "Fira Code", "SFMono-Regular", Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
         background: rgba(8, 20, 40, 0.8);
         border: 1px solid var(--surface-border);
         border-radius: 12px;
@@ -385,9 +404,9 @@
         color: var(--text-muted);
         box-shadow: var(--shadow-1);
         margin: 0;
-    }
+      }
 
-    .scenario-callout {
+      .scenario-callout {
         border-left: 3px solid var(--accent);
         padding: 18px 20px;
         border-radius: 12px;
@@ -395,18 +414,18 @@
         display: grid;
         gap: 0.85rem;
         box-shadow: var(--shadow-1);
-    }
+      }
 
-    .scenario-callout strong {
+      .scenario-callout strong {
         color: var(--text-strong);
-    }
+      }
 
-    .numeric-example {
+      .numeric-example {
         font-style: italic;
         color: var(--text-muted);
-    }
+      }
 
-    .trade-checklist {
+      .trade-checklist {
         border: 1px solid var(--surface-border);
         border-radius: 16px;
         padding: 22px 24px;
@@ -414,9 +433,9 @@
         box-shadow: var(--shadow-1);
         display: grid;
         gap: 1rem;
-    }
+      }
 
-    .trade-checklist h4 {
+      .trade-checklist h4 {
         margin: 0;
         color: var(--text-strong);
         font-size: clamp(1.1rem, 0.95rem + 0.4vw, 1.35rem);
@@ -427,162 +446,153 @@
         padding: 12px 16px;
         border-radius: 12px;
         font-weight: 600;
-    }
+      }
 
-    .trade-checklist ul {
+      .trade-checklist ul {
         margin: 0;
         padding-left: 1.1rem;
         display: grid;
         gap: 0.6rem;
         list-style: disc;
-    }
+      }
 
-    .trade-checklist ul li {
+      .trade-checklist ul li {
         list-style-type: disc;
-    }
+      }
 
-    #recommended-times ul,
-    #swing-trading-guide ul {
+      #recommended-times ul,
+      #swing-trading-guide ul {
         list-style: disc;
-    }
+      }
 
-    #recommended-times li,
-    #swing-trading-guide li {
+      #recommended-times li,
+      #swing-trading-guide li {
         padding-left: 0.15rem;
         list-style-type: disc;
-    }
+      }
 
-    @media (max-width: 720px) {
+      @media (max-width: 720px) {
         .page-index {
-            padding: 28px 22px;
-            margin: 28px auto 44px;
+          padding: 28px 22px;
+          margin: 28px auto 44px;
         }
 
         main {
-            padding: 0 1.25rem 4rem;
-            gap: 3rem;
+          padding: 0 1.25rem 4rem;
+          gap: 3rem;
         }
 
         .scenario-callout {
-            padding: 16px;
+          padding: 16px;
         }
-    }
+      }
 
-    footer {
+      footer {
         text-align: center;
-    }
+      }
 
-    .liability-note {
+      .liability-note {
         margin-top: 6px;
         font-size: 0.85em;
         color: var(--text-muted);
-    }
-</style>
-</head>
+      }
+    </style>
+  </head>
 
-<body>
-    <header>
-    </header>
-    
+  <body>
+    <header></header>
+
     <div class="navbar">
-        <div class="navbar-inner">
-            <div class="logo">
-                <a href="../../index.html"><span class="code-line-logo"></span>Hello World</a>
-            </div>
-            <nav>
-                <ul class="links">
-                    <li><a href="../../index.html" class="navbutton">Inicio</a></li>
-                    <li><a href="./python.html" class="navbutton">Python</a></li>
-                    <li><a href="./git.html" class="navbutton">Git</a></li>
-                    <li><a href="./raptor.html" class="navbutton">Raptor</a></li>
-                    <li><a href="../../index.html#contact" class="navbutton">Contacto</a></li>
-                </ul>
-            </nav>
-            
-            <button class="dropdown-btn" aria-label="Abrir menú">☰</button>
-
-            <div class="dropdown">
-                <ul>
-                    <li><a href="../../index.html" class="navbutton">Inicio</a></li>
-                    <li><a href="./python.html" class="navbutton">Python</a></li>
-                    <li><a href="./git.html" class="navbutton">Git</a></li>
-                    <li><a href="./raptor.html" class="navbutton">Raptor</a></li>
-                    <li><a href="../../index.html#contact" class="navbutton">Contacto</a></li>
-                </ul>
-            </div>
-        </div>
+      <!-- Navbar injected by JS -->
     </div>
     <div class="popup-overlay" id="disclaimerPopup">
-        <div class="popup-content">
-            <button class="popup-close-btn" onclick="ocultarPopup()">&times;</button>
-            <div class="popup-header">
-                <span class="popup-icon" aria-hidden="true">⚠️</span>
-                <h2>Aviso Importante</h2>
-            </div>
-            <div class="popup-body">
-                <p>
-                    La información proporcionada en este sitio es únicamente con fines educativos e informativos. No debe considerarse como asesoramiento financiero, de inversión o de otro tipo. Las inversiones en criptomonedas pueden ser volátiles y conllevan riesgos. Te recomiendo encarecidamente que realices tu propia investigación y consultes a un profesional financiero antes de tomar decisiones de inversión.
-                </p>
-                <p>
-                    La información proporcionada en este sitio web es solo para fines informativos generales. Recuerda que cada persona tiene una situación financiera única, y lo que funciona para uno puede no ser adecuado para otro. La responsabilidad de tus decisiones de inversión es exclusivamente tuya.
-                </p>
-            </div>
-            <div class="popup-actions">
-                <button class="popup-accept-btn" onclick="aceptarDisclaimer()">Aceptar y cerrar</button>
-            </div>
+      <div class="popup-content">
+        <button class="popup-close-btn" onclick="ocultarPopup()">
+          &times;
+        </button>
+        <div class="popup-header">
+          <span class="popup-icon" aria-hidden="true">⚠️</span>
+          <h2>Aviso Importante</h2>
         </div>
+        <div class="popup-body">
+          <p>
+            La información proporcionada en este sitio es únicamente con fines
+            educativos e informativos. No debe considerarse como asesoramiento
+            financiero, de inversión o de otro tipo. Las inversiones en
+            criptomonedas pueden ser volátiles y conllevan riesgos. Te
+            recomiendo encarecidamente que realices tu propia investigación y
+            consultes a un profesional financiero antes de tomar decisiones de
+            inversión.
+          </p>
+          <p>
+            La información proporcionada en este sitio web es solo para fines
+            informativos generales. Recuerda que cada persona tiene una
+            situación financiera única, y lo que funciona para uno puede no ser
+            adecuado para otro. La responsabilidad de tus decisiones de
+            inversión es exclusivamente tuya.
+          </p>
+        </div>
+        <div class="popup-actions">
+          <button class="popup-accept-btn" onclick="aceptarDisclaimer()">
+            Aceptar y cerrar
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        const disclaimerPopup = document.getElementById('disclaimerPopup');
+      const disclaimerPopup = document.getElementById("disclaimerPopup");
 
-        // Función para mostrar el pop-up
-        function mostrarPopup() {
-            if (disclaimerPopup) {
-                disclaimerPopup.style.display = 'flex';
-            }
+      // Función para mostrar el pop-up
+      function mostrarPopup() {
+        if (disclaimerPopup) {
+          disclaimerPopup.style.display = "flex";
         }
+      }
 
-        // Función para ocultar el pop-up
-        function ocultarPopup() {
-            if (disclaimerPopup) {
-                disclaimerPopup.style.display = 'none';
-            }
+      // Función para ocultar el pop-up
+      function ocultarPopup() {
+        if (disclaimerPopup) {
+          disclaimerPopup.style.display = "none";
         }
+      }
 
-        // Función para cuando el usuario acepta el disclaimer
-        function aceptarDisclaimer() {
-            ocultarPopup();
-            console.log('Disclaimer aceptado.');
-            localStorage.setItem('disclaimerAceptado', 'true');
+      // Función para cuando el usuario acepta el disclaimer
+      function aceptarDisclaimer() {
+        ocultarPopup();
+        console.log("Disclaimer aceptado.");
+        localStorage.setItem("disclaimerAceptado", "true");
+      }
+
+      // --- Lógica para mostrar el pop-up automáticamente ---
+
+      // Opción 1: Mostrar al cargar la página
+      window.onload = function () {
+        // Comprobar si el disclaimer ya fue aceptado (usando localStorage como ejemplo)
+        if (!localStorage.getItem("disclaimerAceptado")) {
+          mostrarPopup();
         }
+        // Por ahora, lo mostramos directamente para la demostración
+        //  mostrarPopup();
+      };
 
-        // --- Lógica para mostrar el pop-up automáticamente ---
+      // Event listener para cerrar con la tecla Escape
+      document.addEventListener("keydown", function (event) {
+        if (
+          event.key === "Escape" &&
+          disclaimerPopup.style.display === "flex"
+        ) {
+          ocultarPopup();
+        }
+      });
 
-        // Opción 1: Mostrar al cargar la página
-        window.onload = function() {
-            // Comprobar si el disclaimer ya fue aceptado (usando localStorage como ejemplo)
-            if (!localStorage.getItem('disclaimerAceptado')) {
-                mostrarPopup();
-            }
-            // Por ahora, lo mostramos directamente para la demostración
-            //  mostrarPopup(); 
-        };
-
-        // Event listener para cerrar con la tecla Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && disclaimerPopup.style.display === 'flex') {
-                ocultarPopup();
-            }
-        });
-
-        // Event listener para cerrar si se hace clic fuera del contenido del pop-up
-        disclaimerPopup.addEventListener('click', function(event) {
-            if (event.target === disclaimerPopup) { // Si el clic es en el overlay mismo
-                ocultarPopup();
-            }
-        });
-
+      // Event listener para cerrar si se hace clic fuera del contenido del pop-up
+      disclaimerPopup.addEventListener("click", function (event) {
+        if (event.target === disclaimerPopup) {
+          // Si el clic es en el overlay mismo
+          ocultarPopup();
+        }
+      });
     </script>
 
     <nav
@@ -609,25 +619,60 @@
           </div>
         </div>
         <div class="toc-track-shell" data-scroll-state="start">
-          <ul id="toc-list" class="toc-track" role="list" aria-label="Secciones de la guía">
+          <ul
+            id="toc-list"
+            class="toc-track"
+            role="list"
+            aria-label="Secciones de la guía"
+          >
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="investment-types" href="#investment-types">Tipos de inversión</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="investment-types"
+                href="#investment-types"
+                >Tipos de inversión</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="risk-management" href="#risk-management">Gestión de riesgos</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="risk-management"
+                href="#risk-management"
+                >Gestión de riesgos</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="technical-analysis" href="#technical-analysis">Análisis técnico</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="technical-analysis"
+                href="#technical-analysis"
+                >Análisis técnico</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="fundamental-analysis" href="#fundamental-analysis">Análisis fundamental</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="fundamental-analysis"
+                href="#fundamental-analysis"
+                >Análisis fundamental</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="derivatives" href="#derivatives">Futuros y derivados</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="derivatives"
+                href="#derivatives"
+                >Futuros y derivados</a
+              >
             </li>
             <li class="toc-item toc-item-has-sub">
               <div class="toc-chip-shell">
-                <a class="toc-chip toc-link" data-toc-id="rsi-bb-strategy" href="#rsi-bb-strategy">Estrategia práctica: RSI + BB</a>
+                <a
+                  class="toc-chip toc-link"
+                  data-toc-id="rsi-bb-strategy"
+                  href="#rsi-bb-strategy"
+                  >Estrategia práctica: RSI + BB</a
+                >
                 <button
                   class="toc-sub-trigger"
                   type="button"
@@ -640,25 +685,86 @@
               </div>
               <div id="toc-sub-rsi-bb" class="toc-submenu" hidden>
                 <ul class="toc-sub-list" role="list">
-                  <li><a class="toc-link" data-toc-id="rsi-resumen-rapido" href="#rsi-resumen-rapido">Resumen rápido</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-explicacion-rsi" href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-bandas-bollinger" href="#rsi-bandas-bollinger">Explicación de Bandas de Bollinger</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-reglas-estrategia" href="#rsi-reglas-estrategia">Reglas claras de la estrategia</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-gestion-riesgo" href="#rsi-gestion-riesgo">Gestión de riesgo</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-practica-validacion" href="#rsi-practica-validacion">Práctica y validación</a></li>
-                  <li><a class="toc-link" data-toc-id="rsi-alertas-tradingview" href="#rsi-alertas-tradingview">Alertas en TradingView</a></li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-resumen-rapido"
+                      href="#rsi-resumen-rapido"
+                      >Resumen rápido</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-explicacion-rsi"
+                      href="#rsi-explicacion-rsi"
+                      >Explicación del RSI</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-bandas-bollinger"
+                      href="#rsi-bandas-bollinger"
+                      >Explicación de Bandas de Bollinger</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-reglas-estrategia"
+                      href="#rsi-reglas-estrategia"
+                      >Reglas claras de la estrategia</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-gestion-riesgo"
+                      href="#rsi-gestion-riesgo"
+                      >Gestión de riesgo</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-practica-validacion"
+                      href="#rsi-practica-validacion"
+                      >Práctica y validación</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="rsi-alertas-tradingview"
+                      href="#rsi-alertas-tradingview"
+                      >Alertas en TradingView</a
+                    >
+                  </li>
                 </ul>
               </div>
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="why-it-works" href="#why-it-works">Por qué funciona esta combinación</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="why-it-works"
+                href="#why-it-works"
+                >Por qué funciona esta combinación</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="example" href="#example">Ejemplo práctico (resumen)</a>
+              <a class="toc-chip toc-link" data-toc-id="example" href="#example"
+                >Ejemplo práctico (resumen)</a
+              >
             </li>
             <li class="toc-item toc-item-has-sub">
               <div class="toc-chip-shell">
-                <a class="toc-chip toc-link" data-toc-id="recommended-times" href="#recommended-times">Horarios recomendados</a>
+                <a
+                  class="toc-chip toc-link"
+                  data-toc-id="recommended-times"
+                  href="#recommended-times"
+                  >Horarios recomendados</a
+                >
                 <button
                   class="toc-sub-trigger"
                   type="button"
@@ -671,17 +777,57 @@
               </div>
               <div id="toc-sub-recommended-times" class="toc-submenu" hidden>
                 <ul class="toc-sub-list" role="list">
-                  <li><a class="toc-link" data-toc-id="horarios-frecuencia-sugerida" href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
-                  <li><a class="toc-link" data-toc-id="horarios-concretos" href="#horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</a></li>
-                  <li><a class="toc-link" data-toc-id="horarios-checklist" href="#horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</a></li>
-                  <li><a class="toc-link" data-toc-id="horarios-reglas-practicas" href="#horarios-reglas-practicas">Reglas prácticas para no sobre-operar</a></li>
-                  <li><a class="toc-link" data-toc-id="horarios-plantilla-compacta" href="#horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</a></li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="horarios-frecuencia-sugerida"
+                      href="#horarios-frecuencia-sugerida"
+                      >Frecuencia sugerida</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="horarios-concretos"
+                      href="#horarios-concretos"
+                      >Horarios concretos (CST, UTC−6) y por qué</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="horarios-checklist"
+                      href="#horarios-checklist"
+                      >Qué mirar en cada chequeo (checklist rápido)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="horarios-reglas-practicas"
+                      href="#horarios-reglas-practicas"
+                      >Reglas prácticas para no sobre-operar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="horarios-plantilla-compacta"
+                      href="#horarios-plantilla-compacta"
+                      >Plantilla de horario compacta (ejemplo)</a
+                    >
+                  </li>
                 </ul>
               </div>
             </li>
             <li class="toc-item toc-item-has-sub">
               <div class="toc-chip-shell">
-                <a class="toc-chip toc-link" data-toc-id="swing-trading-guide" href="#swing-trading-guide">Swing trading</a>
+                <a
+                  class="toc-chip toc-link"
+                  data-toc-id="swing-trading-guide"
+                  href="#swing-trading-guide"
+                  >Swing trading</a
+                >
                 <button
                   class="toc-sub-trigger"
                   type="button"
@@ -694,172 +840,393 @@
               </div>
               <div id="toc-sub-swing-trading" class="toc-submenu" hidden>
                 <ul class="toc-sub-list" role="list">
-                  <li><a class="toc-link" data-toc-id="swing-caracteristicas" href="#swing-caracteristicas">Características principales</a></li>
-                  <li><a class="toc-link" data-toc-id="swing-ventajas-desventajas" href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
-                  <li><a class="toc-link" data-toc-id="swing-proceso" href="#swing-proceso">Proceso simplificado de una operación swing (pasos)</a></li>
-                  <li><a class="toc-link" data-toc-id="swing-reglas-riesgo" href="#swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</a></li>
-                  <li><a class="toc-link" data-toc-id="swing-ejemplo" href="#swing-ejemplo">Ejemplo práctico breve (resumen)</a></li>
-                  <li><a class="toc-link" data-toc-id="swing-checklist" href="#swing-checklist">Checklist rápido antes de abrir (para pegar como card)</a></li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-caracteristicas"
+                      href="#swing-caracteristicas"
+                      >Características principales</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-ventajas-desventajas"
+                      href="#swing-ventajas-desventajas"
+                      >Ventajas y desventajas</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-proceso"
+                      href="#swing-proceso"
+                      >Proceso simplificado de una operación swing (pasos)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-reglas-riesgo"
+                      href="#swing-reglas-riesgo"
+                      >Reglas de gestión de riesgo (esenciales)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-ejemplo"
+                      href="#swing-ejemplo"
+                      >Ejemplo práctico breve (resumen)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="toc-link"
+                      data-toc-id="swing-checklist"
+                      href="#swing-checklist"
+                      >Checklist rápido antes de abrir (para pegar como card)</a
+                    >
+                  </li>
                 </ul>
               </div>
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="advanced-strategies" href="#advanced-strategies">Estrategias avanzadas</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="advanced-strategies"
+                href="#advanced-strategies"
+                >Estrategias avanzadas</a
+              >
             </li>
             <li class="toc-item">
-              <a class="toc-chip toc-link" data-toc-id="resources" href="#resources">Recursos adicionales</a>
+              <a
+                class="toc-chip toc-link"
+                data-toc-id="resources"
+                href="#resources"
+                >Recursos adicionales</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </nav>
     <div class="content-shell">
-        <main>
-            <section id="intro" class="doc-section">
-                <h1>Bitcoin</h1>
-                <p>Bitcoin es un activo escaso (oferta máxima de 21 millones) y descentralizado, considerado "oro digital". Eventos como los halvings, donde se reduce la recompensa por bloque, refuerzan esta escasez y suelen preceder subidas de precio.</p>
-                <hr class="section-sep" data-sep-purpose="intro">
-                <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
+      <main>
+        <section id="intro" class="doc-section">
+          <h1>Bitcoin</h1>
+          <p>
+            Bitcoin es un activo escaso (oferta máxima de 21 millones) y
+            descentralizado, considerado "oro digital". Eventos como los
+            halvings, donde se reduce la recompensa por bloque, refuerzan esta
+            escasez y suelen preceder subidas de precio.
+          </p>
+          <hr class="section-sep" data-sep-purpose="intro" />
+          <p>
+            Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015
+            tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza
+            resultados futuros, demuestra el potencial a largo plazo.
+          </p>
 
-                <div class="disclaimer-btn">
-                    <button class="show-popup-btn" onclick="mostrarPopup()">Ver disclaimer</button>
-                </div>
-                <hr class="section-sep" data-sep-purpose="section">
-
-            </section>
+          <div class="disclaimer-btn">
+            <button class="show-popup-btn" onclick="mostrarPopup()">
+              Ver disclaimer
+            </button>
+          </div>
+          <hr class="section-sep" data-sep-purpose="section" />
+        </section>
 
         <section id="investment-types" class="doc-section">
-            <h2>Tipos de inversión</h2>
-            <ul>
-                <li><strong>HODLing estratégico (largo plazo):</strong> Comprar y mantener BTC durante años. Es simple y tiene potencial de grandes ganancias, pero requiere disciplina y seguridad.</li>
-                <li><strong>Trading activo:</strong>
-                    <ul>
-                        <li><strong>Scalping:</strong> Operaciones rápidas (minutos/horas). Requiere plataformas avanzadas y tiene alta exposición a errores.</li>
-                        <li><strong>Swing trading:</strong> Basado en análisis técnico de días/semanas. Permite aprovechar tendencias, pero conlleva riesgos elevados.</li>
-                    </ul>
+          <h2>Tipos de inversión</h2>
+          <ul>
+            <li>
+              <strong>HODLing estratégico (largo plazo):</strong> Comprar y
+              mantener BTC durante años. Es simple y tiene potencial de grandes
+              ganancias, pero requiere disciplina y seguridad.
+            </li>
+            <li>
+              <strong>Trading activo:</strong>
+              <ul>
+                <li>
+                  <strong>Scalping:</strong> Operaciones rápidas
+                  (minutos/horas). Requiere plataformas avanzadas y tiene alta
+                  exposición a errores.
                 </li>
-                <li><strong>Ingresos pasivos (yield):</strong> Prestar BTC para ganar intereses (~3–10% anual). Riesgo: quiebra de la plataforma.</li>
-                <li><strong>Cobertura con derivados:</strong> Uso de futuros u opciones para proteger tenencias ante caídas.</li>
-            </ul>
-            <hr class="section-sep" data-sep-purpose="section">
+                <li>
+                  <strong>Swing trading:</strong> Basado en análisis técnico de
+                  días/semanas. Permite aprovechar tendencias, pero conlleva
+                  riesgos elevados.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Ingresos pasivos (yield):</strong> Prestar BTC para ganar
+              intereses (~3–10% anual). Riesgo: quiebra de la plataforma.
+            </li>
+            <li>
+              <strong>Cobertura con derivados:</strong> Uso de futuros u
+              opciones para proteger tenencias ante caídas.
+            </li>
+          </ul>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
         <section id="risk-management" class="doc-section">
-            <h2>Gestión de riesgos</h2>
-            <p>Proteger tu capital es fundamental antes de buscar ganancias. Una gestión de riesgos adecuada puede marcar la diferencia entre un inversor exitoso y uno que sufre pérdidas significativas. Aquí te detallo algunas estrategias y conceptos clave:</p>
-            <ul>
-                <li><strong>Tamaño de posición prudente:</strong> Arriesga solo 1–2% del portafolio por operación.
-                    <p>Esta regla ayuda a evitar que una sola operación perdedora tenga un impacto devastador en tu capital total. Por ejemplo, si tienes un portafolio de $10,000, no deberías arriesgar más de $100-$200 en una sola operación.</p>
+          <h2>Gestión de riesgos</h2>
+          <p>
+            Proteger tu capital es fundamental antes de buscar ganancias. Una
+            gestión de riesgos adecuada puede marcar la diferencia entre un
+            inversor exitoso y uno que sufre pérdidas significativas. Aquí te
+            detallo algunas estrategias y conceptos clave:
+          </p>
+          <ul>
+            <li>
+              <strong>Tamaño de posición prudente:</strong> Arriesga solo 1–2%
+              del portafolio por operación.
+              <p>
+                Esta regla ayuda a evitar que una sola operación perdedora tenga
+                un impacto devastador en tu capital total. Por ejemplo, si
+                tienes un portafolio de $10,000, no deberías arriesgar más de
+                $100-$200 en una sola operación.
+              </p>
+            </li>
+            <li>
+              <strong>Órdenes de stop-loss y take-profit:</strong> Automatiza
+              salidas para limitar pérdidas y asegurar ganancias.
+              <ul>
+                <li>
+                  <strong>Stop-Loss:</strong> Una orden para vender un activo
+                  cuando alcanza un precio específico, limitando la pérdida
+                  potencial.
+                  <p>
+                    Imagina que compras BTC a $50,000. Estableces un stop-loss
+                    en $45,000. Si el precio cae a $45,000, tu posición se vende
+                    automáticamente, limitando tu pérdida a $5,000.
+                  </p>
                 </li>
-                <li><strong>Órdenes de stop-loss y take-profit:</strong> Automatiza salidas para limitar pérdidas y asegurar ganancias.
-                    <ul>
-                        <li><strong>Stop-Loss:</strong> Una orden para vender un activo cuando alcanza un precio específico, limitando la pérdida potencial.
-                            <p>Imagina que compras BTC a $50,000. Estableces un stop-loss en $45,000. Si el precio cae a $45,000, tu posición se vende automáticamente, limitando tu pérdida a $5,000.</p>
-                        </li>
-                        <li><strong>Take-Profit:</strong> Una orden para vender un activo cuando alcanza un precio específico, asegurando una ganancia.
-                            <p>Siguiendo el ejemplo anterior, podrías establecer un take-profit en $60,000. Si el precio sube a $60,000, tu posición se vende automáticamente, asegurando una ganancia de $10,000.</p>
-                        </li>
-                    </ul>
+                <li>
+                  <strong>Take-Profit:</strong> Una orden para vender un activo
+                  cuando alcanza un precio específico, asegurando una ganancia.
+                  <p>
+                    Siguiendo el ejemplo anterior, podrías establecer un
+                    take-profit en $60,000. Si el precio sube a $60,000, tu
+                    posición se vende automáticamente, asegurando una ganancia
+                    de $10,000.
+                  </p>
                 </li>
-                <li><strong>Leverage moderado:</strong> Si usas apalancamiento, mantén colateral suficiente y stops estrictos.
-                    <ul>
-                        <li><strong>Apalancamiento:</strong> El uso de capital prestado para aumentar el potencial de retorno de una inversión.
-                            <p>Un apalancamiento de 2x significa que con $1,000 de tu capital, puedes controlar $2,000 en BTC. Si el precio de BTC sube un 10%, tu ganancia sería del 20% ($200), pero si baja un 10%, tu pérdida también sería del 20% ($200).</p>
-                        </li>
-                        <li><strong>Colateral:</strong> Activos ofrecidos como garantía para asegurar un préstamo.
-                            <p>Al usar apalancamiento, el exchange requiere que mantengas un cierto nivel de colateral en tu cuenta. Si el precio se mueve en tu contra, tu colateral puede liquidarse para cubrir las pérdidas.</p>
-                        </li>
-                    </ul>
+              </ul>
+            </li>
+            <li>
+              <strong>Leverage moderado:</strong> Si usas apalancamiento, mantén
+              colateral suficiente y stops estrictos.
+              <ul>
+                <li>
+                  <strong>Apalancamiento:</strong> El uso de capital prestado
+                  para aumentar el potencial de retorno de una inversión.
+                  <p>
+                    Un apalancamiento de 2x significa que con $1,000 de tu
+                    capital, puedes controlar $2,000 en BTC. Si el precio de BTC
+                    sube un 10%, tu ganancia sería del 20% ($200), pero si baja
+                    un 10%, tu pérdida también sería del 20% ($200).
+                  </p>
                 </li>
-                <li><strong>Diversificación:</strong> Incluye activos no correlacionados para reducir riesgos.
-                    <ul>
-                        <li><strong>Activos no correlacionados:</strong> Activos que no se mueven en la misma dirección al mismo tiempo.
-                            <p>Por ejemplo, las acciones y los bonos a menudo tienen una correlación baja o negativa. Cuando las acciones bajan, los bonos pueden subir, y viceversa. Incluir ambos en tu portafolio reduce el riesgo general.</p>
-                        </li>
-                        <li><strong>Ejemplos:</strong> Acciones, bonos, criptomonedas, materias primas, bienes raíces.</li>
-                    </ul>
+                <li>
+                  <strong>Colateral:</strong> Activos ofrecidos como garantía
+                  para asegurar un préstamo.
+                  <p>
+                    Al usar apalancamiento, el exchange requiere que mantengas
+                    un cierto nivel de colateral en tu cuenta. Si el precio se
+                    mueve en tu contra, tu colateral puede liquidarse para
+                    cubrir las pérdidas.
+                  </p>
                 </li>
-                <li><strong>Seguridad operativa:</strong> Usa 2FA y wallets confiables; para grandes montos, custodia en frío.
-                    <ul>
-                        <li><strong>2FA (Autenticación de dos factores):</strong> Proceso de seguridad que requiere dos formas de identificación.
-                            <p>Además de tu contraseña, el 2FA puede requerir un código enviado a tu teléfono o generado por una aplicación como Google Authenticator, añadiendo una capa extra de seguridad.</p>
-                        </li>
-                        <li><strong>Wallets:</strong> Dispositivos o aplicaciones para almacenar criptomonedas.
-                            <p>Es crucial elegir una wallet segura y confiable. Algunas opciones populares incluyen Ledger (hardware wallet), Trezor (hardware wallet) y Electrum (software wallet).</p>
-                        </li>
-                        <li><strong>Custodia en frío:</strong> Almacenar criptomonedas fuera de línea para mayor seguridad.
-                            <p>Esto implica guardar tus claves privadas en un dispositivo que no está conectado a Internet, como un hardware wallet o una cartera de papel, protegiéndolas de hackeos.</p>
-                        </li>
-                    </ul>
+              </ul>
+            </li>
+            <li>
+              <strong>Diversificación:</strong> Incluye activos no
+              correlacionados para reducir riesgos.
+              <ul>
+                <li>
+                  <strong>Activos no correlacionados:</strong> Activos que no se
+                  mueven en la misma dirección al mismo tiempo.
+                  <p>
+                    Por ejemplo, las acciones y los bonos a menudo tienen una
+                    correlación baja o negativa. Cuando las acciones bajan, los
+                    bonos pueden subir, y viceversa. Incluir ambos en tu
+                    portafolio reduce el riesgo general.
+                  </p>
                 </li>
-            </ul>
-            <hr class="section-sep" data-sep-purpose="section">
+                <li>
+                  <strong>Ejemplos:</strong> Acciones, bonos, criptomonedas,
+                  materias primas, bienes raíces.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Seguridad operativa:</strong> Usa 2FA y wallets
+              confiables; para grandes montos, custodia en frío.
+              <ul>
+                <li>
+                  <strong>2FA (Autenticación de dos factores):</strong> Proceso
+                  de seguridad que requiere dos formas de identificación.
+                  <p>
+                    Además de tu contraseña, el 2FA puede requerir un código
+                    enviado a tu teléfono o generado por una aplicación como
+                    Google Authenticator, añadiendo una capa extra de seguridad.
+                  </p>
+                </li>
+                <li>
+                  <strong>Wallets:</strong> Dispositivos o aplicaciones para
+                  almacenar criptomonedas.
+                  <p>
+                    Es crucial elegir una wallet segura y confiable. Algunas
+                    opciones populares incluyen Ledger (hardware wallet), Trezor
+                    (hardware wallet) y Electrum (software wallet).
+                  </p>
+                </li>
+                <li>
+                  <strong>Custodia en frío:</strong> Almacenar criptomonedas
+                  fuera de línea para mayor seguridad.
+                  <p>
+                    Esto implica guardar tus claves privadas en un dispositivo
+                    que no está conectado a Internet, como un hardware wallet o
+                    una cartera de papel, protegiéndolas de hackeos.
+                  </p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
         <section id="technical-analysis" class="doc-section">
-            <h2>Análisis técnico</h2>
-            <ul>
-                <li><strong>Patrones de velas japonesas:</strong> Formaciones como "hammer" o "doji" indican reversiones. Confirma con volumen.</li>
-                <li><strong>Indicadores técnicos:</strong> Herramientas como RSI y MACD ayudan a identificar sobrecompra, sobreventa y tendencias.</li>
-                <li><strong>Niveles de soporte y resistencia:</strong> Zonas donde el precio históricamente se detuvo. Usa Fibonacci para retrocesos.</li>
-            </ul>
-            <p><strong>Consejo:</strong> Combina varias herramientas para validar señales y gestiona siempre el riesgo.</p>
-            <hr class="section-sep" data-sep-purpose="section">
+          <h2>Análisis técnico</h2>
+          <ul>
+            <li>
+              <strong>Patrones de velas japonesas:</strong> Formaciones como
+              "hammer" o "doji" indican reversiones. Confirma con volumen.
+            </li>
+            <li>
+              <strong>Indicadores técnicos:</strong> Herramientas como RSI y
+              MACD ayudan a identificar sobrecompra, sobreventa y tendencias.
+            </li>
+            <li>
+              <strong>Niveles de soporte y resistencia:</strong> Zonas donde el
+              precio históricamente se detuvo. Usa Fibonacci para retrocesos.
+            </li>
+          </ul>
+          <p>
+            <strong>Consejo:</strong> Combina varias herramientas para validar
+            señales y gestiona siempre el riesgo.
+          </p>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
         <section id="fundamental-analysis" class="doc-section">
-            <h2>Análisis fundamental</h2>
-            <ul>
-                <li><strong>Métricas on-chain:</strong> Datos como el Puell Multiple o SOPR muestran la salud de la red y ciclos de mercado.</li>
-                <li><strong>Eventos macro:</strong> Políticas monetarias, inflación y regulación influyen en el precio de Bitcoin.</li>
-                <li><strong>Minería:</strong> Cambios en dificultad y hashrate reflejan la estabilidad de la red.</li>
-            </ul>
-            <hr class="section-sep" data-sep-purpose="section">
+          <h2>Análisis fundamental</h2>
+          <ul>
+            <li>
+              <strong>Métricas on-chain:</strong> Datos como el Puell Multiple o
+              SOPR muestran la salud de la red y ciclos de mercado.
+            </li>
+            <li>
+              <strong>Eventos macro:</strong> Políticas monetarias, inflación y
+              regulación influyen en el precio de Bitcoin.
+            </li>
+            <li>
+              <strong>Minería:</strong> Cambios en dificultad y hashrate
+              reflejan la estabilidad de la red.
+            </li>
+          </ul>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
         <section id="derivatives" class="doc-section">
-            <h2>Futuros y derivados</h2>
-            <ul>
-                <li><strong>Futuros perpetuos:</strong> Contratos sin vencimiento con settlement diario. Alta flexibilidad, pero alto riesgo.</li>
-                <li><strong>Opciones:</strong> Contratos call/put para especular o proteger. Estrategias comunes: straddle, iron condor.</li>
-            </ul>
-            <p><strong>Nota:</strong> Los derivados amplifican tanto ganancias como pérdidas. Requieren estrategias disciplinadas.</p>
-            <hr class="section-sep" data-sep-purpose="section">
+          <h2>Futuros y derivados</h2>
+          <ul>
+            <li>
+              <strong>Futuros perpetuos:</strong> Contratos sin vencimiento con
+              settlement diario. Alta flexibilidad, pero alto riesgo.
+            </li>
+            <li>
+              <strong>Opciones:</strong> Contratos call/put para especular o
+              proteger. Estrategias comunes: straddle, iron condor.
+            </li>
+          </ul>
+          <p>
+            <strong>Nota:</strong> Los derivados amplifican tanto ganancias como
+            pérdidas. Requieren estrategias disciplinadas.
+          </p>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
-        <hr class="section-sep" data-sep-purpose="pre-practical">
+        <hr class="section-sep" data-sep-purpose="pre-practical" />
         <section id="rsi-bb-strategy" class="doc-section">
           <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
           <p>
-            Esta estrategia combina un oscilador de momentum (RSI) con un indicador de volatilidad (Bandas de Bollinger).
-            Está pensada para traders novatos que operan BTC en mercado spot. Usa marcos temporales de 1H o 4H.
+            Esta estrategia combina un oscilador de momentum (RSI) con un
+            indicador de volatilidad (Bandas de Bollinger). Está pensada para
+            traders novatos que operan BTC en mercado spot. Usa marcos
+            temporales de 1H o 4H.
           </p>
-        
+
           <h3 id="rsi-resumen-rapido">Resumen rápido</h3>
           <ul>
-            <li><strong>Indicadores:</strong> RSI (14) + Bandas de Bollinger (SMA 20, ±2σ).</li>
+            <li>
+              <strong>Indicadores:</strong> RSI (14) + Bandas de Bollinger (SMA
+              20, ±2σ).
+            </li>
             <li><strong>Temporalidad recomendada:</strong> 1H o 4H.</li>
-            <li><strong>Objetivo:</strong> Entrar en rebotes cuando hay sobreventa y tomar ganancias en zonas de sobrecompra o en bandazos de volatilidad.</li>
+            <li>
+              <strong>Objetivo:</strong> Entrar en rebotes cuando hay sobreventa
+              y tomar ganancias en zonas de sobrecompra o en bandazos de
+              volatilidad.
+            </li>
           </ul>
-        
+
           <h3 id="rsi-explicacion-rsi">Explicación del RSI</h3>
           <p>
-            El RSI (Relative Strength Index) mide fuerza y momentum en una escala de 0 a 100. Los umbrales comunes son <strong>30</strong> (sobreventa) y <strong>70</strong> (sobrecompra), y muchos traders añaden una media móvil del RSI para suavizar las señales.
-            En tu gráfico, configura el RSI con longitud 14 y activa una media simple para evaluar cruces.
+            El RSI (Relative Strength Index) mide fuerza y momentum en una
+            escala de 0 a 100. Los umbrales comunes son
+            <strong>30</strong> (sobreventa) y
+            <strong>70</strong> (sobrecompra), y muchos traders añaden una media
+            móvil del RSI para suavizar las señales. En tu gráfico, configura el
+            RSI con longitud 14 y activa una media simple para evaluar cruces.
           </p>
 
           <div class="scenario-callout">
             <h4>RSI — escenarios prácticos y acción recomendada</h4>
             <ul>
-              <li><strong>RSI ≈ 50 (mercado neutro):</strong> evita entradas agresivas; espera ruptura de rango, vela impulsiva o confirmación de volumen antes de operar.</li>
-              <li><strong>RSI &lt; 30 + vela de reversal:</strong> abre entrada parcial y ubica el stop-loss bajo el mínimo reciente; escala solo si el rebote continúa.</li>
-              <li><strong>RSI &gt; 70 + toque de banda superior:</strong> toma ganancias parciales o ajusta stops; el momentum suele relajarse tras este combo.</li>
-              <li><strong>Cruce del RSI sobre su media lenta:</strong> valida el momentum alcista; úsalo como filtro adicional para sostener posiciones o descartar rupturas débiles.</li>
-              <li><strong>Divergencias (alto valor predictivo):</strong> cuando el precio hace un nuevo mínimo pero el RSI sube (divergencia alcista) o el precio marca un máximo y el RSI desciende (divergencia bajista), prepara entradas inversas con confirmación de vela.</li>
+              <li>
+                <strong>RSI ≈ 50 (mercado neutro):</strong> evita entradas
+                agresivas; espera ruptura de rango, vela impulsiva o
+                confirmación de volumen antes de operar.
+              </li>
+              <li>
+                <strong>RSI &lt; 30 + vela de reversal:</strong> abre entrada
+                parcial y ubica el stop-loss bajo el mínimo reciente; escala
+                solo si el rebote continúa.
+              </li>
+              <li>
+                <strong>RSI &gt; 70 + toque de banda superior:</strong> toma
+                ganancias parciales o ajusta stops; el momentum suele relajarse
+                tras este combo.
+              </li>
+              <li>
+                <strong>Cruce del RSI sobre su media lenta:</strong> valida el
+                momentum alcista; úsalo como filtro adicional para sostener
+                posiciones o descartar rupturas débiles.
+              </li>
+              <li>
+                <strong>Divergencias (alto valor predictivo):</strong> cuando el
+                precio hace un nuevo mínimo pero el RSI sube (divergencia
+                alcista) o el precio marca un máximo y el RSI desciende
+                (divergencia bajista), prepara entradas inversas con
+                confirmación de vela.
+              </li>
             </ul>
             <div class="mini-diagram" aria-hidden="true">
-Precio:  \__/‾‾‾\
-RSI:    \__/__  \
+              Precio: \__/‾‾‾\ RSI: \__/__ \
             </div>
           </div>
 
@@ -870,26 +1237,49 @@ RSI:    \__/__  \
             <li><strong>Calculate Divergence:</strong> Desactivado</li>
             <li><strong>Smoothing Type:</strong> SMA</li>
             <li><strong>Smoothing Length:</strong> 14</li>
-            <li><strong>Timeframe:</strong> Chart (usar la temporalidad del gráfico)</li>
+            <li>
+              <strong>Timeframe:</strong> Chart (usar la temporalidad del
+              gráfico)
+            </li>
             <li><strong>Wait for timeframe closes:</strong> Activado</li>
             <li><strong>Inputs in status line:</strong> Activado</li>
           </ul>
-        
+
           <h3 id="rsi-bandas-bollinger">Explicación de Bandas de Bollinger</h3>
           <p>
-            Las Bandas de Bollinger muestran una SMA central (20) y dos bandas ±2 desviaciones estándar.
-            Las bandas se ensanchan con alta volatilidad y se estrechan con baja volatilidad (compresión).
+            Las Bandas de Bollinger muestran una SMA central (20) y dos bandas
+            ±2 desviaciones estándar. Las bandas se ensanchan con alta
+            volatilidad y se estrechan con baja volatilidad (compresión).
           </p>
 
           <div class="scenario-callout">
             <h4>Bandas de Bollinger — escenarios prácticos y acción</h4>
             <ul>
-              <li><strong>Precio en la SMA 20 (línea central):</strong> señala consolidación; espera ruptura con volumen o patrón de velas antes de abrir posición.</li>
-              <li><strong>Bandas estrechas (compresión):</strong> prepara alertas y define niveles de entrada/stop para operar la ruptura acompañada de volumen.</li>
-              <li><strong>Bandas en expansión + ruptura:</strong> si el volumen confirma, deja correr el trade usando trailing stop para capturar la tendencia.</li>
-              <li><strong>Toque de banda inferior + RSI bajo:</strong> busca rebotes medidos; entra parcial con stop bajo la banda y objetivo en la SMA 20 o banda superior.</li>
+              <li>
+                <strong>Precio en la SMA 20 (línea central):</strong> señala
+                consolidación; espera ruptura con volumen o patrón de velas
+                antes de abrir posición.
+              </li>
+              <li>
+                <strong>Bandas estrechas (compresión):</strong> prepara alertas
+                y define niveles de entrada/stop para operar la ruptura
+                acompañada de volumen.
+              </li>
+              <li>
+                <strong>Bandas en expansión + ruptura:</strong> si el volumen
+                confirma, deja correr el trade usando trailing stop para
+                capturar la tendencia.
+              </li>
+              <li>
+                <strong>Toque de banda inferior + RSI bajo:</strong> busca
+                rebotes medidos; entra parcial con stop bajo la banda y objetivo
+                en la SMA 20 o banda superior.
+              </li>
             </ul>
-            <p class="numeric-example">Ej.: BTC 4H: RSI 28 + martillo en banda inferior = entrada parcial; stop 1.5% por debajo de la vela; TP en banda superior.</p>
+            <p class="numeric-example">
+              Ej.: BTC 4H: RSI 28 + martillo en banda inferior = entrada
+              parcial; stop 1.5% por debajo de la vela; TP en banda superior.
+            </p>
           </div>
 
           <h4>Ajustes recomendados para Bandas de Bollinger</h4>
@@ -898,175 +1288,332 @@ RSI:    \__/__  \
             <li><strong>StdDev:</strong> 2</li>
             <li><strong>Source:</strong> Close</li>
           </ul>
-        
-          <h3 id="rsi-reglas-estrategia">Reglas claras de la estrategia (entrada / salida)</h3>
+
+          <h3 id="rsi-reglas-estrategia">
+            Reglas claras de la estrategia (entrada / salida)
+          </h3>
           <h4>Señal de Entrada (Compra)</h4>
           <ul>
             <li>RSI <strong>&lt; 30</strong> (zona de sobreventa).</li>
-            <li>Precio toca o prueba la <strong>banda inferior</strong> de Bollinger.</li>
-            <li>Confirmación opcional: vela de reversal (hammer) o aumento de volumen en el rebote.</li>
-            <li>Abrir posición parcial (ej. 50% del tamaño planeado) y mover el resto según confirmaciones adicionales.</li>
+            <li>
+              Precio toca o prueba la <strong>banda inferior</strong> de
+              Bollinger.
+            </li>
+            <li>
+              Confirmación opcional: vela de reversal (hammer) o aumento de
+              volumen en el rebote.
+            </li>
+            <li>
+              Abrir posición parcial (ej. 50% del tamaño planeado) y mover el
+              resto según confirmaciones adicionales.
+            </li>
           </ul>
-        
+
           <h4>Señal de Salida (Venta / cierre parcial)</h4>
           <ul>
             <li>RSI se aproxima o supera <strong>70</strong>.</li>
-            <li>Precio toca la <strong>banda superior</strong> de Bollinger.</li>
-            <li>Si ocurre ruptura de banda con volumen alto, dejar correr parte de la posición con trailing stop.</li>
+            <li>
+              Precio toca la <strong>banda superior</strong> de Bollinger.
+            </li>
+            <li>
+              Si ocurre ruptura de banda con volumen alto, dejar correr parte de
+              la posición con trailing stop.
+            </li>
           </ul>
-        
+
           <h3 id="rsi-gestion-riesgo">Gestión de riesgo</h3>
           <ul>
-            <li><strong>Tamaño de posición:</strong> no arriesgar más del 1–2% del portafolio por operación.</li>
-            <li><strong>Stop-loss:</strong> colocar por debajo de la banda inferior (si entras en rebote) o según un % de pérdida máxima predefinida.</li>
-            <li><strong>Take-profit:</strong> objetivo inicial cerca de la banda superior o cuando RSI ~70; considerar salida parcial y trailing stop para el resto.</li>
-            <li><strong>Apalancamiento:</strong> evitar en spot; si usas margin, mantén apalancamiento muy moderado y stops ajustados.</li>
+            <li>
+              <strong>Tamaño de posición:</strong> no arriesgar más del 1–2% del
+              portafolio por operación.
+            </li>
+            <li>
+              <strong>Stop-loss:</strong> colocar por debajo de la banda
+              inferior (si entras en rebote) o según un % de pérdida máxima
+              predefinida.
+            </li>
+            <li>
+              <strong>Take-profit:</strong> objetivo inicial cerca de la banda
+              superior o cuando RSI ~70; considerar salida parcial y trailing
+              stop para el resto.
+            </li>
+            <li>
+              <strong>Apalancamiento:</strong> evitar en spot; si usas margin,
+              mantén apalancamiento muy moderado y stops ajustados.
+            </li>
           </ul>
-        
+
           <h3 id="rsi-practica-validacion">Práctica y validación</h3>
           <ul>
-            <li>Usa <strong>paper trading</strong> o el modo replay en TradingView para testear la estrategia durante al menos 30 operaciones.</li>
-            <li>Lleva un <strong>diario de operaciones</strong>: fecha, marco temporal, razón de entrada, precio de entrada, stop, take, resultado y lecciones.</li>
-            <li>Evita operar en noticias de alto impacto; las rupturas durante noticias pueden generar falsas señales y gran slippage.</li>
+            <li>
+              Usa <strong>paper trading</strong> o el modo replay en TradingView
+              para testear la estrategia durante al menos 30 operaciones.
+            </li>
+            <li>
+              Lleva un <strong>diario de operaciones</strong>: fecha, marco
+              temporal, razón de entrada, precio de entrada, stop, take,
+              resultado y lecciones.
+            </li>
+            <li>
+              Evita operar en noticias de alto impacto; las rupturas durante
+              noticias pueden generar falsas señales y gran slippage.
+            </li>
           </ul>
-        
+
           <h3 id="rsi-alertas-tradingview">Alertas sugeridas en TradingView</h3>
           <ul>
             <li>Alerta cuando <strong>RSI cruza por debajo de 30</strong>.</li>
             <li>Alerta cuando <strong>RSI cruza por encima de 70</strong>.</li>
-            <li>Alerta visual cuando el <strong>precio toca banda inferior/superior</strong> (price crossing line of BB).</li>
+            <li>
+              Alerta visual cuando el
+              <strong>precio toca banda inferior/superior</strong> (price
+              crossing line of BB).
+            </li>
           </ul>
-          <hr class="section-sep" data-sep-purpose="section">
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
         <section id="why-it-works" class="doc-section">
           <h2>Por qué funciona esta combinación</h2>
           <p>
-            El RSI identifica condiciones extremas de momentum, mientras que las Bandas de Bollinger contextualizan esas señales dentro de la volatilidad.
-            Juntos reducen señales falsas: RSI te dice cuándo el mercado está "exagerado" y las Bandas te muestran zonas de precio con probabilidad de rebote o ruptura.
+            El RSI identifica condiciones extremas de momentum, mientras que las
+            Bandas de Bollinger contextualizan esas señales dentro de la
+            volatilidad. Juntos reducen señales falsas: RSI te dice cuándo el
+            mercado está "exagerado" y las Bandas te muestran zonas de precio
+            con probabilidad de rebote o ruptura.
           </p>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
+        <hr class="section-sep" data-sep-purpose="section" />
 
         <section id="example" class="doc-section">
           <h2>Ejemplo práctico (resumen)</h2>
           <p>
-            Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior. En la siguiente vela aparece un martillo con mayor volumen: entrada parcial.
-            Pones stop justo por debajo de la banda inferior y take-profit cerca de la banda superior. Si la subida tiene volumen y rompe la banda superior, pasas a trailing stop para capturar más ganancia.
+            Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior.
+            En la siguiente vela aparece un martillo con mayor volumen: entrada
+            parcial. Pones stop justo por debajo de la banda inferior y
+            take-profit cerca de la banda superior. Si la subida tiene volumen y
+            rompe la banda superior, pasas a trailing stop para capturar más
+            ganancia.
           </p>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
-
+        <hr class="section-sep" data-sep-purpose="section" />
 
         <section id="recommended-times" class="doc-section">
           <h2>Horarios recomendados para revisar (CST, UTC−6)</h2>
           <p>
-            Aquí tienes una guía práctica para revisar tus gráficos en timeframe 1H sin estar pegado a la pantalla.
-            Revisa justo después del cierre de la vela horaria (ej. 01:05) para evitar señales parciales mientras la vela se forma.
+            Aquí tienes una guía práctica para revisar tus gráficos en timeframe
+            1H sin estar pegado a la pantalla. Revisa justo después del cierre
+            de la vela horaria (ej. 01:05) para evitar señales parciales
+            mientras la vela se forma.
           </p>
 
           <h3 id="horarios-frecuencia-sugerida">Frecuencia sugerida</h3>
           <ul>
-            <li>Revisiones diarias: <strong>3–4 veces al día</strong>. Duración: 5–15 minutos por chequeo.</li>
-            <li>Usa alertas automáticas (RSI cruces, toque de Bandas de Bollinger, rupturas) para reducir la supervisión continua.</li>
+            <li>
+              Revisiones diarias: <strong>3–4 veces al día</strong>. Duración:
+              5–15 minutos por chequeo.
+            </li>
+            <li>
+              Usa alertas automáticas (RSI cruces, toque de Bandas de Bollinger,
+              rupturas) para reducir la supervisión continua.
+            </li>
           </ul>
 
-          <h3 id="horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</h3>
+          <h3 id="horarios-concretos">
+            Horarios concretos (CST, UTC−6) y por qué
+          </h3>
           <ul>
             <li>
-              <strong>18:00–20:00 CST</strong> — Sesión asiática / pre-actividad americana<br>
-              Por qué: empiezan a moverse los mercados asiáticos; aparecen desequilibrios nocturnos y setups tempranos.
+              <strong>18:00–20:00 CST</strong> — Sesión asiática / pre-actividad
+              americana<br />
+              Por qué: empiezan a moverse los mercados asiáticos; aparecen
+              desequilibrios nocturnos y setups tempranos.
             </li>
             <li>
-              <strong>01:00–03:00 CST</strong> — Apertura europea (media)<br>
-              Por qué: flujo europeo que suele aumentar la volatilidad y confirmar rupturas iniciadas en Asia.
+              <strong>01:00–03:00 CST</strong> — Apertura europea (media)<br />
+              Por qué: flujo europeo que suele aumentar la volatilidad y
+              confirmar rupturas iniciadas en Asia.
             </li>
             <li>
-              <strong>08:00–10:00 CST</strong> — Apertura y pico de la sesión americana<br>
-              Por qué: ventana con mayor volumen para BTC; señales confirmadas aquí tienen más peso.
+              <strong>08:00–10:00 CST</strong> — Apertura y pico de la sesión
+              americana<br />
+              Por qué: ventana con mayor volumen para BTC; señales confirmadas
+              aquí tienen más peso.
             </li>
             <li>
-              <strong>13:00–15:00 CST</strong> — Cierre de la jornada americana / confirmación diaria<br>
-              Por qué: cierre de sesión en USA y reajuste de posiciones globales; buen momento para decidir dejar posiciones correr o asegurar ganancias.
+              <strong>13:00–15:00 CST</strong> — Cierre de la jornada americana
+              / confirmación diaria<br />
+              Por qué: cierre de sesión en USA y reajuste de posiciones
+              globales; buen momento para decidir dejar posiciones correr o
+              asegurar ganancias.
             </li>
           </ul>
 
-          <h3 id="horarios-checklist">Qué mirar en cada chequeo (checklist rápido)</h3>
+          <h3 id="horarios-checklist">
+            Qué mirar en cada chequeo (checklist rápido)
+          </h3>
           <ul>
-            <li>Cierre de la vela 1H: ¿confirmó la señal (RSI + Bandas) tras el cierre?</li>
-            <li>Volumen: ¿la vela de confirmación trae volumen mayor al promedio reciente?</li>
-            <li>Posición del precio respecto a la SMA20 (línea central de Bollinger).</li>
-            <li>Soporte / resistencia cercano: ¿estoy entrando sobre un soporte válido o en resistencia fuerte?</li>
-            <li>Gestión: mover stop a breakeven si se alcanzó tu objetivo intermedio; considerar salida parcial si RSI &gt; 70.</li>
-            <li>Noticias programadas: si hay evento macro, reducir exposición o evitar abrir nuevas posiciones.</li>
+            <li>
+              Cierre de la vela 1H: ¿confirmó la señal (RSI + Bandas) tras el
+              cierre?
+            </li>
+            <li>
+              Volumen: ¿la vela de confirmación trae volumen mayor al promedio
+              reciente?
+            </li>
+            <li>
+              Posición del precio respecto a la SMA20 (línea central de
+              Bollinger).
+            </li>
+            <li>
+              Soporte / resistencia cercano: ¿estoy entrando sobre un soporte
+              válido o en resistencia fuerte?
+            </li>
+            <li>
+              Gestión: mover stop a breakeven si se alcanzó tu objetivo
+              intermedio; considerar salida parcial si RSI &gt; 70.
+            </li>
+            <li>
+              Noticias programadas: si hay evento macro, reducir exposición o
+              evitar abrir nuevas posiciones.
+            </li>
           </ul>
 
-          <h3 id="horarios-reglas-practicas">Reglas prácticas para no sobre-operar</h3>
+          <h3 id="horarios-reglas-practicas">
+            Reglas prácticas para no sobre-operar
+          </h3>
           <ul>
-            <li>No entrar solo por una vela incompleta; esperar cierre horario.</li>
-            <li>Si recibes una alerta fuera de tus ventanas, esperar el siguiente cierre de 1H para confirmar.</li>
-            <li>Máximo recomendado mientras aprendes: 1–2 operaciones simultáneas en spot.</li>
+            <li>
+              No entrar solo por una vela incompleta; esperar cierre horario.
+            </li>
+            <li>
+              Si recibes una alerta fuera de tus ventanas, esperar el siguiente
+              cierre de 1H para confirmar.
+            </li>
+            <li>
+              Máximo recomendado mientras aprendes: 1–2 operaciones simultáneas
+              en spot.
+            </li>
           </ul>
 
-          <h3 id="horarios-plantilla-compacta">Plantilla de horario compacta (ejemplo)</h3>
+          <h3 id="horarios-plantilla-compacta">
+            Plantilla de horario compacta (ejemplo)
+          </h3>
           <ul>
             <li>Opción 3 checks: <strong>20:05, 01:05, 09:05 CST</strong>.</li>
-            <li>Opción 4 checks: <strong>20:05, 01:05, 09:05, 14:05 CST</strong>.</li>
+            <li>
+              Opción 4 checks: <strong>20:05, 01:05, 09:05, 14:05 CST</strong>.
+            </li>
           </ul>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
-
+        <hr class="section-sep" data-sep-purpose="section" />
 
         <section id="swing-trading-guide" class="doc-section">
           <h2>Swing trading — guía práctica</h2>
           <p>
-            El swing trading busca capturar movimientos intermedios (desde horas hasta semanas). No es scalping ni inversión a muy largo plazo.
-            Se basa en identificar tendencias, rebotes y rupturas, gestionando riesgo con stops y tamaño de posición adecuados.
+            El swing trading busca capturar movimientos intermedios (desde horas
+            hasta semanas). No es scalping ni inversión a muy largo plazo. Se
+            basa en identificar tendencias, rebotes y rupturas, gestionando
+            riesgo con stops y tamaño de posición adecuados.
           </p>
 
           <h3 id="swing-caracteristicas">Características principales</h3>
           <ul>
             <li>Horizonte típico: varias horas hasta semanas.</li>
-            <li>Timeframes usados comúnmente: <strong>1H, 4H, diario</strong>. Tú usarás 1H para entradas y 4H para confirmaciones mayores.</li>
-            <li>Se apoya en análisis técnico: soportes/resistencias, RSI, Bandas de Bollinger, volumen.</li>
-            <li>Gestión de riesgo: stops claros, tamaño de posición controlado (1–2% del portafolio por operación).</li>
+            <li>
+              Timeframes usados comúnmente: <strong>1H, 4H, diario</strong>. Tú
+              usarás 1H para entradas y 4H para confirmaciones mayores.
+            </li>
+            <li>
+              Se apoya en análisis técnico: soportes/resistencias, RSI, Bandas
+              de Bollinger, volumen.
+            </li>
+            <li>
+              Gestión de riesgo: stops claros, tamaño de posición controlado
+              (1–2% del portafolio por operación).
+            </li>
           </ul>
 
           <h3 id="swing-ventajas-desventajas">Ventajas y desventajas</h3>
           <ul>
-            <li><strong>Ventajas:</strong> más oportunidades que el swing a diario; permite sacar provecho de movimientos significativos sin vigilar todo el día.</li>
-            <li><strong>Desventajas:</strong> requiere disciplina con stops; movimientos grandes pueden generar mayor drawdown temporal.</li>
+            <li>
+              <strong>Ventajas:</strong> más oportunidades que el swing a
+              diario; permite sacar provecho de movimientos significativos sin
+              vigilar todo el día.
+            </li>
+            <li>
+              <strong>Desventajas:</strong> requiere disciplina con stops;
+              movimientos grandes pueden generar mayor drawdown temporal.
+            </li>
           </ul>
 
-          <h3 id="swing-proceso">Proceso simplificado de una operación swing (pasos)</h3>
+          <h3 id="swing-proceso">
+            Proceso simplificado de una operación swing (pasos)
+          </h3>
           <ol>
-            <li>Identificar setup: RSI y Bandas de Bollinger muestran condición (ej. RSI &lt; 30 + toque banda inferior).</li>
-            <li>Confirmar: espera cierre de vela 1H; revisa volumen y estructura (soporte/resistencia).</li>
-            <li>Calcular tamaño de posición: riesgo monetario = 1% del portafolio; distancia al stop → determinar tamaño.</li>
-            <li>Abrir posición parcial (opcional): por ejemplo 50% del tamaño planeado para validar movimiento.</li>
-            <li>Gestionar: mover stop a breakeven al alcanzar objetivo parcial; tomar ganancias parciales cuando RSI ≥ 60–70 o precio en banda superior.</li>
-            <li>Salir o trailing: si ruptura con volumen, usar trailing stop; si señal se invalida (RSI cruza en sentido contrario), cerrar parcialmente o totalmente.</li>
+            <li>
+              Identificar setup: RSI y Bandas de Bollinger muestran condición
+              (ej. RSI &lt; 30 + toque banda inferior).
+            </li>
+            <li>
+              Confirmar: espera cierre de vela 1H; revisa volumen y estructura
+              (soporte/resistencia).
+            </li>
+            <li>
+              Calcular tamaño de posición: riesgo monetario = 1% del portafolio;
+              distancia al stop → determinar tamaño.
+            </li>
+            <li>
+              Abrir posición parcial (opcional): por ejemplo 50% del tamaño
+              planeado para validar movimiento.
+            </li>
+            <li>
+              Gestionar: mover stop a breakeven al alcanzar objetivo parcial;
+              tomar ganancias parciales cuando RSI ≥ 60–70 o precio en banda
+              superior.
+            </li>
+            <li>
+              Salir o trailing: si ruptura con volumen, usar trailing stop; si
+              señal se invalida (RSI cruza en sentido contrario), cerrar
+              parcialmente o totalmente.
+            </li>
           </ol>
 
-          <h3 id="swing-reglas-riesgo">Reglas de gestión de riesgo (esenciales)</h3>
+          <h3 id="swing-reglas-riesgo">
+            Reglas de gestión de riesgo (esenciales)
+          </h3>
           <ul>
             <li>Riesgo por operación: ≤ 1–2% del portafolio.</li>
-            <li>Stop-loss: colocarlo según soporte técnico o por debajo de la banda inferior si entras en rebote.</li>
-            <li>Take-profit: objetivo inicial en banda superior o cuando RSI ≈ 70; considerar salida parcial y trailing stop.</li>
-            <li>Registro: llevar un diario con marco temporal, razón de entrada, stop, take, resultado y lección.</li>
+            <li>
+              Stop-loss: colocarlo según soporte técnico o por debajo de la
+              banda inferior si entras en rebote.
+            </li>
+            <li>
+              Take-profit: objetivo inicial en banda superior o cuando RSI ≈ 70;
+              considerar salida parcial y trailing stop.
+            </li>
+            <li>
+              Registro: llevar un diario con marco temporal, razón de entrada,
+              stop, take, resultado y lección.
+            </li>
           </ul>
 
           <h3 id="swing-ejemplo">Ejemplo práctico breve (resumen)</h3>
           <p>
-            BTC en 1H: RSI baja a 28 y la vela toca la banda inferior. Esperas el cierre de la vela 1H; aparece una vela martillo con volumen mayor.
-            Entras parcial, pones stop por debajo del mínimo reciente (o banda inferior) y TP inicial en banda superior. Si la subida tiene volumen y rompe la banda superior, aplicas trailing stop.
+            BTC en 1H: RSI baja a 28 y la vela toca la banda inferior. Esperas
+            el cierre de la vela 1H; aparece una vela martillo con volumen
+            mayor. Entras parcial, pones stop por debajo del mínimo reciente (o
+            banda inferior) y TP inicial en banda superior. Si la subida tiene
+            volumen y rompe la banda superior, aplicas trailing stop.
           </p>
 
-          <hr class="section-sep" data-sep-purpose="pre-checklist">
-          <h3 id="swing-checklist">Checklist rápido antes de abrir (para pegar como card)</h3>
+          <hr class="section-sep" data-sep-purpose="pre-checklist" />
+          <h3 id="swing-checklist">
+            Checklist rápido antes de abrir (para pegar como card)
+          </h3>
           <div class="trade-checklist">
             <h4>Checklist antes de operar</h4>
             <ul>
@@ -1077,43 +1624,75 @@ RSI:    \__/__  \
               <li>Stop-loss y tamaño de posición definidos (≤ 2% riesgo).</li>
             </ul>
           </div>
-          <hr class="section-sep" data-sep-purpose="section">
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
-
 
         <section id="advanced-strategies" class="doc-section">
-            <h2>Estrategias avanzadas</h2>
-            <ul>
-                <li><strong>Comprar en capitulación:</strong> Usar indicadores como Hash Ribbons para identificar oportunidades en pánico.</li>
-                <li><strong>Arbitraje entre exchanges:</strong> Aprovechar diferencias de precios en mercados.</li>
-                <li><strong>Seguimiento de rupturas:</strong> Detectar rompimientos de resistencias con alto volumen para entrar en tendencia.</li>
-            </ul>
-            <hr class="section-sep" data-sep-purpose="section">
+          <h2>Estrategias avanzadas</h2>
+          <ul>
+            <li>
+              <strong>Comprar en capitulación:</strong> Usar indicadores como
+              Hash Ribbons para identificar oportunidades en pánico.
+            </li>
+            <li>
+              <strong>Arbitraje entre exchanges:</strong> Aprovechar diferencias
+              de precios en mercados.
+            </li>
+            <li>
+              <strong>Seguimiento de rupturas:</strong> Detectar rompimientos de
+              resistencias con alto volumen para entrar en tendencia.
+            </li>
+          </ul>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
 
-        <hr class="section-sep" data-sep-purpose="pre-footer">
+        <hr class="section-sep" data-sep-purpose="pre-footer" />
         <section id="resources" class="doc-section">
-            <h2>Recursos adicionales</h2>
-            <ul>
-                <li><strong>Documentación:</strong> <a href="https://www.investopedia.com/bitcoin-halving-4843769" target="_blank">Bitcoin Halving (Investopedia)</a></li>
-                <li><strong>Guías:</strong> <a href="https://coinbureau.com/guides/risk-management-strategies-crypto-trading/" target="_blank">Estrategias de gestión de riesgos (Coin Bureau)</a></li>
-                <li><strong>Reportes:</strong> <a href="https://bitcoinmagazine.com/markets/exploring-six-on-chain-indicators-to-understand-the-bitcoin-market-cycle" target="_blank">Indicadores on-chain (Bitcoin Magazine)</a></li>
-            </ul>
-            <p>Consulta estas fuentes para mejorar tu conocimiento y estrategias.</p>
-            <hr class="section-sep" data-sep-purpose="section">
+          <h2>Recursos adicionales</h2>
+          <ul>
+            <li>
+              <strong>Documentación:</strong>
+              <a
+                href="https://www.investopedia.com/bitcoin-halving-4843769"
+                target="_blank"
+                >Bitcoin Halving (Investopedia)</a
+              >
+            </li>
+            <li>
+              <strong>Guías:</strong>
+              <a
+                href="https://coinbureau.com/guides/risk-management-strategies-crypto-trading/"
+                target="_blank"
+                >Estrategias de gestión de riesgos (Coin Bureau)</a
+              >
+            </li>
+            <li>
+              <strong>Reportes:</strong>
+              <a
+                href="https://bitcoinmagazine.com/markets/exploring-six-on-chain-indicators-to-understand-the-bitcoin-market-cycle"
+                target="_blank"
+                >Indicadores on-chain (Bitcoin Magazine)</a
+              >
+            </li>
+          </ul>
+          <p>
+            Consulta estas fuentes para mejorar tu conocimiento y estrategias.
+          </p>
+          <hr class="section-sep" data-sep-purpose="section" />
         </section>
-
-    </main>
+      </main>
     </div>
 
     <footer>
-        <p>©2025 DesvoSoft</p>
-        <p class="liability-note">Contenido educativo: evalúa tus decisiones y asume la responsabilidad de cada inversión.</p>
+      <p>©2025 DesvoSoft</p>
+      <p class="liability-note">
+        Contenido educativo: evalúa tus decisiones y asume la responsabilidad de
+        cada inversión.
+      </p>
     </footer>
 
-    <script src="../JS/navbar.js"></script>
+    <script src="../JS/navbar.js" data-basepath="../../"></script>
     <!-- TOC script externalizado: ../JS/crypto-toc.js -->
     <script src="../JS/crypto-toc.js" defer></script>
-</body>
-
+  </body>
 </html>
