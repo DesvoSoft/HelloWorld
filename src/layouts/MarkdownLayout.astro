@@ -1,0 +1,40 @@
+---
+import Layout from './Layout.astro';
+import '../styles/page-specific/info-pages.css';
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+    <main>
+        <slot />
+        
+        {frontmatter.videoUrl && frontmatter.buttonText && (
+            <>
+                <br><br><br>
+                <section>
+                    <button id="playButton">{frontmatter.buttonText}</button>
+                </section>
+                
+                <br><br><br><br><br><br>
+                <div id="videoBackground"></div>
+
+                <script define:vars={{ videoUrl: frontmatter.videoUrl }}>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const playButton = document.getElementById('playButton');
+                        const videoBackground = document.getElementById('videoBackground');
+
+                        if (playButton && videoBackground) {
+                            playButton.addEventListener('click', function () {
+                                if (!videoBackground.innerHTML) {
+                                    videoBackground.innerHTML = `<iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                                }
+                                videoBackground.style.display = 'block';
+                            });
+                        }
+                    });
+                </script>
+            </>
+        )}
+    </main>
+</Layout>

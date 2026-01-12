@@ -28,6 +28,119 @@ import '../styles/crypto-toc.css';
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
       }
+
+      /* Pop-up Styles */
+      .popup-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .popup-content {
+        background: var(--bg-card, #1a1f2e);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        animation: popupFadeIn 0.3s ease-out;
+      }
+
+      @keyframes popupFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .popup-close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: var(--text-muted, #8892b0);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+
+      .popup-close-btn:hover {
+        color: var(--text-main, #fff);
+      }
+
+      .popup-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+        padding-bottom: 1rem;
+      }
+
+      .popup-icon {
+        font-size: 1.5rem;
+      }
+
+      .popup-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: var(--text-main, #fff);
+        border: none;
+        padding: 0;
+      }
+
+      .popup-body {
+        color: var(--text-body, #a8b2d1);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .popup-body p {
+        margin-bottom: 1rem;
+      }
+
+      .popup-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .popup-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .popup-accept-btn {
+        background: var(--accent, #64ffda);
+        color: var(--bg-main, #0a192f);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, filter 0.2s;
+      }
+
+      .popup-accept-btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+      }
     </style>
     
     <div class="popup-overlay" id="disclaimerPopup">

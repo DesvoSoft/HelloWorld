@@ -1,6 +1,6 @@
 # Hello World (DesvoSoft)
 
-![Logo del proyecto](/images/theme.ico)
+![Logo](/images/theme.ico)
 
 ## Descripción
 
