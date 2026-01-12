@@ -1,0 +1,261 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/page-specific/info-pages.css';
+---
+
+<Layout title="Guía de Git">
+    <main>
+        
+        <!-- Introducción y flujo típico -->
+        
+        <section id="intro">
+            <h2>¿Qué es Git?</h2>
+            <p>Git es un sistema de control de versiones (VCS) que rastrea los cambios en tus archivos. Permite a múltiples personas trabajar en un proyecto simultáneamente sin pisarse los pies, y facilita volver a versiones anteriores.</p>
+            <br>
+            <h3>Flujo de trabajo típico</h3>
+            <ol>
+                <li>Crear o clonar un repositorio (<code>git init</code> / <code>git clone</code>).</li>
+                <li>Editar archivos.</li>
+                <li>Preparar cambios (<code>git add</code>).</li>
+                <li>Guardar cambios (<code>git commit</code>).</li>
+                <li>Trabajar en ramas (<code>git branch</code>, <code>git checkout</code>).</li>
+                <li>Compartir cambios (<code>git push</code>, <code>git pull</code>).</li>
+                <li>Integrar cambios (<code>git merge</code>, <code>git rebase</code>, pull request).</li>
+            </ol>
+            <br><hr><br>
+        </section>
+
+        <!-- Glosario ordenado -->
+        <section id="glossary">
+            <h2>Glosario</h2>
+            <ul>
+                <li><strong>Repositorio:</strong> Directorio con tu proyecto y su historial.</li>
+                <li><strong>Commit:</strong> Fotografía de los cambios en un punto del tiempo.</li>
+                <li><strong>Branch:</strong> Línea de desarrollo paralela.</li>
+                <li><strong>Merge:</strong> Unir cambios de diferentes ramas.</li>
+                <li><strong>Pull Request:</strong> Solicitud formal para fusionar cambios.</li>
+                <li><strong>Rebase:</strong> Reaplicar commits sobre otra rama para un historial más lineal.</li>
+                <li><strong>Stash:</strong> Guardar cambios temporalmente sin comprometer.</li>
+            </ul>
+            <br><hr><br>
+        </section>
+
+        <!-- Configuración Inicial reorganizada -->
+        <section id="setup">
+            <h2>Configuración Inicial</h2>
+            <br>
+            <p>Lo primero: configura tu identidad global:</p>
+            <pre><code>$ git config --global user.name "Tu Nombre"
+$ git config --global user.email "tuemail@ejemplo.com"
+$ git config --list</code></pre>
+            <p>Esto asegura que Git sepa quién realiza cada commit. <code>--global</code> aplica a todos los repositorios. Para un repositorio específico, omite <code>--global</code> y configúralo localmente.</p>
+            <br><hr><br>
+        </section>
+
+        <!-- Comandos Básicos agrupados -->
+        <section id="basic-commands">
+            <h2>Comandos Básicos</h2>
+            <br>
+            <ul>
+                <li><code>git init</code>: Crea la carpeta <code>.git</code> (historial) en el directorio actual.</li>
+                <li><code>git status</code>: Muestra cambios no rastreados, preparados y modificados.</li>
+                <li><code>git add [archivo]</code>: Prepara cambios para el próximo commit.</li>
+                <li><code>git commit -m "mensaje"</code>: Guarda los cambios preparados con un mensaje descriptivo.</li>
+                <li><code>git log --oneline</code>: Lista el historial de commits en una línea cada uno.</li>
+            </ul>
+            <br>
+            <p><strong>Ejemplo guiado:</strong></p>
+            <pre><code>$ mkdir mi_proyecto
+$ cd mi_proyecto
+$ git init
+$ echo "Hola Mundo" > archivo.txt
+$ git status
+$ git add archivo.txt
+$ git status
+$ git commit -m "Agregar archivo inicial"
+$ git log --oneline</code></pre>
+<br><hr><br>
+        </section>
+
+        <!-- Operaciones Avanzadas -->
+        <section id="advanced-topics">
+            <h2>Operaciones Avanzadas</h2>
+            <br>
+            <h3>Rebase</h3>
+            <p>Mantén un historial lineal moviendo tus commits al tope de otra rama.</p>
+            <pre><code># En feature-branch
+$ git checkout feature-branch
+$ git rebase origin/main
+# Resolver conflictos si aparecen:
+$ git add &lt;archivos&gt;
+$ git rebase --continue</code></pre>
+            <p><em>Advertencia:</em> No reescribas ramas compartidas.</p><br>
+
+            <h3>Cherry-pick</h3>
+            <p>Aplica un solo commit a tu rama actual.</p>
+            <pre><code>$ git log --oneline
+$ git cherry-pick &lt;SHA_del_commit&gt;
+# Resolver y confirmar</code></pre>
+            <br>
+
+            <h3>Stash</h3>
+            <p>Guarda cambios sin hacer commit, ideal para cambiar de tarea.</p>
+            <pre><code>$ git stash
+$ git status
+$ git stash list
+$ git stash pop</code></pre>
+            <br>
+
+            <h3>Squash Commits</h3>
+            <p>Combina múltiples commits en uno solo durante un rebase interactivo.</p>
+            <pre><code>$ git rebase -i HEAD~3
+# Marca 'squash' en los commits a combinar</code></pre>
+            <br><hr><br>
+        </section>
+
+        <!-- Workflows Colaborativos -->
+        <section id="workflows">
+            <h2>Workflows Colaborativos y Flujo de Ramas</h2>
+            <br>
+            <p>Las estrategias de branching ayudan a organizar el desarrollo en equipo y el ciclo de vida de las releases.</p>
+
+            <h3>Ejemplo de Flujo de Ramas</h3>
+            <p>Supongamos que trabajamos en una nueva característica y luego la integramos:</p>
+            <pre><code># 1. Partir desde main actualizada
+git checkout main
+git pull origin main
+
+# 2. Crear rama de feature
+git checkout -b feature/login
+
+# 3. Trabajar en la feature (editar, probar)
+# ... hacer cambios ...
+
+# 4. Preparar y commitear cambios
+git add .
+git commit -m "Implementar pantalla de login"
+
+# 5. Volver a main y combinar
+git checkout main
+git merge feature/login
+
+# 6. Subir a remoto
+git push origin main
+            </code></pre>
+            <br>
+
+            <h3>Gitflow</h3>
+            <p>Gitflow es un modelo popular para gestionar releases, features y hotfixes:</p>
+            <pre><code># Inicializar Gitflow (solo una vez)
+git flow init
+
+# Crear y finalizar una feature
+git flow feature start nueva-funcionalidad
+# ... trabajar ...
+git flow feature finish nueva-funcionalidad
+
+# Crear y terminar release
+git flow release start v1.0.0
+# ... preparar release ...
+git flow release finish v1.0.0
+
+# Crear hotfix
+git flow hotfix start corregir-bug
+# ... arreglar bug ...
+git flow hotfix finish corregir-bug</code></pre>
+            <p>Este flujo genera ramas <code>feature/*</code>, <code>release/*</code> y <code>hotfix/*</code>, manteniendo <code>develop</code> y <code>master</code> limpias.</p>
+            <br><hr><br>
+        </section>
+
+        <!-- Revisión y Comparación de Cambios -->
+        <section id="review">
+            <h2>Revisión y Comparación de Cambios</h2>
+            <br>
+            <p>Antes de crear commits o durante las revisiones de código, es vital inspeccionar lo que ha cambiado, qué está preparado y cómo difiere del historial.</p>
+
+            <h3>Estado de los cambios</h3>
+            <pre><code>$ git status
+# Muestra archivos modificados, no rastreados y preparados para commit.</code></pre>
+            <br>
+
+            <h3>Comparar cambios no preparados</h3>
+            <pre><code>$ git diff
+# Muestra las diferencias entre el working directory y el índice (staging area).</code></pre>
+            <br>
+
+            <h3>Comparar cambios preparados</h3>
+            <pre><code>$ git diff --staged
+# Muestra las diferencias entre el índice y el último commit.</code></pre>
+            <br>
+
+            <h3>Ver un commit específico</h3>
+            <pre><code>$ git show &lt;SHA_del_commit&gt;
+# Muestra los cambios introducidos por ese commit.</code></pre>
+            <br>
+
+            <h3>Historial con diferencias</h3>
+            <pre><code>$ git log -p
+# Incluye el patch (diff) junto a cada commit en el historial.</code></pre>
+            <br>
+
+            <h3>Responsables de líneas</h3>
+            <pre><code>$ git blame archivo.txt
+# Muestra qué commit y autor modificó cada línea del archivo.</code></pre>
+            <br>
+
+            <h3>Bisect para encontrar errores</h3>
+            <p>Divide y vencerás: usa <code>git bisect</code> para localizar el commit que introdujo un bug.</p>
+            <pre><code>$ git bisect start
+$ git bisect bad  # en estado con bug
+$ git bisect good &lt;SHA_del_commit_anterior&gt;
+# Git recorrerá commits; marca cada estado con 'good' o 'bad' hasta hallar el culpable.</code></pre>
+
+            <br><hr><br>
+        </section>
+
+        <!-- Recursos Adicionales categorizados -->
+        <section id="resources">
+            <h2>Recursos Adicionales</h2>
+            <br>
+            <ul>
+                <li><strong>Documentación:</strong> <a href="https://git-scm.com/doc" target="_blank">git-scm.com</a></li>
+                <li><strong>Tutoriales Interactivos:</strong> <a href="https://learngitbranching.js.org/" target="_blank">Learn Git Branching</a></li>
+                <li><strong>Guías:</strong> <a href="https://guides.github.com/" target="_blank">GitHub Guides</a>, <a href="https://www.atlassian.com/git" target="_blank">Atlassian Git</a></li>
+                <li><strong>Hojas de Referencia:</strong> <a href="https://www.freecodecamp.org/news/git-cheat-sheet/" target="_blank">FreeCodeCamp Cheat Sheet</a></li>
+            </ul>
+            <br><hr><br>
+        </section>
+
+         <!-- Interactividad -->
+        <section id="fun">
+            <p>Aprender Git es una inversión clave para desarrolladores.</p>
+            <br><br><br><br><br><br><br>
+            <button id="playButton">git push</button>
+            <br><br><br><br><br><br>
+            <div id="videoBackground"></div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const playButton = document.getElementById('playButton');
+            const videoBackground = document.getElementById('videoBackground');
+
+            // URL del video de YouTube con controles y sonido
+            const videoUrl = 'https://www.youtube.com/embed/zZdVwTjUtjg?si=W1LgM0J8b2Dbf1kl?autoplay=1&controls=0&loop=0&amp;vq=hd1080';
+
+            // Funcion para reproducir el video y mostrar el div
+            if (playButton && videoBackground) {
+                playButton.addEventListener('click', function () {
+                    // Inyectar el video de YouTube en el fondo si aun no se ha inyectado
+                    if (!videoBackground.innerHTML) {
+                        videoBackground.innerHTML = `<iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                    }
+
+                    // Mostrar el div de videoBackground
+                    videoBackground.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</Layout>

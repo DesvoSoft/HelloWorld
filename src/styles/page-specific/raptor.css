@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+:root{
+    --bgColor: #333;
+    --textPrimary: #fff;
+    --textSecondary: #666;
+    --primaryColor: #fd4;
+}
+
+#home{
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    background-color: var(--bgColor);
+    padding: 20px;
+    margin: 50px auto;
+}
+
+main {
+    width: 85%;
+    margin: 50px auto;
+    font-size: 1.4rem;
+}
+
+h1 {
+    color: var(--primaryColor);
+}
+
+ h1 svg {
+    width: 40px;
+    fill: var(--primaryColor);
+}
+
+#hgameHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#buttons {
+    text-align: right;
+}
+
+#info {
+    color: var(--primaryColor);
+}
+
+/* Contenedor de resultados */
+#result {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--bgColor);
+    color: var(--textPrimary);
+    border-radius: 5px;
+    font-family: "Chakra Petch", sans-serif;
+  }
+  
+  .resultBox h2 {
+    margin-top: 0;
+  }
+  
+  #controls {
+    margin-bottom: 15px;
+  }
+  
+  #controls label,
+  #controls select,
+  #controls button {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  /* Otros estilos para letras y palabras (ya existentes) */
+  .word {
+    margin-right: 7px;
+  }
+  
+  .letter {
+    font-size: 24px;
+    padding: 2px;
+    transition: color 0.2s ease;
+  }
+  
+  .faded {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .correct {
+    color: white;
+  }
+  
+  .incorrect {
+    color: rgb(250, 79, 79);
+  }
+  
+  .cursor {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    animation: cursor-blink 0.8s infinite;
+  }
+  
+  @keyframes cursor-blink {
+    0% { background: rgba(255, 255, 255, 0.2); }
+    50% { background: rgba(255, 255, 255, 0.5); }
+    100% { background: rgba(255, 255, 255, 0.2); }
+  }
+  

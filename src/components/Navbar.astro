@@ -1,0 +1,58 @@
+---
+---
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="logo">
+            <a href="/"><span class="code-line-logo"></span>Hello World</a>
+        </div>
+        <nav>
+            <ul class="links">
+                <li><a href="/python" class="navbutton">Python</a></li>
+                <!--<li><a href="/javascript" class="navbutton">Javascript</a></li>  --- WIP -->
+                <li><a href="/git" class="navbutton">Git</a></li>
+                <li><a href="/raptor" class="navbutton">Raptor</a></li>
+                <li><a href="/crypto" class="navbutton">Crypto</a></li>
+                <li><a href="#contact" class="navbutton">Contacto</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Boton hamburguesa -->
+        <button class="dropdown-btn" aria-label="Abrir menú">☰</button>
+
+        <!-- Menu desplegable -->
+        <div class="dropdown">
+            <ul>
+                <li><a href="/python" class="navbutton">Python</a></li>
+                <!--<li><a href="/javascript" class="navbutton">Javascript</a></li>  --- WIP -->
+                <li><a href="/git" class="navbutton">Git</a></li>
+                <li><a href="/raptor" class="navbutton">Raptor</a></li>
+                <li><a href="/crypto" class="navbutton">Crypto</a></li>
+                <li><a href="#contact" class="navbutton">Contacto</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+  const dropdownBtn = document.querySelector(".dropdown-btn");
+  const dropdown = document.querySelector(".dropdown");
+
+  if (dropdownBtn && dropdown) {
+    // Abrir/cerrar el menu al hacer clic en el boton
+    dropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    // Cerrar el menu si se hace clic fuera
+    document.addEventListener("click", (event) => {
+      if (
+        event.target instanceof Node &&
+        !dropdown.contains(event.target) &&
+        !dropdownBtn.contains(event.target)
+      ) {
+        dropdown.classList.remove("open");
+      }
+    });
+  }
+</script>

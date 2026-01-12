@@ -1,0 +1,42 @@
+---
+import '../styles/variables.css';
+import '../styles/responsive.css';
+import '../styles/navbar.css';
+import Navbar from '../components/Navbar.astro';
+
+interface Props {
+	title: string;
+    description?: string;
+}
+
+const { title, description = "DesvoSoft: Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+        <meta name="google-site-verification" content="t61vFNx51RZSU9UsbAIbH6cTzFvAJKXvFHbvUo0UAH0" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/x-icon" href="/images/theme.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	</head>
+	<body>
+        <header>
+            <slot name="header" />
+        </header>
+        
+        <Navbar />
+
+		<slot />
+
+        <footer>
+            <p data-i18n="footerCopyright">&copy; 2025 DesvoSoft</p>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" is:inline></script>
+	</body>
+</html>
