@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BtcTracker from '../components/BtcTracker.astro';
 import '../styles/page-specific/info-pages.css';
 import '../styles/crypto-toc.css';
 ---
@@ -140,6 +141,31 @@ import '../styles/crypto-toc.css';
       .popup-accept-btn:hover {
         transform: translateY(-2px);
         filter: brightness(1.1);
+      }
+      .disclaimer-btn {
+        display: flex;
+        justify-content: center;
+        margin: 2rem 0;
+      }
+
+      .show-popup-btn {
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent, #64ffda);
+        border: 1px solid rgba(100, 255, 218, 0.3);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.02em;
+      }
+
+      .show-popup-btn:hover {
+        background: rgba(100, 255, 218, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(100, 255, 218, 0.1);
+        border-color: var(--accent, #64ffda);
       }
     </style>
     
@@ -303,6 +329,9 @@ import '../styles/crypto-toc.css';
                 <div class="disclaimer-btn">
                     <button class="show-popup-btn" id="showPopupBtn">Ver disclaimer</button>
                 </div>
+
+                <BtcTracker />
+
                 <hr class="section-sep" data-sep-purpose="section">
 
             </section>

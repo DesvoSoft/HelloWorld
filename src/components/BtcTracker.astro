@@ -1,0 +1,279 @@
+---
+// BtcTracker.astro
+---
+
+<div class="btc-tracker-container">
+  <div class="btc-tracker-card" id="btc-tracker">
+    <div class="tracker-header">
+      <div class="coin-info">
+        <div class="coin-icon">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+            <path d="M23.189 14.022c.336-2.247-1.374-3.455-3.712-4.26l.759-3.041-1.85-.461-.74 2.965c-.486-.121-.984-.235-1.478-.348l.746-2.989-1.85-.461-.759 3.041c-.403-.092-.801-.182-1.188-.276l.001-.005-2.552-.637-.492 1.976s1.373.315 1.344.334c.75.187.885.683.863 1.077l-.864 3.465c.052.013.119.032.193.058l-.195-.049-1.21 4.853c-.092.228-.325.57-.849.44.02.029-1.344-.334-1.344-.334l-.918 2.117 2.408.6c.447.112.885.228 1.316.339l-.766 3.075 1.85.461.759-3.042c.505.137 1 .267 1.487.39l-.754 3.027 1.85.461.766-3.074c3.156.598 5.528.357 6.526-2.498.805-2.298-.04-3.624-1.701-4.493 1.21-.28 2.12-1.077 2.362-2.724zM19.16 20.43c-.572 2.298-4.439 1.056-5.694.744l1.016-4.074c1.255.313 5.276.932 4.678 3.33zm.573-5.753c-.522 2.092-3.742 1.03-4.787.77l.922-3.698c1.045.26 4.408.746 3.865 2.928z" fill="white"/>
+          </svg>
+        </div>
+        <span class="coin-name">Bitcoin</span>
+        <span class="coin-symbol">BTC</span>
+      </div>
+      <div class="live-indicator">
+        <span class="dot"></span>
+        LIVE
+      </div>
+    </div>
+    
+    <div class="price-container">
+      <div class="current-price" id="btc-price">Loading...</div>
+      <div class="price-change" id="btc-change">
+        <span class="change-value">--</span>
+      </div>
+    </div>
+
+    <div class="graph-container">
+      <svg id="btc-sparkline" width="100%" height="60" viewBox="0 0 100 60" preserveAspectRatio="none">
+        <path id="sparkline-path" d="" fill="none" stroke="#64ffda" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="sparkline-area" d="" fill="url(#sparkline-gradient)" opacity="0.1"></path>
+        <defs>
+          <linearGradient id="sparkline-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#64ffda" />
+            <stop offset="100%" stop-color="#64ffda" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="tracker-footer">
+      <span class="last-updated">Last updated: <span id="update-time">--</span></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btc-tracker-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 2rem 0;
+  }
+
+  .btc-tracker-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 360px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btc-tracker-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.5);
+    border-color: rgba(100, 255, 218, 0.4);
+  }
+
+  .tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .coin-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .coin-name {
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .coin-symbol {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.1rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64ffda;
+    background: rgba(100, 255, 218, 0.1);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #64ffda;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(100, 255, 218, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
+  }
+
+  .price-container {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .current-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .price-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+  }
+
+  .price-change.up { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+  .price-change.down { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+
+  .graph-container {
+    height: 60px;
+    margin: 1rem -1.75rem;
+    padding: 0 1.75rem;
+    position: relative;
+  }
+
+  .tracker-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .last-updated {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+  }
+
+  /* Light mode adjustments if needed */
+  :global(body:not(.dark)) .btc-tracker-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  }
+  :global(body:not(.dark)) .coin-name, 
+  :global(body:not(.dark)) .current-price {
+    color: #1a1f2e;
+  }
+  :global(body:not(.dark)) .coin-symbol,
+  :global(body:not(.dark)) .last-updated {
+    color: rgba(0, 0, 0, 0.5);
+  }
+</style>
+
+<script>
+  async function fetchBtcPrice() {
+    const priceEl = document.getElementById('btc-price');
+    const changeEl = document.getElementById('btc-change');
+    const timeEl = document.getElementById('update-time');
+    const sparklinePath = document.getElementById('sparkline-path');
+    const sparklineArea = document.getElementById('sparkline-area');
+
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true');
+      const data = await response.json();
+      
+      const price = data.market_data.current_price.usd;
+      const change = data.market_data.price_change_percentage_24h;
+      const sparklineData = data.market_data.sparkline_7d.price;
+      
+      if (priceEl) {
+        priceEl.textContent = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(price);
+      }
+      
+      if (changeEl) {
+        const isUp = change >= 0;
+        changeEl.className = `price-change ${isUp ? 'up' : 'down'}`;
+        changeEl.innerHTML = `
+          <span class="change-icon">${isUp ? '▲' : '▼'}</span>
+          <span class="change-value">${Math.abs(change).toFixed(2)}%</span>
+          <span class="change-period">(24h)</span>
+        `;
+        
+        // Update graph color based on change
+        if (sparklinePath) sparklinePath.setAttribute('stroke', isUp ? '#4ade80' : '#f87171');
+        const stop0 = document.querySelector('#sparkline-gradient stop:first-child');
+        const stop1 = document.querySelector('#sparkline-gradient stop:last-child');
+        if (stop0) stop0.setAttribute('stop-color', isUp ? '#4ade80' : '#f87171');
+        if (stop1) stop1.setAttribute('stop-color', isUp ? '#4ade80' : '#f87171');
+      }
+      
+      if (sparklinePath && sparklineData) {
+        const min = Math.min(...sparklineData);
+        const max = Math.max(...sparklineData);
+        const range = max - min;
+        const width = 100;
+        const height = 60;
+        
+        const points = sparklineData.map((p: number, i: number) => {
+          const x = (i / (sparklineData.length - 1)) * width;
+          const y = height - ((p - min) / range) * height;
+          return `${x},${y}`;
+        });
+        
+        const d = `M ${points.join(' L ')}`;
+        sparklinePath.setAttribute('d', d);
+        
+        if (sparklineArea) {
+          const areaD = `${d} L ${width},${height} L 0,${height} Z`;
+          sparklineArea.setAttribute('d', areaD);
+        }
+      }
+      
+      if (timeEl) {
+        timeEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+    } catch (error) {
+      console.error('Error fetching BTC price:', error);
+      if (priceEl) priceEl.textContent = 'Error';
+    }
+  }
+
+  // Initial fetch
+  fetchBtcPrice();
+  
+  // Update every 60 seconds
+  setInterval(fetchBtcPrice, 60000);
+</script>
