@@ -70,8 +70,14 @@ jobs:
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} astro build \
             --site "${{ steps.pages.outputs.origin }}" \
-            --base "${{ steps.pages.outputs.base_path }}"
+            --base "${{ steps.pages.outputs.base_path || '/HelloWorld/' }"
         working-directory: ${{ env.BUILD_PATH }}
+      - name: List built files
+        run: |
+          echo "Build structure:"
+          find ${{ env.BUILD_PATH }}/dist -type f -name "*.html" | head -10
+          echo "Directory structure:"
+          ls -la ${{ env.BUILD_PATH }}/dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
