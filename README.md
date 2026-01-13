@@ -52,9 +52,10 @@ Este proyecto ha sido migrado a **Astro**, un framework web moderno para sitios 
 Actualmente, el sitio cubre los siguientes temas:
 
 - **Python:** Recursos y guías sobre el lenguaje de programación Python. [Ver página](/python)
+- **C++:** Fundamentos de programación en C++ con ejemplos prácticos. [Ver página](/cpp)
 - **Git:** Información esencial sobre el sistema de control de versiones Git. [Ver página](/git)
-- **Raptor:** Una herramienta de práctica de mecanografía con diseño moderno. [Ver página](/raptor)
 - **Crypto:** Exploración de temas relacionados con las criptomonedas, incluyendo avisos legales interactivos. [Ver página](/crypto)
+- **Galería:** Colección de imágenes generadas con inteligencia artificial. [Ver galería](/)#images)
 
 ## Características
 
@@ -62,15 +63,19 @@ Actualmente, el sitio cubre los siguientes temas:
 - **Gestión de Contenido Simplificada:** Uso de Markdown para facilitar la edición y adición de nuevas guías.
 - **Navegación Intuitiva:** Fácil acceso a los diferentes temas con un diseño limpio.
 - **Responsive Design:** Adaptable a diferentes tamaños de pantalla y dispositivos.
-- **UI Moderna:** Interfaces pulidas con temas oscuros y acentos vibrantes (ej. Raptor Typing).
+- **UI Moderna:** Interfaces pulidas con temas oscuros y organización optimizada de recursos.
 
 ## Estructura del Proyecto
 
 - `src/pages/`: Rutas del sitio (archivos `.astro` y `.md`).
-- `src/components/`: Componentes reutilizables (Navbar, etc.).
+- `src/components/`: Componentes reutilizables (Navbar, BtcTracker, etc.).
 - `src/layouts/`: Plantillas base (`Layout.astro`) y especializadas (`MarkdownLayout.astro`).
 - `src/styles/`: Archivos CSS organizados por propósito y página.
-- `public/`: Activos estáticos (imágenes, iconos).
+- `src/scripts/`: Scripts JavaScript para funcionalidades interactivas.
+- `public/`: Activos estáticos organizados en subcarpetas:
+  - `public/images/gallery/`: Galería de imágenes generadas con IA
+  - `public/images/docs/`: Imágenes de documentación y diagramas
+  - `public/images/`: Iconos y recursos generales
 
 ## Licencia
 

@@ -6,6 +6,6 @@ export default defineConfig({
   output: 'static',
   base: '/HelloWorld/',
   build: {
-    format: 'directory'
+    format: 'file'
   }
 });
