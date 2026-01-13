@@ -1,14 +1,12 @@
 # Hello World (DesvoSoft)
 
-![Logo](/images/theme.ico)
-
 ## Descripción
 
-Hello World es un sitio web dedicado a proporcionar recursos y guías de distintos temas relevantes a la evolución digital.
+Sitio web dedicado a proporcionar recursos y guías de distintos temas relevantes a la evolución digital.
 
 Nacido como un proyecto personal para practicar el control de versiones con Git y explorar el desarrollo web, este sitio busca ofrecer contenido conciso y práctico, especialmente útil para principiantes y aquellos que desean solidificar sus conocimientos básicos.
 
-El contenido de este sitio web está destinado a fines informativos y no debe interpretarse como asesoramiento. Usted acepta usar el sitio web bajo su propio riesgo.
+El contenido de este sitio web está destinado a fines informativos y no debe interpretarse como asesoramiento.
 
 ## Tecnología
 
@@ -16,7 +14,7 @@ Este proyecto ha sido migrado a **Astro**, un framework web moderno para sitios 
 
 - **Framework**: [Astro](https://astro.build)
 - **Contenido**: Markdown (`.md`) para guías y recursos.
-- **Lenguaje**: TypeScript / JavaScript
+- **Lenguaje**: JavaScript
 - **Estilos**: CSS (Vanilla, Legacy & Scoped)
 
 ## Instalación y Ejecución
@@ -77,6 +75,4 @@ Actualmente, el sitio cubre los siguientes temas:
   - `public/images/docs/`: Imágenes de documentación y diagramas
   - `public/images/`: Iconos y recursos generales
 
-## Licencia
-
-© 2025 DesvoSoft
+© 2026 DesvoSoft
