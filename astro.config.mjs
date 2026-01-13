@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   output: 'static',
   base: '/HelloWorld/',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   build: {
     format: 'directory'
   }
