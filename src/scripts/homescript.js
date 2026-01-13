@@ -40,10 +40,17 @@ function initializeSwiper() {
         disableOnInteraction: false,
       },
 
-      /*Pagination
-        pagination: {
+      // Pagination
+      pagination: {
         el: '.swiper-pagination',
-        },*/
+        clickable: true,
+      },
+
+      // Navigation
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
 
       // Navigation with keyboard and mouse
       grabCursor: true,
