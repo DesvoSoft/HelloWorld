@@ -230,6 +230,15 @@ import '../styles/crypto-toc.css';
             <li class="toc-item">
               <a class="toc-chip toc-link" data-toc-id="derivatives" href="#derivatives">Futuros y derivados</a>
             </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="etfs" href="#etfs">ETFs (Fondos Cotizados)</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="beginner-guide" href="#beginner-guide">Guía para principiantes</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="tax-regulation" href="#tax-regulation">Aspectos fiscales y regulatorios</a>
+            </li>
             <li class="toc-item toc-item-has-sub">
               <div class="toc-chip-shell">
                 <a class="toc-chip toc-link" data-toc-id="rsi-bb-strategy" href="#rsi-bb-strategy">Estrategia práctica: RSI + BB</a>
@@ -313,6 +322,9 @@ import '../styles/crypto-toc.css';
             </li>
             <li class="toc-item">
               <a class="toc-chip toc-link" data-toc-id="resources" href="#resources">Recursos adicionales</a>
+            </li>
+            <li class="toc-item">
+              <a class="toc-chip toc-link" data-toc-id="conclusion" href="#conclusion">Conclusión</a>
             </li>
           </ul>
         </div>
@@ -448,20 +460,273 @@ import '../styles/crypto-toc.css';
 
         <section id="derivatives" class="doc-section">
             <h2>Futuros y derivados</h2>
+            
+            <h3>¿Qué son los contratos de futuros?</h3>
+            <p>Un contrato de futuros es un acuerdo legal entre dos partes para comprar o vender un activo (llamado activo subyacente) en una fecha futura y a un precio previamente pactado. Este activo puede ser una materia prima, un índice bursátil, una divisa, un bono, una acción o incluso una criptomoneda como Bitcoin.</p>
+            
+            <p>A diferencia de comprar una acción, donde se adquiere una parte de una empresa, al operar con futuros no se posee el activo subyacente, sino que se asume una obligación: el comprador debe adquirir el activo en la fecha acordada y el vendedor debe entregarlo o liquidar la diferencia en efectivo.</p>
+            
+            <h3>Futuros en criptomonedas vs. bolsa tradicional</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="background: var(--bg-card, #1a1f2e);">
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Característica</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Futuros Criptomonedas</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Futuros Bolsa Tradicional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Horario</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">24/7</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Casi 24h/día, con pausas y festivos</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apalancamiento</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Hasta 125x</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Hasta 50x</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Regulación</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Limitada</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Altamente regulada</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Liquidación</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Automática, rápida</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Más gradual, con protecciones</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Accesibilidad</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alta, desde pequeñas cantidades</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Más capital y experiencia</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Tipos de contratos en cripto</h3>
             <ul>
-                <li>
-                    <strong>Futuros perpetuos:</strong> Contratos sin vencimiento con
-                    settlement diario. Alta flexibilidad, pero alto riesgo.
-                </li>
-                <li>
-                    <strong>Opciones:</strong> Contratos call/put para especular o
-                    proteger. Estrategias comunes: straddle, iron condor.
-                </li>
+                <li><strong>Futuros con vencimiento:</strong> Tienen una fecha de expiración específica. Al llegar esa fecha, el contrato se liquida automáticamente.</li>
+                <li><strong>Futuros perpetuos:</strong> No tienen fecha de vencimiento. Se pueden mantener indefinidamente, pero incluyen un mecanismo llamado "funding rate" para mantener el precio alineado con el mercado real.</li>
             </ul>
-            <p>
-                <strong>Nota:</strong> Los derivados amplifican tanto ganancias como
-                pérdidas. Requieren estrategias disciplinadas.
-            </p>
+            
+            <h3>Términos clave</h3>
+            <ul>
+                <li><strong>Apalancamiento:</strong> Posibilidad de operar con más dinero del que tienes. Un apalancamiento de 10x significa que puedes abrir una posición de $10,000 con solo $1,000.</li>
+                <li><strong>Margen:</strong> Cantidad de dinero que debes depositar como garantía para abrir una posición apalancada.</li>
+                <li><strong>Liquidación:</strong> Ocurre cuando el valor de tu cuenta cae por debajo del margen requerido, y la plataforma cierra tu posición automáticamente.</li>
+                <li><strong>Funding Rate:</strong> En futuros perpetuos, es un pago periódico entre largos y cortos para mantener el precio alineado.</li>
+                <li><strong>Contango y Backwardation:</strong> Contango cuando el precio del futuro &gt; precio spot; Backwardation cuando el precio del futuro &lt; precio spot.</li>
+            </ul>
+            
+            <h3>Técnicas populares para operar</h3>
+            <ul>
+                <li><strong>Long (largo):</strong> Comprar un contrato esperando que el precio suba.</li>
+                <li><strong>Short (corto):</strong> Vender un contrato esperando que el precio baje.</li>
+                <li><strong>Take Profit (TP):</strong> Orden que cierra automáticamente cuando se alcanza una ganancia predefinida.</li>
+                <li><strong>Stop Loss (SL):</strong> Orden que cierra automáticamente cuando se alcanza una pérdida predefinida.</li>
+                <li><strong>Estrategia Long/Short:</strong> Abrir posición larga en un activo y corta en otro para beneficiarse de diferencias.</li>
+            </ul>
+            
+            <h3>Plataformas para operar futuros</h3>
+            <p><strong>Criptomonedas:</strong> Binance Futures, Bybit, OKX, MEXC, PrimeXBT, Margex, BloFin, KCEX, Pionex, Bitunix.</p>
+            <p><strong>Tradicionales:</strong> CME Group, Eurex, Interactive Brokers, DEGIRO, XTB.</p>
+            
+            <div class="scenario-callout">
+                <h4>⚠️ Advertencia de riesgo</h4>
+                <p>Los futuros amplifican tanto ganancias como pérdidas. El apalancamiento alto puede llevar a liquidaciones rápidas y pérdidas totales. Empieza con poco capital y usa siempre stop loss.</p>
+            </div>
+            
+            <hr class="section-sep" data-sep-purpose="section">
+        </section>
+        
+        <section id="etfs" class="doc-section">
+            <h2>ETFs (Fondos Cotizados en Bolsa)</h2>
+            
+            <h3>¿Qué es un ETF?</h3>
+            <p>Un ETF (Exchange-Traded Fund) es un vehículo de inversión que permite comprar una canasta diversificada de activos a través de una sola transacción en la bolsa. Los ETFs suelen replicar el comportamiento de un índice, sector o estrategia específica.</p>
+            
+            <h3>Ventajas principales</h3>
+            <ul>
+                <li><strong>Diversificación instantánea:</strong> Al comprar una participación, inviertes en todos los activos del ETF.</li>
+                <li><strong>Bajos costos:</strong> Gestión pasiva con comisiones reducidas.</li>
+                <li><strong>Transparencia:</strong> Publican su composición diariamente.</li>
+                <li><strong>Liquidez:</strong> Se negocian como acciones durante el horario de mercado.</li>
+            </ul>
+            
+            <h3>Tipos de ETFs</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="background: var(--bg-card, #1a1f2e);">
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Tipo de ETF</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">¿Qué replica?</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Riesgo</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Uso principal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Índice</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">S&P 500, MSCI World, IBEX 35</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Moderado</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Diversificación global</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Sectorial</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Tecnología, salud, energía</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Moderado/Alto</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apostar por sectores</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Temático</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Robótica, energías limpias, IA</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alto</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Invertir en tendencias</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bonos</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bonos públicos/corporativos</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bajo/Moderado</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Estabilidad y renta fija</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apalancado</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Multiplica el índice (2x, 3x)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Muy alto</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Trading a corto plazo</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Inverso</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Gana cuando el índice baja</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alto</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cobertura, especulación</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Estrategias con ETFs para principiantes</h3>
+            <ul>
+                <li><strong>Dollar-Cost Averaging (DCA):</strong> Invertir una cantidad fija de forma periódica sin importar el precio.</li>
+                <li><strong>Asignación de activos:</strong> Distribuir capital entre diferentes clases (60% acciones, 40% bonos).</li>
+                <li><strong>Rebalanceo periódico:</strong> Ajustar porcentajes cada cierto tiempo para mantener la estrategia original.</li>
+                <li><strong>Rotación sectorial:</strong> Mover capital entre sectores según el ciclo económico.</li>
+            </ul>
+            
+            <h3>Relación entre ETFs y futuros</h3>
+            <p>Algunos ETFs utilizan contratos de futuros para replicar su comportamiento, común en ETFs de materias primas o del VIX. Estos ETFs son útiles para cobertura pero no recomendables para mantener a largo plazo debido al efecto contango.</p>
+            
+            <h3>Plataformas para invertir en ETFs</h3>
+            <p><strong>Internacionales:</strong> eToro, XTB, DEGIRO, TradeRepublic.</p>
+            <p><strong>Locales:</strong> Bancos y brókers locales (suelen tener comisiones más altas).</p>
+            
+            <hr class="section-sep" data-sep-purpose="section">
+        </section>
+        
+        <section id="beginner-guide" class="doc-section">
+            <h2>Guía para principiantes</h2>
+            
+            <h3>Recomendaciones clave</h3>
+            <ol>
+                <li><strong>Empieza con poco capital:</strong> No arriesgues dinero que no puedas permitirte perder.</li>
+                <li><strong>Define tus objetivos:</strong> Determina para qué inviertes, tu horizonte temporal y tolerancia al riesgo.</li>
+                <li><strong>Diversifica:</strong> No pongas todo tu dinero en un solo activo o estrategia.</li>
+                <li><strong>Usa siempre stop loss y take profit:</strong> Protege tu capital y evita decisiones emocionales.</li>
+                <li><strong>No uses apalancamiento alto al principio:</strong> Empieza con apalancamiento bajo y aumenta solo con experiencia.</li>
+                <li><strong>Educación continua:</strong> Lee, toma cursos y consulta fuentes confiables.</li>
+                <li><strong>Mantén la calma:</strong> Sigue tu plan y no tomes decisiones impulsivas.</li>
+            </ol>
+            
+            <h3>Errores comunes a evitar</h3>
+            <ul>
+                <li><strong>No tener un plan claro:</strong> Operar sin estrategia lleva a decisiones emocionales.</li>
+                <li><strong>Sobreapalancamiento:</strong> Usar apalancamiento excesivo causa liquidaciones rápidas.</li>
+                <li><strong>Falta de diversificación:</strong> Apostar todo a un solo activo aumenta el riesgo.</li>
+                <li><strong>Ignorar costos:</strong> Comisiones, spreads y tasas reducen las ganancias.</li>
+                <li><strong>No tener fondo de emergencia:</strong> Invertir sin colchón financiero obliga a vender en mal momento.</li>
+                <li><strong>Seguir modas sin investigar:</strong> Haz tu propia investigación (DYOR).</li>
+                <li><strong>Ignorar regulaciones fiscales:</strong> Cumple con tus obligaciones tributarias.</li>
+            </ul>
+            
+            <h3>Gestión de riesgo avanzada</h3>
+            <ul>
+                <li><strong>No arriesgues más del 1-2% del capital por operación.</strong></li>
+                <li><strong>Usa siempre stop loss y take profit.</strong></li>
+                <li><strong>Diversifica entre diferentes activos y estrategias.</strong></li>
+                <li><strong>Control emocional:</strong> No operes por miedo o codicia.</li>
+                <li><strong>Registro de operaciones:</strong> Lleva un diario para aprender de errores y aciertos.</li>
+            </ul>
+            
+            <div class="scenario-callout">
+                <h4>📊 Criterio de Kelly (opcional avanzado)</h4>
+                <p>Fórmula matemática para determinar cuánto capital destinar a cada operación según probabilidad de éxito y relación riesgo/beneficio. Se recomienda usar solo una fracción (ej. la mitad) para evitar grandes fluctuaciones.</p>
+            </div>
+            
+            <hr class="section-sep" data-sep-purpose="section">
+        </section>
+        
+        <section id="tax-regulation" class="doc-section">
+            <h2>Aspectos fiscales y regulatorios</h2>
+            
+            <h3>Fiscalidad general</h3>
+            <ul>
+                <li><strong>Ganancias de capital:</strong> Suelen tributar como ganancias de capital con tasas progresivas.</li>
+                <li><strong>Compensación de pérdidas:</strong> En muchos países, las pérdidas pueden compensarse con ganancias de otros activos.</li>
+                <li><strong>Dividendos:</strong> Tributan como rendimientos de capital mobiliario.</li>
+            </ul>
+            
+            <h3>Fiscalidad en Costa Rica</h3>
+            <ul>
+                <li>Las ganancias de capital por futuros y ETFs tienen un impuesto del 15% sobre la ganancia neta.</li>
+                <li>Las pérdidas pueden compensarse con ganancias de los tres años siguientes.</li>
+                <li>Los fondos de inversión y ETFs tienen tratamiento especial con exenciones para fondos de pensión.</li>
+                <li>Los dividendos tributan al 15%.</li>
+            </ul>
+            
+            <div class="scenario-callout">
+                <h4>⚖️ Recomendación legal</h4>
+                <p>Consulta siempre con un asesor fiscal local antes de invertir. La normativa puede cambiar y existen particularidades según el tipo de activo y residencia fiscal.</p>
+            </div>
+            
+            <h3>Días festivos importantes 2026 (Mercados tradicionales)</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="background: var(--bg-card, #1a1f2e);">
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Fecha</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Festivo</th>
+                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Estado del mercado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">1 enero (jueves)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Año Nuevo</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">19 enero (lunes)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Martin Luther King Jr.</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">16 febrero (lunes)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Presidents Day</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">3 abril (viernes)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Viernes Santo</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">25 diciembre (viernes)</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Navidad</td>
+                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><strong>Nota:</strong> Los mercados de criptomonedas operan 24/7 sin interrupciones.</p>
+            
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
@@ -983,6 +1248,20 @@ import '../styles/crypto-toc.css';
             <p>
                 Consulta estas fuentes para mejorar tu conocimiento y estrategias.
             </p>
+            <hr class="section-sep" data-sep-purpose="section">
+        </section>
+        
+        <section id="conclusion" class="doc-section">
+            <h2>Conclusión</h2>
+            <p>Los contratos de futuros y los ETFs son herramientas poderosas para invertir y gestionar riesgos, pero requieren conocimiento, disciplina y una gestión adecuada del riesgo. Los futuros permiten especular tanto al alza como a la baja, con la posibilidad de usar apalancamiento, pero también con el riesgo de liquidaciones rápidas y pérdidas significativas, especialmente en mercados volátiles como el de las criptomonedas.</p>
+            
+            <p>Los ETFs, por su parte, ofrecen una forma sencilla y diversificada de invertir en mercados globales, sectores o tendencias, con bajos costos y alta liquidez. Para los principiantes, la clave está en empezar poco a poco, educarse constantemente, diversificar, usar siempre herramientas de gestión de riesgo como stop loss y take profit, y evitar los errores más comunes como el sobreapalancamiento, la falta de planificación y la toma de decisiones emocionales.</p>
+            
+            <div class="scenario-callout">
+                <h4>💡 Recuerda final</h4>
+                <p>La inversión exitosa es un maratón, no una carrera de velocidad. Con paciencia, disciplina y una estrategia clara, es posible aprovechar las oportunidades que ofrecen los futuros y los ETFs para construir un patrimonio sólido y sostenible en el tiempo. Antes de invertir, consulta siempre fuentes confiables, mantente actualizado sobre las regulaciones de tu país y, si es posible, busca asesoría profesional.</p>
+            </div>
+            
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
