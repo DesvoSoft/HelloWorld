@@ -6,18 +6,14 @@
   <div class="btc-tracker-card" id="btc-tracker">
     <div class="tracker-header">
       <div class="coin-info">
-        <div class="coin-icon">
+        <div class="coin-icon clickable" onclick="window.open('https://www.coingecko.com/en/coins/bitcoin', '_blank')" title="Click to view Bitcoin on CoinGecko">
           <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="16" fill="#F7931A"/>
             <path d="M23.189 14.022c.336-2.247-1.374-3.455-3.712-4.26l.759-3.041-1.85-.461-.74 2.965c-.486-.121-.984-.235-1.478-.348l.746-2.989-1.85-.461-.759 3.041c-.403-.092-.801-.182-1.188-.276l.001-.005-2.552-.637-.492 1.976s1.373.315 1.344.334c.75.187.885.683.863 1.077l-.864 3.465c.052.013.119.032.193.058l-.195-.049-1.21 4.853c-.092.228-.325.57-.849.44.02.029-1.344-.334-1.344-.334l-.918 2.117 2.408.6c.447.112.885.228 1.316.339l-.766 3.075 1.85.461.759-3.042c.505.137 1 .267 1.487.39l-.754 3.027 1.85.461.766-3.074c3.156.598 5.528.357 6.526-2.498.805-2.298-.04-3.624-1.701-4.493 1.21-.28 2.12-1.077 2.362-2.724zM19.16 20.43c-.572 2.298-4.439 1.056-5.694.744l1.016-4.074c1.255.313 5.276.932 4.678 3.33zm.573-5.753c-.522 2.092-3.742 1.03-4.787.77l.922-3.698c1.045.26 4.408.746 3.865 2.928z" fill="white"/>
           </svg>
         </div>
-        <span class="coin-name">Bitcoin</span>
-        <span class="coin-symbol">BTC</span>
-      </div>
-      <div class="live-indicator">
-        <span class="dot"></span>
-        LIVE
+        <span class="coin-name clickable" onclick="window.open('https://www.coingecko.com/en/coins/bitcoin', '_blank')" title="Click to view Bitcoin on CoinGecko">Bitcoin</span>
+        <span class="coin-symbol clickable" onclick="window.open('https://www.coingecko.com/en/coins/bitcoin', '_blank')" title="Click to view Bitcoin on CoinGecko">BTC</span>
       </div>
     </div>
 
@@ -30,12 +26,12 @@
 
     <div class="graph-container">
       <svg id="btc-sparkline" width="100%" height="80" viewBox="0 0 100 80" preserveAspectRatio="none">
-        <path id="sparkline-path" d="" fill="none" stroke="#64ffda" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        <path id="sparkline-area" d="" fill="url(#sparkline-gradient)" opacity="0.1"></path>
+        <path id="sparkline-path" d="" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="sparkline-area" d="" fill="url(#sparkline-gradient)" opacity="0.15"></path>
         <defs>
           <linearGradient id="sparkline-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#64ffda" />
-            <stop offset="100%" stop-color="#64ffda" stop-opacity="0" />
+            <stop offset="0%" stop-color="#4ade80" />
+            <stop offset="100%" stop-color="#4ade80" stop-opacity="0" />
           </linearGradient>
         </defs>
       </svg>
@@ -56,24 +52,24 @@
   }
 
   .btc-tracker-card {
-    background: rgba(11, 27, 52, 0.95);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(76, 157, 245, 0.3);
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(100, 255, 218, 0.2);
     border-radius: 20px;
     padding: 2rem;
     width: 100%;
     max-width: 380px;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    box-shadow: 0 15px 45px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.3);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
   }
 
   .btc-tracker-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 60px 0 rgba(0, 0, 0, 0.6);
-    border-color: rgba(76, 157, 245, 0.5);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 25px 50px 0 rgba(0, 0, 0, 0.4);
+    border-color: rgba(100, 255, 218, 0.4);
   }
 
   .tracker-header {
@@ -91,47 +87,28 @@
 
   .coin-name {
     font-weight: 700;
-    color: #f1f7ff;
+    color: #e6f0ff;
     font-size: 1.2rem;
     letter-spacing: -0.01em;
   }
 
   .coin-symbol {
-    color: #cbd6e6;
+    color: #94a3b8;
     font-size: 0.9rem;
     font-weight: 600;
-    background: rgba(76, 157, 245, 0.15);
+    background: rgba(100, 255, 218, 0.1);
     padding: 0.1rem 0.5rem;
     border-radius: 6px;
   }
 
-  .live-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #4c9df5;
-    background: rgba(76, 157, 245, 0.15);
-    padding: 0.35rem 0.75rem;
-    border-radius: 20px;
-    letter-spacing: 0.08em;
-    border: 1px solid rgba(76, 157, 245, 0.3);
+  .clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .dot {
-    width: 8px;
-    height: 8px;
-    background-color: #4c9df5;
-    border-radius: 50%;
-    display: inline-block;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 157, 245, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(76, 157, 245, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 157, 245, 0); }
+  .clickable:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 
   .price-container {
@@ -142,7 +119,7 @@
   .current-price {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #f1f7ff;
+    color: #e6f0ff;
     letter-spacing: -0.03em;
     line-height: 1;
   }
@@ -158,8 +135,8 @@
     border-radius: 8px;
   }
 
-  .price-change.up { color: #4ade80; background: rgba(74, 222, 128, 0.15); }
-  .price-change.down { color: #f87171; background: rgba(248, 113, 113, 0.15); }
+  .price-change.up { color: #4ade80; background: rgba(74, 222, 128, 0.2); }
+  .price-change.down { color: #f87171; background: rgba(248, 113, 113, 0.2); }
 
   .graph-container {
     height: 80px;
@@ -169,7 +146,7 @@
   }
 
   .tracker-footer {
-    border-top: 1px solid rgba(76, 157, 245, 0.2);
+    border-top: 1px solid rgba(100, 255, 218, 0.15);
     padding-top: 1rem;
     margin-top: 1.5rem;
     display: flex;
@@ -178,24 +155,11 @@
 
   .last-updated {
     font-size: 0.8rem;
-    color: #cbd6e6;
+    color: #94a3b8;
     font-weight: 500;
   }
 
-  /* Light mode adjustments if needed */
-  :global(body:not(.dark)) .btc-tracker-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  }
-  :global(body:not(.dark)) .coin-name, 
-  :global(body:not(.dark)) .current-price {
-    color: #1a1f2e;
-  }
-  :global(body:not(.dark)) .coin-symbol,
-  :global(body:not(.dark)) .last-updated {
-    color: rgba(0, 0, 0, 0.5);
-  }
+
 </style>
 
 <script>
