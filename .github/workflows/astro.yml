@@ -70,7 +70,7 @@ jobs:
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} astro build \
             --site "${{ steps.pages.outputs.origin }}" \
-            --base "${{ steps.pages.outputs.base_path || '/HelloWorld/' }"
+            --base "${{ steps.pages.outputs.base_path || '/HelloWorld/' }}"
         working-directory: ${{ env.BUILD_PATH }}
       - name: List built files
         run: |
