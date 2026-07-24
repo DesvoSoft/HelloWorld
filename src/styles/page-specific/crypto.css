@@ -1,10 +1,66 @@
 .doc-section {
   scroll-margin-top: calc(var(--navbar-h, 64px) + 76px);
+  padding: 2.5rem 2.25rem;
+  margin: 2.5rem 0;
+  border-radius: 18px;
+  background: var(--surface-elevated, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
+}
+
+.doc-section:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.doc-section h2 {
+  margin-top: 0;
+}
+
+.doc-section p,
+.doc-section li {
+  line-height: 1.75;
+}
+
+.doc-section ul,
+.doc-section ol {
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.doc-section ul ul,
+.doc-section ol ul,
+.doc-section ul ol {
+  margin-top: 0.6rem;
+}
+
+.doc-section li > p {
+  margin: 0.5rem 0 0;
 }
 
 @media (max-width: 900px) {
   .doc-section {
     scroll-margin-top: 230px;
+    padding: 1.75rem 1.25rem;
+    margin: 1.75rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .doc-section {
+    padding: 1.5rem 1rem;
+    margin: 1.25rem 0;
+    border-radius: 14px;
+  }
+
+  .doc-section p,
+  .doc-section li {
+    line-height: 1.65;
+    font-size: 0.97rem;
+  }
+
+  .doc-section h3 {
+    padding-left: 0.75rem;
   }
 }
 
@@ -52,6 +108,11 @@
 }
 
 @media (max-width: 480px) {
+  .table-scroll {
+    margin: 1.25rem 0;
+    border-radius: 10px;
+  }
+
   .data-table {
     font-size: 0.85rem;
   }
@@ -64,17 +125,60 @@
 
 /* Content Elements */
 .mini-diagram {
-  font-family: var(--font-mono);
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--surface-border);
   border-radius: 12px;
-  padding: 1.25rem;
-  line-height: 1.4;
-  color: var(--text-muted);
+  padding: 1.25rem 1.5rem;
   box-shadow: var(--shadow-1);
-  margin: 1rem 0;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  margin: 1.25rem 0;
+}
+
+.mini-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mini-diagram .diagram-label {
+  fill: var(--text-muted);
+  font-size: 9px;
+  font-family: var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mini-diagram .diagram-tick {
+  fill: var(--text-muted);
+  font-size: 9px;
+  font-family: var(--font-main);
+}
+
+.mini-diagram .diagram-price {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mini-diagram .diagram-rsi {
+  fill: none;
+  stroke: #4ade80;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mini-diagram .diagram-threshold {
+  stroke: var(--surface-border);
+  stroke-width: 1;
+}
+
+.mini-diagram figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
 }
 
 .scenario-callout {
@@ -131,4 +235,35 @@
   margin-top: 0.5rem;
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .mini-diagram {
+    padding: 1rem;
+  }
+
+  .mini-diagram figcaption {
+    font-size: 0.78rem;
+  }
+
+  .scenario-callout {
+    padding: 1rem;
+    gap: 0.85rem;
+    margin: 1.25rem 0;
+  }
+
+  .scenario-callout ul {
+    padding-left: 1.1rem;
+    gap: 0.85rem;
+  }
+
+  .trade-checklist {
+    padding: 1.1rem;
+    gap: 1rem;
+  }
+
+  .trade-checklist h4 {
+    font-size: 1rem;
+    padding: 0.6rem 0.85rem;
+  }
 }

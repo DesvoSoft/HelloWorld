@@ -22,7 +22,9 @@ import '../styles/crypto-toc.css';
         border: 0;
         height: 1px;
         background: linear-gradient(90deg, transparent, var(--vitra-color-border, rgba(255, 255, 255, 0.08)), transparent);
-        margin: 1.25rem 0;
+        margin: 2.5rem auto;
+        width: min(760px, 80%);
+        opacity: 0.5;
         border-radius: 1px;
       }
 
@@ -30,6 +32,7 @@ import '../styles/crypto-toc.css';
         width: auto !important; /* !important corrige el ancho inline heredado del layout original */
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
+        padding: 0 1.5rem;
       }
 
       .tracker-grid {
@@ -42,6 +45,17 @@ import '../styles/crypto-toc.css';
 
       .tracker-grid > * {
         flex: 1 1 340px;
+      }
+
+      @media (max-width: 480px) {
+        .content-shell {
+          padding: 0 1rem;
+        }
+
+        .tracker-grid {
+          gap: 1.25rem;
+          margin: 1.25rem 0;
+        }
       }
 
       /* Pop-up */
@@ -338,11 +352,10 @@ import '../styles/crypto-toc.css';
                 </div>
 
                 <div class="tracker-grid">
-                    <CoinTracker coinId="bitcoin" name="Bitcoin" symbol="BTC" color="#F7931A" />
+                    <CoinTracker coinId="bitcoin" name="Bitcoin" symbol="BTC" color="#F7931A" featured={true} />
                     <CoinTracker coinId="ethereum" name="Ethereum" symbol="ETH" color="#627EEA" />
                 </div>
 
-                <hr class="section-sep" data-sep-purpose="section">
 
             </section>
 
@@ -359,59 +372,18 @@ import '../styles/crypto-toc.css';
                 <li><strong>Ingresos pasivos (yield):</strong> Prestar BTC para ganar intereses (~3–10% anual). Riesgo: quiebra de la plataforma.</li>
                 <li><strong>Cobertura con derivados:</strong> Uso de futuros u opciones para proteger tenencias ante caídas.</li>
             </ul>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="risk-management" class="doc-section vitra-scroll-reveal">
             <h2>Gestión de riesgos</h2>
-            <p>Proteger tu capital es fundamental antes de buscar ganancias. Una gestión de riesgos adecuada puede marcar la diferencia entre un inversor exitoso y uno que sufre pérdidas significativas. Aquí te detallo algunas estrategias y conceptos clave:</p>
+            <p>Proteger tu capital viene antes que buscar ganancias. Estas reglas marcan la diferencia:</p>
             <ul>
-                <li><strong>Tamaño de posición prudente:</strong> Arriesga solo 1–2% del portafolio por operación.
-                    <p>Esta regla ayuda a evitar que una sola operación perdedora tenga un impacto devastador en tu capital total. Por ejemplo, si tienes un portafolio de $10,000, no deberías arriesgar más de $100-$200 en una sola operación.</p>
-                </li>
-                <li><strong>Órdenes de stop-loss y take-profit:</strong> Automatiza salidas para limitar pérdidas y asegurar ganancias.
-                    <ul>
-                        <li><strong>Stop-Loss:</strong> Una orden para vender un activo cuando alcanza un precio específico, limitando la pérdida potencial.
-                            <p>Imagina que compras BTC a $50,000. Estableces un stop-loss en $45,000. Si el precio cae a $45,000, tu posición se vende automáticamente, limitando tu pérdida a $5,000.</p>
-                        </li>
-                        <li><strong>Take-Profit:</strong> Una orden para vender un activo cuando alcanza un precio específico, asegurando una ganancia.
-                            <p>Siguiendo el ejemplo anterior, podrías establecer un take-profit en $60,000. Si el precio sube a $60,000, tu posición se vende automáticamente, asegurando una ganancia de $10,000.</p>
-                        </li>
-                    </ul>
-                </li>
-                <li><strong>Leverage moderado:</strong> Si usas apalancamiento, mantén colateral suficiente y stops estrictos.
-                    <ul>
-                        <li><strong>Apalancamiento:</strong> El uso de capital prestado para aumentar el potencial de retorno de una inversión.
-                            <p>Un apalancamiento de 2x significa que con $1,000 de tu capital, puedes controlar $2,000 en BTC. Si el precio de BTC sube un 10%, tu ganancia sería del 20% ($200), pero si baja un 10%, tu pérdida también sería del 20% ($200).</p>
-                        </li>
-                        <li><strong>Colateral:</strong> Activos ofrecidos como garantía para asegurar un préstamo.
-                            <p>Al usar apalancamiento, el exchange requiere que mantengas un cierto nivel de colateral en tu cuenta. Si el precio se mueve en tu contra, tu colateral puede liquidarse para cubrir las pérdidas.</p>
-                        </li>
-                    </ul>
-                </li>
-                <li><strong>Diversificación:</strong> Incluye activos no correlacionados para reducir riesgos.
-                    <ul>
-                        <li><strong>Activos no correlacionados:</strong> Activos que no se mueven en la misma dirección al mismo tiempo.
-                            <p>Por ejemplo, las acciones y los bonos a menudo tienen una correlación baja o negativa. Cuando las acciones bajan, los bonos pueden subir, y viceversa. Incluir ambos en tu portafolio reduce el riesgo general.</p>
-                        </li>
-                        <li><strong>Ejemplos:</strong> Acciones, bonos, criptomonedas, materias primas, bienes raíces.</li>
-                    </ul>
-                </li>
-                <li><strong>Seguridad operativa:</strong> Usa 2FA y wallets confiables; para grandes montos, custodia en frío.
-                    <ul>
-                        <li><strong>2FA (Autenticación de dos factores):</strong> Proceso de seguridad que requiere dos formas de identificación.
-                            <p>Además de tu contraseña, el 2FA puede requerir un código enviado a tu teléfono o generado por una aplicación como Google Authenticator, añadiendo una capa extra de seguridad.</p>
-                        </li>
-                        <li><strong>Wallets:</strong> Dispositivos o aplicaciones para almacenar criptomonedas.
-                            <p>Es crucial elegir una wallet segura y confiable. Algunas opciones populares incluyen Ledger (hardware wallet), Trezor (hardware wallet) y Electrum (software wallet).</p>
-                        </li>
-                        <li><strong>Custodia en frío:</strong> Almacenar criptomonedas fuera de línea para mayor seguridad.
-                            <p>Esto implica guardar tus claves privadas en un dispositivo que no está conectado a Internet, como un hardware wallet o una cartera de papel, protegiéndolas de hackeos.</p>
-                        </li>
-                    </ul>
-                </li>
+                <li><strong>Tamaño de posición:</strong> arriesga solo 1–2% del portafolio por operación. Con $10,000, eso son $100–$200 máximo en una sola jugada.</li>
+                <li><strong>Stop-loss y take-profit:</strong> órdenes automáticas que cierran la posición al alcanzar un precio definido — limitan pérdidas y aseguran ganancias sin que tengas que estar mirando el gráfico.</li>
+                <li><strong>Leverage moderado:</strong> el apalancamiento amplifica ganancias y pérdidas por igual (2x = doble en ambas direcciones). Úsalo con colateral suficiente y stops estrictos, o evítalo si eres nuevo.</li>
+                <li><strong>Diversificación:</strong> combina activos que no se muevan todos en la misma dirección (acciones, bonos, cripto, materias primas) para suavizar el riesgo total.</li>
+                <li><strong>Seguridad operativa:</strong> activa 2FA, usa wallets confiables (Ledger, Trezor, Electrum) y, para montos grandes, guarda tus claves en frío (fuera de línea).</li>
             </ul>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="technical-analysis" class="doc-section vitra-scroll-reveal">
@@ -434,7 +406,6 @@ import '../styles/crypto-toc.css';
                 <strong>Consejo:</strong> Combina varias herramientas para validar
                 señales y gestiona siempre el riesgo.
             </p>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="fundamental-analysis" class="doc-section vitra-scroll-reveal">
@@ -453,7 +424,6 @@ import '../styles/crypto-toc.css';
                     reflejan la estabilidad de la red.
                 </li>
             </ul>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="derivatives" class="doc-section vitra-scroll-reveal">
@@ -516,7 +486,7 @@ import '../styles/crypto-toc.css';
                 <li><strong>Margen:</strong> Cantidad de dinero que debes depositar como garantía para abrir una posición apalancada.</li>
                 <li><strong>Liquidación:</strong> Ocurre cuando el valor de tu cuenta cae por debajo del margen requerido, y la plataforma cierra tu posición automáticamente.</li>
                 <li><strong>Funding Rate:</strong> En futuros perpetuos, es un pago periódico entre largos y cortos para mantener el precio alineado.</li>
-                <li><strong>Contango y Backwardation:</strong> Contango cuando el precio del futuro &gt; precio spot; Backwardation cuando el precio del futuro &lt; precio spot.</li>
+                <li><strong>Contango / Backwardation:</strong> el futuro cotiza por encima del precio actual (contango) o por debajo (backwardation) — te dice si el mercado espera subidas o bajadas.</li>
             </ul>
             
             <h3>Técnicas populares para operar</h3>
@@ -537,7 +507,6 @@ import '../styles/crypto-toc.css';
                 <p>Los futuros amplifican tanto ganancias como pérdidas. El apalancamiento alto puede llevar a liquidaciones rápidas y pérdidas totales. Empieza con poco capital y usa siempre stop loss.</p>
             </div>
             
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
         
         <section id="etfs" class="doc-section vitra-scroll-reveal">
@@ -621,7 +590,6 @@ import '../styles/crypto-toc.css';
             <p><strong>Internacionales:</strong> eToro, XTB, DEGIRO, TradeRepublic.</p>
             <p><strong>Locales:</strong> Bancos y brókers locales (suelen tener comisiones más altas).</p>
             
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
         
         <section id="beginner-guide" class="doc-section vitra-scroll-reveal">
@@ -663,7 +631,6 @@ import '../styles/crypto-toc.css';
                 <p>Fórmula matemática para determinar cuánto capital destinar a cada operación según probabilidad de éxito y relación riesgo/beneficio. Se recomienda usar solo una fracción (ej. la mitad) para evitar grandes fluctuaciones.</p>
             </div>
             
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
         
         <section id="tax-regulation" class="doc-section vitra-scroll-reveal">
@@ -731,7 +698,6 @@ import '../styles/crypto-toc.css';
             
             <p><strong>Nota:</strong> Los mercados de criptomonedas operan 24/7 sin interrupciones.</p>
             
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-practical">
@@ -799,9 +765,19 @@ import '../styles/crypto-toc.css';
                         confirmación de vela.
                     </li>
                 </ul>
-                <div class="mini-diagram" aria-hidden="true">
-                    Precio: \__/‾‾‾\ RSI: \__/__ \
-                </div>
+                <figure class="mini-diagram" aria-hidden="true">
+                    <svg viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" role="img">
+                        <text x="4" y="14" class="diagram-label">Precio</text>
+                        <path class="diagram-price" d="M4,50 C40,20 70,20 100,45 C130,68 150,72 180,50 C210,30 240,28 270,42 L316,38" />
+                        <text x="4" y="90" class="diagram-label">RSI (14)</text>
+                        <line x1="4" y1="98" x2="316" y2="98" class="diagram-threshold" stroke-dasharray="3 3" />
+                        <line x1="4" y1="128" x2="316" y2="128" class="diagram-threshold" stroke-dasharray="3 3" />
+                        <text x="320" y="101" class="diagram-tick" text-anchor="end">70</text>
+                        <text x="320" y="131" class="diagram-tick" text-anchor="end">30</text>
+                        <path class="diagram-rsi" d="M4,110 C40,95 70,132 100,130 C130,128 150,100 180,98 C210,96 240,110 270,105 L316,108" />
+                    </svg>
+                    <figcaption>Sobreventa (RSI &lt; 30) coincide con el rebote del precio; sobrecompra (RSI &gt; 70) precede la pausa.</figcaption>
+                </figure>
             </div>
 
             <h4>Ajustes recomendados para RSI</h4>
@@ -944,7 +920,6 @@ import '../styles/crypto-toc.css';
                     crossing line of BB).
                 </li>
             </ul>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="why-it-works" class="doc-section vitra-scroll-reveal">
@@ -958,7 +933,6 @@ import '../styles/crypto-toc.css';
             </p>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
 
         <section id="example" class="doc-section vitra-scroll-reveal">
             <h2>Ejemplo práctico (resumen)</h2>
@@ -972,7 +946,6 @@ import '../styles/crypto-toc.css';
             </p>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
 
         <section id="recommended-times" class="doc-section vitra-scroll-reveal">
             <h2>Horarios recomendados para revisar (CST, UTC−6)</h2>
@@ -1083,7 +1056,6 @@ import '../styles/crypto-toc.css';
             </ul>
         </section>
 
-        <hr class="section-sep" data-sep-purpose="section">
 
         <section id="swing-trading-guide" class="doc-section vitra-scroll-reveal">
             <h2>Swing trading — guía práctica</h2>
@@ -1198,7 +1170,6 @@ import '../styles/crypto-toc.css';
                     <li>Stop-loss y tamaño de posición definidos (≤ 2% riesgo).</li>
                 </ul>
             </div>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <section id="advanced-strategies" class="doc-section vitra-scroll-reveal">
@@ -1217,7 +1188,6 @@ import '../styles/crypto-toc.css';
                     resistencias con alto volumen para entrar en tendencia.
                 </li>
             </ul>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-footer">
@@ -1252,7 +1222,6 @@ import '../styles/crypto-toc.css';
             <p>
                 Consulta estas fuentes para mejorar tu conocimiento y estrategias.
             </p>
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
         
         <section id="conclusion" class="doc-section vitra-scroll-reveal">
@@ -1266,7 +1235,6 @@ import '../styles/crypto-toc.css';
                 <p>La inversión exitosa es un maratón, no una carrera de velocidad. Con paciencia, disciplina y una estrategia clara, es posible aprovechar las oportunidades que ofrecen los futuros y los ETFs para construir un patrimonio sólido y sostenible en el tiempo. Antes de invertir, consulta siempre fuentes confiables, mantente actualizado sobre las regulaciones de tu país y, si es posible, busca asesoría profesional.</p>
             </div>
             
-            <hr class="section-sep" data-sep-purpose="section">
         </section>
 
     </main>

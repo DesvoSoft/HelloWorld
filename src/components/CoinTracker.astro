@@ -5,14 +5,16 @@ interface Props {
   name: string;
   symbol: string;
   color: string;
+  featured?: boolean;
 }
 
-const { coinId, name, symbol, color } = Astro.props;
+const { coinId, name, symbol, color, featured = false } = Astro.props;
 const uid = coinId;
 ---
 
 <div class="coin-tracker-container">
-  <div class="coin-tracker-card vitra-glass" data-coin={uid}>
+  <div class:list={["coin-tracker-card", "vitra-glass", { featured }]} data-coin={uid}>
+    {featured && <span class="featured-badge">Indicador principal</span>}
     <div class="tracker-header">
       <div class="coin-info">
         <div class="coin-icon clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} style={`background:${color}22; color:${color};`} title={`Click to view ${name} on CoinGecko`}>
@@ -43,6 +45,24 @@ const uid = coinId;
       </svg>
     </div>
 
+    <div class="momentum-gauge" data-gauge>
+      <div class="gauge-header">
+        <span class="gauge-label">Momentum 24h</span>
+        <span class="gauge-status" data-gauge-status>--</span>
+      </div>
+      <div class="gauge-track">
+        <div class="gauge-zone gauge-zone-cold"></div>
+        <div class="gauge-zone gauge-zone-neutral"></div>
+        <div class="gauge-zone gauge-zone-hot"></div>
+        <div class="gauge-marker" data-gauge-marker></div>
+      </div>
+      <div class="gauge-scale">
+        <span>Frío</span>
+        <span>Neutral</span>
+        <span>Caliente</span>
+      </div>
+    </div>
+
     <div class="tracker-footer">
       <span class="last-updated">Última actualización: <span data-update-time>--</span></span>
     </div>
@@ -69,6 +89,45 @@ const uid = coinId;
 
   .coin-tracker-card:hover {
     transform: translateY(-6px) scale(1.01);
+  }
+
+  .coin-tracker-card.featured {
+    max-width: 440px;
+    padding: 2.5rem;
+    border: 1px solid var(--vitra-color-accent, #64ffda66);
+    box-shadow: 0 0 0 1px var(--vitra-color-accent-soft, rgba(100, 255, 218, 0.15)),
+      0 20px 60px -20px var(--vitra-color-accent-soft, rgba(100, 255, 218, 0.35));
+  }
+
+  .coin-tracker-card.featured:hover {
+    transform: translateY(-8px) scale(1.015);
+  }
+
+  .coin-tracker-card.featured .current-price {
+    font-size: 3rem;
+  }
+
+  .coin-tracker-card.featured .graph-container {
+    height: 100px;
+  }
+
+  .coin-tracker-card.featured .sparkline-svg {
+    height: 100px;
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--vitra-color-accent, #64ffda);
+    background: var(--vitra-color-accent-soft, rgba(100, 255, 218, 0.12));
+    border: 1px solid var(--vitra-color-accent, #64ffda);
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
   }
 
   .tracker-header {
@@ -188,6 +247,88 @@ const uid = coinId;
     position: relative;
   }
 
+  .momentum-gauge {
+    margin-top: 0.5rem;
+  }
+
+  .gauge-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .gauge-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--vitra-color-text-muted, #94a3b8);
+  }
+
+  .gauge-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .gauge-status.cold { color: #f87171; }
+  .gauge-status.neutral { color: #facc15; }
+  .gauge-status.hot { color: #4ade80; }
+
+  .gauge-track {
+    position: relative;
+    display: flex;
+    height: 8px;
+    border-radius: 999px;
+    overflow: visible;
+  }
+
+  .gauge-zone {
+    flex: 1;
+    height: 100%;
+  }
+
+  .gauge-zone-cold {
+    background: #f87171;
+    border-radius: 999px 0 0 999px;
+    opacity: 0.55;
+  }
+
+  .gauge-zone-neutral {
+    background: #facc15;
+    opacity: 0.55;
+  }
+
+  .gauge-zone-hot {
+    background: #4ade80;
+    border-radius: 0 999px 999px 0;
+    opacity: 0.55;
+  }
+
+  .gauge-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--vitra-color-text-strong, #e6f0ff);
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gauge-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    font-size: 0.65rem;
+    color: var(--vitra-color-text-muted, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
   .tracker-footer {
     border-top: 1px solid var(--vitra-color-border, rgba(100, 255, 218, 0.15));
     padding-top: 1rem;
@@ -215,6 +356,8 @@ const uid = coinId;
     const sparklineArea = card.querySelector<SVGPathElement>('[data-sparkline-area]');
     const stop0 = card.querySelector<SVGStopElement>('[data-grad-stop0]');
     const stop1 = card.querySelector<SVGStopElement>('[data-grad-stop1]');
+    const gaugeMarker = card.querySelector<HTMLElement>('[data-gauge-marker]');
+    const gaugeStatus = card.querySelector<HTMLElement>('[data-gauge-status]');
 
     card.querySelectorAll<HTMLElement>('[data-coingecko-link]').forEach((el) => {
       el.addEventListener('click', () => {
@@ -254,6 +397,22 @@ const uid = coinId;
           if (sparklinePath) sparklinePath.setAttribute('stroke', color);
           if (stop0) stop0.setAttribute('stop-color', color);
           if (stop1) stop1.setAttribute('stop-color', color);
+
+          if (gaugeMarker) {
+            const GAUGE_RANGE = 8;
+            const clamped = Math.max(-GAUGE_RANGE, Math.min(GAUGE_RANGE, change));
+            const position = ((clamped + GAUGE_RANGE) / (GAUGE_RANGE * 2)) * 100;
+            gaugeMarker.style.left = `${position}%`;
+          }
+
+          if (gaugeStatus) {
+            let statusClass = 'neutral';
+            let statusText = 'Neutral';
+            if (change <= -2) { statusClass = 'cold'; statusText = 'Frío'; }
+            else if (change >= 2) { statusClass = 'hot'; statusText = 'Caliente'; }
+            gaugeStatus.className = `gauge-status ${statusClass}`;
+            gaugeStatus.textContent = statusText;
+          }
         }
 
         if (sparklinePath && sparklineData && sparklineData.length > 0) {

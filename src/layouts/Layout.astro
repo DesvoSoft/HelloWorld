@@ -73,6 +73,7 @@ const { title, description = "DesvoSoft: Aprende Git, Python y más en este siti
             </div>
 
             <p class="footer-copyright" data-i18n="footerCopyright">&copy; <span id="footer-year">2025</span> DesvoSoft</p>
+            <p class="footer-credits">Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" is:inline></script>
@@ -174,6 +175,23 @@ const { title, description = "DesvoSoft: Aprende Git, Python y más en este siti
         justify-content: center;
         align-items: center;
         gap: 0.3rem;
+    }
+
+    .footer-credits {
+        text-align: center;
+        margin: 0.35rem 0 0;
+        font-size: 0.75rem;
+        color: var(--vitra-color-text-secondary, #ffffffb3);
+    }
+
+    .footer-credits a {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .footer-credits a:hover {
+        color: var(--vitra-color-text-strong, #fff);
     }
 
     @media (max-width: 640px) {
