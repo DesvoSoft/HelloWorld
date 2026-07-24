@@ -62,3 +62,10 @@ coverage/
 # legacy folders to be ignored
 src_legacy/
 legacy_site/
+
+# AI / dev tooling (local only, never public)
+.claude/
+.serena/
+.mcp.json
+.cursor/
+.codebase-memory/
