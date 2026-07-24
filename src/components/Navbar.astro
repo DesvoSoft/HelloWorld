@@ -1,56 +1,91 @@
 ---
----
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="logo">
-            <a href="/HelloWorld/"><span class="code-line-logo"></span>Hello World</a>
-        </div>
-        <nav>
-            <ul class="links">
-                <li><a href="/HelloWorld/python/" class="navbutton">Python</a></li>
-                <li><a href="/HelloWorld/cpp/" class="navbutton">C++</a></li>
-                <li><a href="/HelloWorld/git/" class="navbutton">Git</a></li>
-                <li><a href="/HelloWorld/crypto/" class="navbutton">Crypto</a></li>
-                <li><a href="#contact" class="navbutton">Contacto</a></li>
-            </ul>
-        </nav>
-        
-        <!-- Boton hamburguesa -->
-        <button class="dropdown-btn" aria-label="Abrir menú">☰</button>
+const navLinks = [
+    { href: "/HelloWorld/python/", label: "Python" },
+    { href: "/HelloWorld/cpp/", label: "C++" },
+    { href: "/HelloWorld/java/", label: "Java" },
+    { href: "/HelloWorld/git/", label: "Git" },
+    { href: "/HelloWorld/crypto/", label: "Crypto" },
+    { href: "#contact", label: "Contacto" },
+];
 
-        <!-- Menu desplegable -->
-        <div class="dropdown">
-            <ul>
-                <li><a href="/HelloWorld/python/" class="navbutton">Python</a></li>
-                <li><a href="/HelloWorld/cpp/" class="navbutton">C++</a></li>
-                <li><a href="/HelloWorld/git/" class="navbutton">Git</a></li>
-                <li><a href="/HelloWorld/crypto/" class="navbutton">Crypto</a></li>
-                <li><a href="#contact" class="navbutton">Contacto</a></li>
-            </ul>
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) =>
+    href.startsWith("#") ? false : currentPath.replace(/\/?$/, "/") === href;
+---
+<div class="vitra-navbar vitra-navbar-glass">
+    <a href="/HelloWorld/" class="vitra-navbar-brand">
+        <span class="code-line-logo"></span>Hello World
+    </a>
+
+    <div class="nav-right-group">
+        <nav class="vitra-navbar-links">
+            {navLinks.map((link) => (
+                <a href={link.href} class="vitra-navbar-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+            ))}
+        </nav>
+
+        <div class="vitra-navbar-actions">
+            <button class="vitra-burger" aria-label="Abrir menú" aria-expanded="false">
+                <span class="vitra-burger-line"></span>
+                <span class="vitra-burger-line"></span>
+                <span class="vitra-burger-line"></span>
+            </button>
         </div>
     </div>
 </div>
 
-<script>
-  const dropdownBtn = document.querySelector(".dropdown-btn");
-  const dropdown = document.querySelector(".dropdown");
+<div class="vitra-drawer-overlay"></div>
+<div class="vitra-drawer vitra-drawer-glass">
+    <div class="vitra-drawer-header">
+        <span class="vitra-drawer-title">Hello World</span>
+        <button class="vitra-drawer-close" aria-label="Cerrar menú">✕</button>
+    </div>
+    <div class="vitra-drawer-body">
+        {navLinks.map((link) => (
+            <a href={link.href} class="vitra-drawer-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+        ))}
+    </div>
+</div>
 
-  if (dropdownBtn && dropdown) {
-    // Abrir/cerrar el menu al hacer clic en el boton
-    dropdownBtn.addEventListener("click", (e) => {
+<style>
+    .nav-right-group {
+        display: flex;
+        align-items: center;
+        gap: var(--vitra-space-4, 1.5rem);
+    }
+</style>
+
+<script>
+  const burger = document.querySelector(".vitra-burger");
+  const drawer = document.querySelector(".vitra-drawer");
+  const overlay = document.querySelector(".vitra-drawer-overlay");
+  const drawerClose = document.querySelector(".vitra-drawer-close");
+
+  function closeDrawer() {
+    burger?.classList.remove("active");
+    burger?.setAttribute("aria-expanded", "false");
+    drawer?.classList.remove("open");
+    overlay?.classList.remove("open");
+  }
+
+  function toggleDrawer() {
+    const isOpen = drawer?.classList.toggle("open");
+    overlay?.classList.toggle("open", !!isOpen);
+    burger?.classList.toggle("active", !!isOpen);
+    burger?.setAttribute("aria-expanded", String(!!isOpen));
+  }
+
+  if (burger && drawer && overlay) {
+    burger.addEventListener("click", (e) => {
       e.stopPropagation();
-      dropdown.classList.toggle("open");
+      toggleDrawer();
     });
 
-    // Cerrar el menu si se hace clic fuera
-    document.addEventListener("click", (event) => {
-      if (
-        event.target instanceof Node &&
-        !dropdown.contains(event.target) &&
-        !dropdownBtn.contains(event.target)
-      ) {
-        dropdown.classList.remove("open");
-      }
+    overlay.addEventListener("click", closeDrawer);
+    drawerClose?.addEventListener("click", closeDrawer);
+
+    drawer.querySelectorAll(".vitra-drawer-link").forEach((link) => {
+      link.addEventListener("click", closeDrawer);
     });
   }
 </script>

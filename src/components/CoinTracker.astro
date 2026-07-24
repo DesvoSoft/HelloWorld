@@ -1,0 +1,307 @@
+---
+// CoinTracker.astro
+interface Props {
+  coinId: string;
+  name: string;
+  symbol: string;
+  color: string;
+}
+
+const { coinId, name, symbol, color } = Astro.props;
+const uid = coinId;
+---
+
+<div class="coin-tracker-container">
+  <div class="coin-tracker-card vitra-glass" data-coin={uid}>
+    <div class="tracker-header">
+      <div class="coin-info">
+        <div class="coin-icon clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} style={`background:${color}22; color:${color};`} title={`Click to view ${name} on CoinGecko`}>
+          <span class="coin-symbol-mark">{symbol[0]}</span>
+        </div>
+        <span class="coin-name clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} title={`Click to view ${name} on CoinGecko`}>{name}</span>
+        <span class="coin-symbol clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} title={`Click to view ${name} on CoinGecko`}>{symbol}</span>
+      </div>
+    </div>
+
+    <div class="price-container">
+      <div class="current-price" data-price>Loading...</div>
+      <div class="price-change" data-change>
+        <span class="change-value">--</span>
+      </div>
+    </div>
+
+    <div class="graph-container">
+      <svg class="sparkline-svg" width="100%" height="80" viewBox="0 0 100 80" preserveAspectRatio="none">
+        <path data-sparkline-path d="" fill="none" stroke={color} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path data-sparkline-area d="" fill={`url(#sparkline-gradient-${uid})`} opacity="0.15"></path>
+        <defs>
+          <linearGradient id={`sparkline-gradient-${uid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop data-grad-stop0 offset="0%" stop-color={color} />
+            <stop data-grad-stop1 offset="100%" stop-color={color} stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="tracker-footer">
+      <span class="last-updated">Última actualización: <span data-update-time>--</span></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .coin-tracker-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 1.25rem 0;
+  }
+
+  .coin-tracker-card {
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    font-family: var(--font-main, 'Inter', system-ui, sans-serif);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .coin-tracker-card:hover {
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  .tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .coin-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .coin-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+
+  .coin-name {
+    font-weight: 700;
+    color: var(--vitra-color-text-strong, #e6f0ff);
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .coin-symbol {
+    color: var(--vitra-color-text-muted, #94a3b8);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--vitra-color-accent-soft, rgba(100, 255, 218, 0.1));
+    padding: 0.1rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .clickable:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+
+  .price-container {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .current-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--vitra-color-text-strong, #e6f0ff);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .price-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+  }
+
+  .price-change.up { color: #4ade80; background: rgba(74, 222, 128, 0.2); }
+  .price-change.down { color: #f87171; background: rgba(248, 113, 113, 0.2); }
+
+  .current-price:has(.price-error-msg) {
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .price-error-msg {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--vitra-color-text-muted, #94a3b8);
+  }
+
+  .price-retry-btn {
+    margin-top: 0.6rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--vitra-color-accent, #64ffda);
+    background: var(--vitra-color-accent-soft, rgba(100, 255, 218, 0.1));
+    border: 1px solid var(--vitra-color-accent, #64ffda);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  .price-retry-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+  }
+
+  .graph-container {
+    height: 80px;
+    margin: 1.5rem -2rem;
+    padding: 0 2rem;
+    position: relative;
+  }
+
+  .tracker-footer {
+    border-top: 1px solid var(--vitra-color-border, rgba(100, 255, 218, 0.15));
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .last-updated {
+    font-size: 0.8rem;
+    color: var(--vitra-color-text-muted, #94a3b8);
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.coin-tracker-card[data-coin]').forEach((card) => {
+    const coinId = card.dataset.coin;
+    if (!coinId) return;
+
+    const priceEl = card.querySelector<HTMLElement>('[data-price]');
+    const changeEl = card.querySelector<HTMLElement>('[data-change]');
+    const timeEl = card.querySelector<HTMLElement>('[data-update-time]');
+    const sparklinePath = card.querySelector<SVGPathElement>('[data-sparkline-path]');
+    const sparklineArea = card.querySelector<SVGPathElement>('[data-sparkline-area]');
+    const stop0 = card.querySelector<SVGStopElement>('[data-grad-stop0]');
+    const stop1 = card.querySelector<SVGStopElement>('[data-grad-stop1]');
+
+    card.querySelectorAll<HTMLElement>('[data-coingecko-link]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const url = el.dataset.coingeckoLink;
+        if (url) window.open(url, '_blank');
+      });
+    });
+
+    async function fetchCoinPrice() {
+      try {
+        const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`);
+        const data = await response.json();
+
+        const price = data.market_data.current_price.usd;
+        const change = data.market_data.price_change_percentage_24h;
+        const sparklineData = data.market_data.sparkline_7d.price;
+
+        if (priceEl) {
+          priceEl.textContent = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: price < 1 ? 4 : 0,
+            maximumFractionDigits: price < 1 ? 4 : 0
+          }).format(price);
+        }
+
+        if (changeEl) {
+          const isUp = change >= 0;
+          changeEl.className = `price-change ${isUp ? 'up' : 'down'}`;
+          changeEl.innerHTML = `
+            <span class="change-icon">${isUp ? '▲' : '▼'}</span>
+            <span class="change-value">${Math.abs(change).toFixed(2)}%</span>
+            <span class="change-period">(24h)</span>
+          `;
+
+          const color = isUp ? '#4ade80' : '#f87171';
+          if (sparklinePath) sparklinePath.setAttribute('stroke', color);
+          if (stop0) stop0.setAttribute('stop-color', color);
+          if (stop1) stop1.setAttribute('stop-color', color);
+        }
+
+        if (sparklinePath && sparklineData && sparklineData.length > 0) {
+          const min = Math.min(...sparklineData);
+          const max = Math.max(...sparklineData);
+          const range = max - min || 1;
+          const width = 100;
+          const height = 80;
+
+          const points = sparklineData.map((p: number, i: number) => {
+            const x = (i / (sparklineData.length - 1)) * width;
+            const y = height - ((p - min) / range) * height;
+            return `${x},${y}`;
+          });
+
+          const d = `M ${points.join(' L ')}`;
+          sparklinePath.setAttribute('d', d);
+
+          if (sparklineArea) {
+            const areaD = `${d} L ${width},${height} L 0,${height} Z`;
+            sparklineArea.setAttribute('d', areaD);
+          }
+        }
+
+        if (timeEl) {
+          timeEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+      } catch (error) {
+        console.error(`Error fetching ${coinId} price:`, error);
+        if (priceEl) {
+          priceEl.innerHTML = '';
+          const msg = document.createElement('span');
+          msg.className = 'price-error-msg';
+          msg.textContent = 'No se pudo cargar el precio';
+          const retryBtn = document.createElement('button');
+          retryBtn.type = 'button';
+          retryBtn.className = 'price-retry-btn';
+          retryBtn.textContent = 'Reintentar';
+          retryBtn.addEventListener('click', () => {
+            priceEl.textContent = 'Loading...';
+            fetchCoinPrice();
+          });
+          priceEl.append(msg, retryBtn);
+        }
+      }
+    }
+
+    fetchCoinPrice();
+    setInterval(fetchCoinPrice, 60000);
+  });
+</script>

@@ -1,25 +1,9 @@
-/* Centra el contenido de las secciones */
-section {
-    display: grid;
-    place-items: center;
-    align-content: center;
-    min-height: 90vh; /* antes 100vh*/
-    padding: 0% 10%;
-}
-
-.home-container{
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
 /* ============================
     SECCION: Swiper (Galeria)
 ============================ */
 .swiper {
     width: 100%;
-    min-width: 250px; /* 350 */
-    max-width: 1200px;
+    max-width: 100%;
 }
 
 .swiper-slide img {
@@ -27,20 +11,54 @@ section {
 }
 
 /* ============================
-             Efectos
-   ============================ */
-
-/* Transiciones para elementos ocultos */
-.hidden {
+    Scroll reveal (IntersectionObserver-driven,
+    cross-browser — Vitra's own animation-timeline:view()
+    reveal only fires in Chromium and has no JS fallback)
+============================ */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
     opacity: 0;
-    filter: blur(8px);
-    transform: translateX(-100%); /*antes -100%*/
-    transition: all 1s ease-in-out;
+    filter: blur(10px);
+    transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Elementos visibles */
-.show {
+.reveal {
+    transform: translateY(40px);
+}
+
+.reveal-left {
+    transform: translateX(-60px);
+}
+
+.reveal-right {
+    transform: translateX(60px);
+}
+
+.reveal-scale {
+    transform: scale(0.92);
+}
+
+.reveal.show,
+.reveal-left.show,
+.reveal-right.show,
+.reveal-scale.show {
     opacity: 1;
     filter: blur(0);
-    transform: translateX(0);
+    transform: translate(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        transition: none;
+    }
 }

@@ -14,12 +14,7 @@ body {
 }
 
 main {
-  display: block;
-  width: 100%;
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  box-sizing: border-box;
+  padding-block: var(--vitra-space-6, 3rem);
 }
 
 h1,
@@ -105,6 +100,12 @@ pre {
   overflow-x: auto;
   border-left: 4px solid var(--accent);
   backdrop-filter: blur(10px);
+  transition: box-shadow var(--vitra-duration-normal, 0.3s) var(--vitra-ease-out, ease), transform var(--vitra-duration-normal, 0.3s) var(--vitra-ease-out, ease);
+}
+
+pre:hover {
+  box-shadow: var(--shadow-2), 0 0 24px hsl(var(--vitra-color-accent-h, 200) 80% 60% / 15%);
+  transform: translateY(-2px);
 }
 
 pre code {
@@ -116,7 +117,7 @@ pre code {
 }
 
 .exercise {
-  background-color: rgba(76, 157, 245, 0.05);
+  background-color: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 5%);
   border-left: 5px solid var(--accent);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
@@ -143,15 +144,6 @@ hr {
   opacity: 0.9;
   box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent-soft);
   border-radius: 100%;
-}
-
-footer {
-  text-align: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1.5rem;
-  margin-top: 4rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
 }
 
 @keyframes blink {

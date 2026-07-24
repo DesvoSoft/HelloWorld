@@ -5,41 +5,93 @@ import '../styles/page-specific/info-pages.css';
 ---
 
 <Layout title="Hello World">
-    <div class="home-container">
-        <section id="home" class="hidden">
-            <h1>Hola Mundo</h1>
-            <br>
-            <p>
-                ¡Hola y bienvenido a Hello World, un sitio creado con el propósito de compartir información útil sobre fundamentos de programación y otros temas de la evolución digital!
-            </p>
-            
-            <p>
-                Este proyecto nació de la idea de practicar el control de versiones con Git y GitHub, explorar el desarrollo web y mantener información de referencia.
-            </p>
-            
-            <p>
-                Con el tiempo, el objetivo es añadir más contenido sobre diversos temas digitales. Aunque no hay un enfoque fijo, la prioridad es mantenerlo conciso y práctico, ideal para quienes también están comenzando o quieren reforzar lo básico.
-            </p>
+    <div class="vitra-container home-container">
+        <section id="home" class="vitra-scenery-inline">
+            <div class="vitra-scenery-sky" aria-hidden="true"></div>
+            <div class="vitra-scenery-clouds" aria-hidden="true"></div>
+            <div class="vitra-scenery-stars" aria-hidden="true"></div>
+            <div class="vitra-scenery-halo" aria-hidden="true"></div>
+            <div class="vitra-scenery-ridge-far" aria-hidden="true"></div>
+            <div class="vitra-scenery-ridge-mid" aria-hidden="true"></div>
+            <div class="vitra-scenery-ridge-near" aria-hidden="true"></div>
+            <div class="vitra-scenery-grain" aria-hidden="true"></div>
+            <div class="hero-inner">
+                <p class="hero-kicker">Desarrollador &amp; eterno aprendiz</p>
+                <h1 class="vitra-gradient-text">Hola Mundo</h1>
+                <p class="hero-lead">
+                    Bienvenido a Hello World: un espacio para compartir fundamentos de programación y explorar la evolución digital.
+                </p>
+                <p class="hero-sub">
+                    Nació como práctica de Git y GitHub, y hoy crece con contenido conciso y práctico para quienes están comenzando o quieren reforzar lo básico.
+                </p>
+            </div>
         </section>
 
-        <section class="hidden">
-            <h2>Acerca</h2>
-            
-            <p>
-                Este sitio es mi espacio para experimentar y compartir al mismo tiempo, lo que ves aquí es un reflejo de mi evolución como eterno aprendiz.
-            </p>
-            
-            <p>
-                Me interesa explorar temas como el diseño web, el desarrollo de videojuegos y el uso de nuevas tecnologías. Cada proyecto es una oportunidad para aprender algo nuevo, y me encantaría que este sitio también sea útil para ti.
-                Puedes encontrar el código del sitio en:
-            </p>
-            
-            
-            <a href="https://github.com/DesvoSoft/HelloWorld"><p><img src="https://cdn.afterdawn.fi/v3/news/original/github-logo.png" alt="github" style="width: 60px;"><br><span>GitHub</span></p></a>
-            
+        <section class="reveal-left content-section">
+            <div class="section-inner about-card">
+                <h2>Acerca</h2>
+
+                <p>
+                    Este sitio es mi espacio para experimentar y compartir al mismo tiempo, lo que ves aquí es un reflejo de mi evolución como eterno aprendiz.
+                </p>
+
+                <p>
+                    Me interesa explorar temas como el diseño web, el desarrollo de videojuegos y el uso de nuevas tecnologías. Cada proyecto es una oportunidad para aprender algo nuevo, y me encantaría que este sitio también sea útil para ti.
+                    Puedes encontrar el código del sitio en:
+                </p>
+
+                <a href="https://github.com/DesvoSoft/HelloWorld" class="vitra-btn vitra-btn-glass github-link" target="_blank">
+                    <img src="https://cdn.afterdawn.fi/v3/news/original/github-logo.png" alt="github" width="28">
+                    <span>GitHub</span>
+                </a>
+            </div>
         </section>
 
-        <section id="images" class="hidden">
+        <section id="projects" class="reveal content-section">
+            <div class="section-inner projects-inner">
+                <h2>Proyectos principales</h2>
+                <div class="project-grid">
+                    <a href="https://github.com/DesvoSoft/ZeroBlockBridge" target="_blank" rel="noopener" class="project-card vitra-glass">
+                        <div class="project-card-head">
+                            <h3>ZeroBlockBridge</h3>
+                            <span class="project-lang"><span class="project-lang-dot" data-lang="python"></span>Python</span>
+                        </div>
+                        <p class="project-desc">
+                            Gestor de self-hosting para servidores de Minecraft: tunneling integrado, auto-healing y backups de un clic.
+                        </p>
+                        <div class="project-tags">
+                            <span>gui</span>
+                            <span>backup</span>
+                            <span>minecraft-server</span>
+                            <span>sysadmin</span>
+                            <span>game-server</span>
+                            <span>self-hosting</span>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-stars">★ 4</span>
+                            <span>GNU AGPLv3</span>
+                        </div>
+                    </a>
+
+                    <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener" class="project-card vitra-glass">
+                        <div class="project-card-head">
+                            <h3>Vitra</h3>
+                            <span class="project-lang"><span class="project-lang-dot" data-lang="css"></span>CSS</span>
+                        </div>
+                        <p class="project-desc">
+                            Framework CSS ligero enfocado en glassmorphism. El mismo framework que da estilo a este sitio.
+                        </p>
+                        <div class="project-tags">
+                            <span>frontend</span>
+                            <span>ui-components</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="images" class="reveal-scale content-section">
+            <div class="section-inner gallery-card gallery-inner">
             <h2 data-i18n="seccionImagenesTitulo">Imagenes</h2>
             <p>Colección de imágenes generadas con Stable Diffusion 1.5 (2022).</p>
             <br>
@@ -90,21 +142,23 @@ import '../styles/page-specific/info-pages.css';
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
             </div>
+            </div>
         </section>
 
-        <section id="contact" class="hidden">
-            <h2>Contacto</h2>
-            <p>Email: <a href="mailto:desvox23@gmail.com">desvox23@gmail.com</a></p>
-            <br>
-            <div style="text-align: center;">
-                <h3 style="font-size: 25px; border: 0px;">Unete al discord</h3>
-                <p>¿Tienes preguntas, ideas o simplemente deseas conversar sobre temas de interés?</p>
-                <p>Te invito a unirte al servidor creado para este sitio:</p>
-                <br>
-                <a href="https://discord.gg/FfmkPhQv" target="_blank" class="discord-invite">
-                    <img width="126" loading="lazy" alt="" src="https://www.tradingdigits.io/assets/images/discordLogo.png"><br>
-                    <span style="font-size: 25px;">Discord</span>
-                </a>
+        <section id="contact" class="reveal-right content-section">
+            <div class="section-inner contact-card">
+                <h2>Contacto</h2>
+                <p>Email: <a href="mailto:desvox23@gmail.com">desvox23@gmail.com</a></p>
+
+                <div class="discord-block">
+                    <h3>Únete al Discord</h3>
+                    <p>¿Tienes preguntas, ideas o simplemente deseas conversar sobre temas de interés?</p>
+                    <p>Te invito a unirte al servidor creado para este sitio:</p>
+                    <a href="https://discord.gg/aCaHssJJu" target="_blank" class="vitra-btn vitra-btn-glass discord-invite">
+                        <img width="28" loading="lazy" alt="" src="https://www.tradingdigits.io/assets/images/discordLogo.png">
+                        <span>Discord</span>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -114,3 +168,239 @@ import '../styles/page-specific/info-pages.css';
 <script>
   import "../scripts/homescript.js";
 </script>
+
+<style>
+  .home-container {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--vitra-space-8, 4rem);
+    padding-block: var(--vitra-space-6, 3rem) var(--vitra-space-10, 5rem);
+  }
+
+  #home {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    min-height: 78vh;
+    display: grid;
+    place-items: center;
+    --vitra-scenery-halo-x: 78%;
+    --vitra-scenery-halo-y: 12%;
+    --vitra-scenery-halo-size: clamp(90px, 12vw, 160px);
+    /* Swap Vitra's default amber moonlight/sky-glow for a cool blue in
+       line with the site's teal/blue palette (--cool-accent-h). Ridge
+       silhouettes stay on --vitra-scenery-hue (teal), untouched. */
+    --vitra-scenery-warm-h: var(--cool-accent-h);
+  }
+
+  /* Extra opaque halo behind the stars layer: Vitra's star mask hole
+     tracks the moon's solid disc but not its box-shadow glow radius, so
+     faint stars bleed through near the corona. This sits between stars
+     (z-index:0) and the halo (z-index:1) and blocks that bleed without
+     touching Vitra's own mask math. */
+  #home::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: var(--vitra-scenery-halo-x);
+    top: var(--vitra-scenery-halo-y);
+    width: calc(var(--vitra-scenery-halo-size) * 3.4);
+    height: calc(var(--vitra-scenery-halo-size) * 3.4);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      hsl(var(--vitra-scenery-hue) 40% 6% / 65%) 0%,
+      hsl(var(--vitra-scenery-hue) 40% 6% / 30%) 45%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  /* Vitra's ridge-near mask leaves a hard near-black band at the very
+     bottom of the scenery container; fade it into the page background
+     instead of letting it cut off sharply. */
+  #home::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: auto 0 0 0;
+    height: 28%;
+    background: linear-gradient(to bottom, transparent, var(--vitra-color-bg) 85%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 760px;
+    margin-inline: auto;
+    padding: var(--vitra-space-6, 3rem) var(--vitra-space-4, 2rem);
+  }
+
+  .hero-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--vitra-color-accent, #4c9df5);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-inner h1 {
+    font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+    line-height: 1.05;
+    margin-block: 0 1.25rem;
+  }
+
+  .hero-lead {
+    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem);
+    font-weight: 500;
+    color: var(--vitra-color-text-primary, #fff);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    color: var(--vitra-color-text-secondary, #ffffffb3);
+    max-width: 540px;
+    margin-inline: auto;
+    margin-top: 0.75rem;
+  }
+
+  .content-section {
+    padding-block: var(--vitra-space-10, 5rem);
+  }
+
+  .section-inner {
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .gallery-inner {
+    max-width: 1100px;
+  }
+
+  .projects-inner {
+    max-width: 1100px;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--vitra-space-4, 2rem);
+    margin-top: var(--vitra-space-4, 2rem);
+    text-align: left;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: var(--vitra-space-4, 2rem);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-smooth, 0.3s), box-shadow var(--transition-smooth, 0.3s);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-1, 0 18px 32px rgba(5, 16, 33, 0.28));
+  }
+
+  .project-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .project-card-head h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .project-lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted, #cbd6e6);
+    white-space: nowrap;
+  }
+
+  .project-lang-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--vitra-color-accent, #4c9df5);
+  }
+
+  .project-lang-dot[data-lang="python"] {
+    background: #3572a5;
+  }
+
+  .project-desc {
+    margin: 0;
+    color: var(--text-muted, #cbd6e6);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .project-tags span {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--accent-soft, hsl(var(--vitra-color-accent-h) 80% 60% / 18%));
+    color: var(--vitra-color-accent, #4c9df5);
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted, #cbd6e6);
+    margin-top: auto;
+  }
+
+  .project-stars {
+    color: var(--vitra-color-accent, #4c9df5);
+  }
+
+  .github-link,
+  .discord-invite {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .discord-block {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .discord-block h3 {
+    font-size: 1.4rem;
+    border: 0;
+  }
+
+  .discord-invite {
+    margin-top: 1rem;
+  }
+</style>

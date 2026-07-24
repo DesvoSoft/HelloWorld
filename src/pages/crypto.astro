@@ -1,27 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import BtcTracker from '../components/BtcTracker.astro';
+import CoinTracker from '../components/CoinTracker.astro';
 import '../styles/page-specific/info-pages.css';
+import '../styles/page-specific/crypto.css';
 import '../styles/crypto-toc.css';
 ---
 
 <Layout title="Guía de Criptomonedas">
     <style>
       .doc-section {
-        scroll-margin-top: calc(var(--navbar-h, 64px) + 16px);
+        scroll-margin-top: calc(var(--navbar-h, 64px) + 76px);
+      }
+
+      @media (max-width: 900px) {
+        .doc-section {
+          scroll-margin-top: 230px;
+        }
       }
 
       hr.section-sep {
         border: 0;
         height: 1px;
-        background: linear-gradient(90deg, rgba(15, 23, 36, 0.06), rgba(15, 23, 36, 0.1));
+        background: linear-gradient(90deg, transparent, var(--vitra-color-border, rgba(255, 255, 255, 0.08)), transparent);
         margin: 1.25rem 0;
-        opacity: 0.95;
         border-radius: 1px;
-      }
-
-      body.dark hr.section-sep {
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.06));
       }
 
       .content-shell {
@@ -30,42 +32,41 @@ import '../styles/crypto-toc.css';
         margin: 0 auto;
       }
 
-      /* Pop-up Styles */
+      .tracker-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+        margin: 1.5rem 0;
+      }
+
+      .tracker-grid > * {
+        flex: 1 1 340px;
+      }
+
+      /* Pop-up */
       .popup-overlay {
-        display: none; /* Hidden by default */
+        display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
+        inset: 0;
         z-index: 1000;
         justify-content: center;
         align-items: center;
+        background-color: rgba(0, 0, 0, 0.55);
         backdrop-filter: blur(5px);
       }
 
       .popup-content {
-        background: var(--bg-card, #1a1f2e);
-        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
         padding: 2rem;
-        border-radius: 16px;
         max-width: 500px;
         width: 90%;
         position: relative;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         animation: popupFadeIn 0.3s ease-out;
       }
 
       @keyframes popupFadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .popup-close-btn {
@@ -74,7 +75,7 @@ import '../styles/crypto-toc.css';
         right: 1rem;
         background: none;
         border: none;
-        color: var(--text-muted, #8892b0);
+        color: var(--vitra-color-text-muted, #8892b0);
         font-size: 1.5rem;
         cursor: pointer;
         padding: 0.25rem;
@@ -83,7 +84,7 @@ import '../styles/crypto-toc.css';
       }
 
       .popup-close-btn:hover {
-        color: var(--text-main, #fff);
+        color: var(--vitra-color-text-strong, #fff);
       }
 
       .popup-header {
@@ -91,7 +92,7 @@ import '../styles/crypto-toc.css';
         align-items: center;
         gap: 1rem;
         margin-bottom: 1.5rem;
-        border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+        border-bottom: 1px solid var(--vitra-color-border, rgba(255, 255, 255, 0.1));
         padding-bottom: 1rem;
       }
 
@@ -102,13 +103,13 @@ import '../styles/crypto-toc.css';
       .popup-header h2 {
         margin: 0;
         font-size: 1.5rem;
-        color: var(--text-main, #fff);
+        color: var(--vitra-color-text-strong, #fff);
         border: none;
         padding: 0;
       }
 
       .popup-body {
-        color: var(--text-body, #a8b2d1);
+        color: var(--vitra-color-text, #a8b2d1);
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 2rem;
@@ -128,11 +129,11 @@ import '../styles/crypto-toc.css';
       }
 
       .popup-accept-btn {
-        background: var(--accent, #64ffda);
-        color: var(--bg-main, #0a192f);
+        background: var(--vitra-color-accent, #64ffda);
+        color: var(--vitra-color-on-accent, #0a192f);
         border: none;
         padding: 0.75rem 1.5rem;
-        border-radius: 8px;
+        border-radius: 12px;
         font-weight: 600;
         cursor: pointer;
         transition: transform 0.2s, filter 0.2s;
@@ -142,6 +143,7 @@ import '../styles/crypto-toc.css';
         transform: translateY(-2px);
         filter: brightness(1.1);
       }
+
       .disclaimer-btn {
         display: flex;
         justify-content: center;
@@ -149,28 +151,22 @@ import '../styles/crypto-toc.css';
       }
 
       .show-popup-btn {
-        background: rgba(100, 255, 218, 0.1);
-        color: var(--accent, #64ffda);
-        border: 1px solid rgba(100, 255, 218, 0.3);
+        color: var(--vitra-color-accent, #64ffda);
         padding: 0.75rem 1.5rem;
         border-radius: 12px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
+        transition: transform 0.3s ease;
         letter-spacing: 0.02em;
       }
 
       .show-popup-btn:hover {
-        background: rgba(100, 255, 218, 0.2);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(100, 255, 218, 0.1);
-        border-color: var(--accent, #64ffda);
       }
     </style>
     
     <div class="popup-overlay" id="disclaimerPopup">
-        <div class="popup-content">
+        <div class="popup-content vitra-glass">
             <button class="popup-close-btn" id="closePopupBtn">&times;</button>
             <div class="popup-header">
                 <span class="popup-icon" aria-hidden="true">⚠️</span>
@@ -195,7 +191,7 @@ import '../styles/crypto-toc.css';
       aria-label="Índice del artículo"
       data-toc-scope="crypto"
     >
-      <div class="toc-ribbon" role="navigation" aria-label="Índice navegable">
+      <div class="toc-ribbon vitra-glass" role="navigation" aria-label="Índice navegable">
         <div class="toc-head">
           <p class="toc-eyebrow">Índice</p>
           <div class="toc-scroll-controls" aria-hidden="true">
@@ -252,7 +248,7 @@ import '../styles/crypto-toc.css';
                   <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
                 </button>
               </div>
-              <div id="toc-sub-rsi-bb" class="toc-submenu" hidden>
+              <div id="toc-sub-rsi-bb" class="toc-submenu vitra-glass" hidden>
                 <ul class="toc-sub-list" role="list">
                   <li><a class="toc-link" data-toc-id="rsi-resumen-rapido" href="#rsi-resumen-rapido">Resumen rápido</a></li>
                   <li><a class="toc-link" data-toc-id="rsi-explicacion-rsi" href="#rsi-explicacion-rsi">Explicación del RSI</a></li>
@@ -283,7 +279,7 @@ import '../styles/crypto-toc.css';
                   <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
                 </button>
               </div>
-              <div id="toc-sub-recommended-times" class="toc-submenu" hidden>
+              <div id="toc-sub-recommended-times" class="toc-submenu vitra-glass" hidden>
                 <ul class="toc-sub-list" role="list">
                   <li><a class="toc-link" data-toc-id="horarios-frecuencia-sugerida" href="#horarios-frecuencia-sugerida">Frecuencia sugerida</a></li>
                   <li><a class="toc-link" data-toc-id="horarios-concretos" href="#horarios-concretos">Horarios concretos (CST, UTC−6) y por qué</a></li>
@@ -306,7 +302,7 @@ import '../styles/crypto-toc.css';
                   <span class="toc-sub-trigger-icon" aria-hidden="true"></span>
                 </button>
               </div>
-              <div id="toc-sub-swing-trading" class="toc-submenu" hidden>
+              <div id="toc-sub-swing-trading" class="toc-submenu vitra-glass" hidden>
                 <ul class="toc-sub-list" role="list">
                   <li><a class="toc-link" data-toc-id="swing-caracteristicas" href="#swing-caracteristicas">Características principales</a></li>
                   <li><a class="toc-link" data-toc-id="swing-ventajas-desventajas" href="#swing-ventajas-desventajas">Ventajas y desventajas</a></li>
@@ -332,23 +328,25 @@ import '../styles/crypto-toc.css';
     </nav>
     <div class="content-shell">
         <main>
-            <section id="intro" class="doc-section">
+            <section id="intro" class="doc-section vitra-scroll-reveal">
                 <h1>Bitcoin</h1>
                 <p>Bitcoin es un activo escaso (oferta máxima de 21 millones) y descentralizado, considerado "oro digital". Eventos como los halvings, donde se reduce la recompensa por bloque, refuerzan esta escasez y suelen preceder subidas de precio.</p>
-                <hr class="section-sep" data-sep-purpose="intro">
                 <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
 
                 <div class="disclaimer-btn">
-                    <button class="show-popup-btn" id="showPopupBtn">Ver disclaimer</button>
+                    <button class="show-popup-btn vitra-glass" id="showPopupBtn">Ver disclaimer</button>
                 </div>
 
-                <BtcTracker />
+                <div class="tracker-grid">
+                    <CoinTracker coinId="bitcoin" name="Bitcoin" symbol="BTC" color="#F7931A" />
+                    <CoinTracker coinId="ethereum" name="Ethereum" symbol="ETH" color="#627EEA" />
+                </div>
 
                 <hr class="section-sep" data-sep-purpose="section">
 
             </section>
 
-        <section id="investment-types" class="doc-section">
+        <section id="investment-types" class="doc-section vitra-scroll-reveal">
             <h2>Tipos de inversión</h2>
             <ul>
                 <li><strong>HODLing estratégico (largo plazo):</strong> Comprar y mantener BTC durante años. Es simple y tiene potencial de grandes ganancias, pero requiere disciplina y seguridad.</li>
@@ -364,7 +362,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="risk-management" class="doc-section">
+        <section id="risk-management" class="doc-section vitra-scroll-reveal">
             <h2>Gestión de riesgos</h2>
             <p>Proteger tu capital es fundamental antes de buscar ganancias. Una gestión de riesgos adecuada puede marcar la diferencia entre un inversor exitoso y uno que sufre pérdidas significativas. Aquí te detallo algunas estrategias y conceptos clave:</p>
             <ul>
@@ -416,7 +414,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="technical-analysis" class="doc-section">
+        <section id="technical-analysis" class="doc-section vitra-scroll-reveal">
             <h2>Análisis técnico</h2>
             <ul>
                 <li>
@@ -439,7 +437,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="fundamental-analysis" class="doc-section">
+        <section id="fundamental-analysis" class="doc-section vitra-scroll-reveal">
             <h2>Análisis fundamental</h2>
             <ul>
                 <li>
@@ -458,7 +456,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="derivatives" class="doc-section">
+        <section id="derivatives" class="doc-section vitra-scroll-reveal">
             <h2>Futuros y derivados</h2>
             
             <h3>¿Qué son los contratos de futuros?</h3>
@@ -467,42 +465,44 @@ import '../styles/crypto-toc.css';
             <p>A diferencia de comprar una acción, donde se adquiere una parte de una empresa, al operar con futuros no se posee el activo subyacente, sino que se asume una obligación: el comprador debe adquirir el activo en la fecha acordada y el vendedor debe entregarlo o liquidar la diferencia en efectivo.</p>
             
             <h3>Futuros en criptomonedas vs. bolsa tradicional</h3>
-            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-                <thead>
-                    <tr style="background: var(--bg-card, #1a1f2e);">
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Característica</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Futuros Criptomonedas</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Futuros Bolsa Tradicional</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Horario</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">24/7</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Casi 24h/día, con pausas y festivos</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apalancamiento</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Hasta 125x</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Hasta 50x</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Regulación</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Limitada</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Altamente regulada</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Liquidación</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Automática, rápida</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Más gradual, con protecciones</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Accesibilidad</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alta, desde pequeñas cantidades</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Más capital y experiencia</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Futuros Criptomonedas</th>
+                            <th>Futuros Bolsa Tradicional</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Horario</td>
+                            <td>24/7</td>
+                            <td>Casi 24h/día, con pausas y festivos</td>
+                        </tr>
+                        <tr>
+                            <td>Apalancamiento</td>
+                            <td>Hasta 125x</td>
+                            <td>Hasta 50x</td>
+                        </tr>
+                        <tr>
+                            <td>Regulación</td>
+                            <td>Limitada</td>
+                            <td>Altamente regulada</td>
+                        </tr>
+                        <tr>
+                            <td>Liquidación</td>
+                            <td>Automática, rápida</td>
+                            <td>Más gradual, con protecciones</td>
+                        </tr>
+                        <tr>
+                            <td>Accesibilidad</td>
+                            <td>Alta, desde pequeñas cantidades</td>
+                            <td>Más capital y experiencia</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             
             <h3>Tipos de contratos en cripto</h3>
             <ul>
@@ -540,7 +540,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
         
-        <section id="etfs" class="doc-section">
+        <section id="etfs" class="doc-section vitra-scroll-reveal">
             <h2>ETFs (Fondos Cotizados en Bolsa)</h2>
             
             <h3>¿Qué es un ETF?</h3>
@@ -555,54 +555,56 @@ import '../styles/crypto-toc.css';
             </ul>
             
             <h3>Tipos de ETFs</h3>
-            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-                <thead>
-                    <tr style="background: var(--bg-card, #1a1f2e);">
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Tipo de ETF</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">¿Qué replica?</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Riesgo</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Uso principal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Índice</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">S&P 500, MSCI World, IBEX 35</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Moderado</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Diversificación global</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Sectorial</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Tecnología, salud, energía</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Moderado/Alto</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apostar por sectores</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Temático</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Robótica, energías limpias, IA</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alto</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Invertir en tendencias</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bonos</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bonos públicos/corporativos</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Bajo/Moderado</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Estabilidad y renta fija</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Apalancado</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Multiplica el índice (2x, 3x)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Muy alto</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Trading a corto plazo</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Inverso</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Gana cuando el índice baja</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Alto</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cobertura, especulación</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de ETF</th>
+                            <th>¿Qué replica?</th>
+                            <th>Riesgo</th>
+                            <th>Uso principal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Índice</td>
+                            <td>S&P 500, MSCI World, IBEX 35</td>
+                            <td>Moderado</td>
+                            <td>Diversificación global</td>
+                        </tr>
+                        <tr>
+                            <td>Sectorial</td>
+                            <td>Tecnología, salud, energía</td>
+                            <td>Moderado/Alto</td>
+                            <td>Apostar por sectores</td>
+                        </tr>
+                        <tr>
+                            <td>Temático</td>
+                            <td>Robótica, energías limpias, IA</td>
+                            <td>Alto</td>
+                            <td>Invertir en tendencias</td>
+                        </tr>
+                        <tr>
+                            <td>Bonos</td>
+                            <td>Bonos públicos/corporativos</td>
+                            <td>Bajo/Moderado</td>
+                            <td>Estabilidad y renta fija</td>
+                        </tr>
+                        <tr>
+                            <td>Apalancado</td>
+                            <td>Multiplica el índice (2x, 3x)</td>
+                            <td>Muy alto</td>
+                            <td>Trading a corto plazo</td>
+                        </tr>
+                        <tr>
+                            <td>Inverso</td>
+                            <td>Gana cuando el índice baja</td>
+                            <td>Alto</td>
+                            <td>Cobertura, especulación</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             
             <h3>Estrategias con ETFs para principiantes</h3>
             <ul>
@@ -622,7 +624,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
         
-        <section id="beginner-guide" class="doc-section">
+        <section id="beginner-guide" class="doc-section vitra-scroll-reveal">
             <h2>Guía para principiantes</h2>
             
             <h3>Recomendaciones clave</h3>
@@ -664,7 +666,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
         
-        <section id="tax-regulation" class="doc-section">
+        <section id="tax-regulation" class="doc-section vitra-scroll-reveal">
             <h2>Aspectos fiscales y regulatorios</h2>
             
             <h3>Fiscalidad general</h3>
@@ -688,42 +690,44 @@ import '../styles/crypto-toc.css';
             </div>
             
             <h3>Días festivos importantes 2026 (Mercados tradicionales)</h3>
-            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-                <thead>
-                    <tr style="background: var(--bg-card, #1a1f2e);">
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Fecha</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Festivo</th>
-                        <th style="border: 1px solid var(--border-color); padding: 12px; text-align: left;">Estado del mercado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">1 enero (jueves)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Año Nuevo</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">19 enero (lunes)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Martin Luther King Jr.</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">16 febrero (lunes)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Presidents Day</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">3 abril (viernes)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Viernes Santo</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">25 diciembre (viernes)</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Navidad</td>
-                        <td style="border: 1px solid var(--border-color); padding: 12px;">Cerrado</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Festivo</th>
+                            <th>Estado del mercado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 enero (jueves)</td>
+                            <td>Año Nuevo</td>
+                            <td>Cerrado</td>
+                        </tr>
+                        <tr>
+                            <td>19 enero (lunes)</td>
+                            <td>Martin Luther King Jr.</td>
+                            <td>Cerrado</td>
+                        </tr>
+                        <tr>
+                            <td>16 febrero (lunes)</td>
+                            <td>Presidents Day</td>
+                            <td>Cerrado</td>
+                        </tr>
+                        <tr>
+                            <td>3 abril (viernes)</td>
+                            <td>Viernes Santo</td>
+                            <td>Cerrado</td>
+                        </tr>
+                        <tr>
+                            <td>25 diciembre (viernes)</td>
+                            <td>Navidad</td>
+                            <td>Cerrado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             
             <p><strong>Nota:</strong> Los mercados de criptomonedas operan 24/7 sin interrupciones.</p>
             
@@ -731,7 +735,7 @@ import '../styles/crypto-toc.css';
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-practical">
-        <section id="rsi-bb-strategy" class="doc-section">
+        <section id="rsi-bb-strategy" class="doc-section vitra-scroll-reveal">
             <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
             <p>
                 Esta estrategia combina un oscilador de momentum (RSI) with un
@@ -943,7 +947,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="why-it-works" class="doc-section">
+        <section id="why-it-works" class="doc-section vitra-scroll-reveal">
             <h2>Por qué funciona esta combinación</h2>
             <p>
                 El RSI identifica condiciones extremas de momentum, mientras que las
@@ -956,7 +960,7 @@ import '../styles/crypto-toc.css';
 
         <hr class="section-sep" data-sep-purpose="section">
 
-        <section id="example" class="doc-section">
+        <section id="example" class="doc-section vitra-scroll-reveal">
             <h2>Ejemplo práctico (resumen)</h2>
             <p>
                 Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior.
@@ -970,7 +974,7 @@ import '../styles/crypto-toc.css';
 
         <hr class="section-sep" data-sep-purpose="section">
 
-        <section id="recommended-times" class="doc-section">
+        <section id="recommended-times" class="doc-section vitra-scroll-reveal">
             <h2>Horarios recomendados para revisar (CST, UTC−6)</h2>
             <p>
                 Aquí tienes una guía práctica para revisar tus gráficos en timeframe
@@ -1081,7 +1085,7 @@ import '../styles/crypto-toc.css';
 
         <hr class="section-sep" data-sep-purpose="section">
 
-        <section id="swing-trading-guide" class="doc-section">
+        <section id="swing-trading-guide" class="doc-section vitra-scroll-reveal">
             <h2>Swing trading — guía práctica</h2>
             <p>
                 El swing trading busca capturar movimientos intermedios (desde horas
@@ -1197,7 +1201,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
 
-        <section id="advanced-strategies" class="doc-section">
+        <section id="advanced-strategies" class="doc-section vitra-scroll-reveal">
             <h2>Estrategias avanzadas</h2>
             <ul>
                 <li>
@@ -1217,7 +1221,7 @@ import '../styles/crypto-toc.css';
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-footer">
-        <section id="resources" class="doc-section">
+        <section id="resources" class="doc-section vitra-scroll-reveal">
             <h2>Recursos adicionales</h2>
             <ul>
                 <li>
@@ -1251,7 +1255,7 @@ import '../styles/crypto-toc.css';
             <hr class="section-sep" data-sep-purpose="section">
         </section>
         
-        <section id="conclusion" class="doc-section">
+        <section id="conclusion" class="doc-section vitra-scroll-reveal">
             <h2>Conclusión</h2>
             <p>Los contratos de futuros y los ETFs son herramientas poderosas para invertir y gestionar riesgos, pero requieren conocimiento, disciplina y una gestión adecuada del riesgo. Los futuros permiten especular tanto al alza como a la baja, con la posibilidad de usar apalancamiento, pero también con el riesgo de liquidaciones rápidas y pérdidas significativas, especialmente en mercados volátiles como el de las criptomonedas.</p>
             

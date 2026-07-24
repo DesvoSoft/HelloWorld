@@ -6,18 +6,18 @@ const { frontmatter } = Astro.props;
 ---
 
 <Layout title={frontmatter.title}>
-    <main>
+    <main class="vitra-container">
         <slot />
         
         {frontmatter.videoUrl && frontmatter.buttonText && (
             <>
-                <br><br><br>
-                <section>
-                    <button id="playButton">{frontmatter.buttonText}</button>
+                <section class="video-cta">
+                    <button id="playButton" class="vitra-btn vitra-btn-gradient vitra-btn-lg vitra-hover-lift vitra-hover-glow">
+                        {frontmatter.buttonText}
+                    </button>
                 </section>
-                
-                <br><br><br><br><br><br>
-                <div id="videoBackground"></div>
+
+                <div id="videoBackground" class="video-embed"></div>
 
                 <script define:vars={{ videoUrl: frontmatter.videoUrl }}>
                     document.addEventListener('DOMContentLoaded', function () {
@@ -38,3 +38,20 @@ const { frontmatter } = Astro.props;
         )}
     </main>
 </Layout>
+
+<style>
+    .video-cta {
+        display: flex;
+        justify-content: center;
+        margin: var(--vitra-space-8, 4rem) 0;
+    }
+
+    .video-embed {
+        display: none;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+</style>
