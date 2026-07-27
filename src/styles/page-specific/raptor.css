@@ -666,6 +666,100 @@
   font-size: 0.8rem;
 }
 
+/* ── Mapa de calor del teclado ───────────────────────────────────────────── */
+
+.kb-heat {
+  margin: 1.25rem 0;
+}
+
+.kb-heat-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.kb-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.kb-row {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.kb-key {
+  /* El calor entra como variable: 0 = limpio, 1 = tu peor tecla. Se mezcla
+     sobre la superficie en vez de sustituirla para que el teclado siga
+     leyéndose como parte del chasis y no como un widget pegado encima. */
+  --heat: 0;
+  display: grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.35rem;
+  border-radius: 3px;
+  border: 1px solid var(--surface-border);
+  background: color-mix(in srgb, var(--raptor-error) calc(var(--heat) * 62%), rgba(255, 255, 255, 0.05));
+  color: var(--text-body);
+  font-family: var(--raptor-font-type);
+  font-size: 0.85rem;
+  cursor: default;
+}
+
+.kb-key-empty {
+  opacity: 0.3;
+}
+
+.kb-key-clean {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--accent);
+}
+
+/* La barra espaciadora ocupa el ancho de la fila para que se lea como tal. */
+.kb-key[title^="espacio"] {
+  min-width: 12rem;
+}
+
+.kb-scale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.kb-gradient {
+  width: 6rem;
+  height: 0.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--surface-border);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), var(--raptor-error));
+}
+
+.kb-empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .kb-key {
+    min-width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.7rem;
+    padding: 0 0.2rem;
+  }
+
+  .kb-key[title^="espacio"] {
+    min-width: 8rem;
+  }
+}
+
 .result-comparison {
   color: var(--text-body);
   font-family: var(--raptor-font-type);

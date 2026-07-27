@@ -295,6 +295,36 @@ function initRaptor() {
     saveMistakeMap(cumulative);
   }
 
+  /**
+   * Intentos por tecla. Sin este denominador solo se puede medir el número
+   * bruto de fallos, que es básicamente un ranking de frecuencia: la `e` acumula
+   * más fallos que la `q` porque sale veinte veces más, no porque se te dé peor.
+   */
+  const PRESSES_KEY = "raptor_presses_v1";
+  function loadPressMap() {
+    try {
+      return JSON.parse(localStorage.getItem(PRESSES_KEY)) || {};
+    } catch {
+      return {};
+    }
+  }
+  function mergePresses(sessionPresses) {
+    const cumulative = loadPressMap();
+    for (const [char, count] of Object.entries(sessionPresses)) {
+      cumulative[char] = (cumulative[char] || 0) + count;
+    }
+    localStorage.setItem(PRESSES_KEY, JSON.stringify(cumulative));
+  }
+
+  /** Tasa de fallo de una tecla. Cuando no hay datos de intentos (historial
+   *  anterior a este contador) se cae al peor caso, que deja el mapa igual de
+   *  ordenado que antes en vez de dividir por cero. */
+  function errorRate(char, mistakes, presses) {
+    const m = mistakes[char] || 0;
+    if (m === 0) return 0;
+    return m / Math.max(presses[char] || 0, m);
+  }
+
   function showPracticeHint(msg) {
     if (!practiceHint) return;
     practiceHint.textContent = msg;
@@ -325,10 +355,14 @@ function initRaptor() {
       return generateRandomWords(count, baseWordBank);
     }
 
+    // Se puntúa por tasa de fallo, no por fallos brutos: con el conteo crudo las
+    // vocales ganaban siempre por frecuencia y la práctica acababa siendo un
+    // modo random con más vocales.
+    const presses = loadPressMap();
     const scored = baseWordBank
       .map((word) => {
         let s = 0;
-        for (const ch of word) s += cumulative[ch] || 0;
+        for (const ch of word) s += errorRate(ch, cumulative, presses);
         return { word, score: s / word.length };
       })
       .filter((x) => x.score > 0)
@@ -355,10 +389,10 @@ function initRaptor() {
       out.push(pick);
     }
 
-    const topChars = Object.entries(cumulative)
-      .sort((a, b) => b[1] - a[1])
+    const topChars = Object.keys(cumulative)
+      .sort((a, b) => errorRate(b, cumulative, presses) - errorRate(a, cumulative, presses))
       .slice(0, 5)
-      .map(([c]) => displayChar(c));
+      .map((c) => displayChar(c));
     showPracticeHint(`Práctica dirigida a tus teclas más falladas: ${topChars.join("  ")}`);
     return out;
   }
@@ -412,6 +446,7 @@ function initRaptor() {
   let committedNetChars = 0;
   let wordRecords = [];
   let mistakesCount = {};
+  let pressesCount = {};
 
   let running = false;
   let finished = false;
@@ -670,6 +705,7 @@ function initRaptor() {
     committedNetChars = 0;
     wordRecords = [];
     mistakesCount = {};
+    pressesCount = {};
 
     scrollOffset = 0;
     lineHeightPx = 0;
@@ -699,6 +735,10 @@ function initRaptor() {
   }
 
   // ---------- Entrada ----------
+  function countPress(expectedChar) {
+    pressesCount[expectedChar] = (pressesCount[expectedChar] || 0) + 1;
+  }
+
   function countMistake(expectedChar) {
     // Siempre se registra el carácter ESPERADO, nunca el pulsado. Antes las
     // letras extra guardaban la tecla pulsada y el resto la esperada, así que el
@@ -719,6 +759,7 @@ function initRaptor() {
       keypresses++;
       errors++;
       // Lo que fallaste aquí es el espacio, no una letra concreta.
+      countPress(" ");
       countMistake(" ");
       const extra = document.createElement("span");
       extra.className = "letter extra incorrect";
@@ -735,6 +776,7 @@ function initRaptor() {
     keypresses++;
     const el = letters[currentLetterIndex];
     const expected = target[currentLetterIndex];
+    countPress(expected);
     el.classList.remove("faded", "skipped");
     if (key === expected) {
       el.classList.remove("incorrect");
@@ -793,6 +835,9 @@ function initRaptor() {
     if (!letters || target === undefined) return;
 
     spacesPressed++;
+    // El espacio acertado también es un intento: sin él, la barra solo tendría
+    // fallos en el denominador y saldría siempre roja en el mapa.
+    countPress(" ");
     commitCurrentWord(true);
     playWordSound();
 
@@ -1098,6 +1143,7 @@ function initRaptor() {
     });
     saveHistory(history);
     mergeMistakes(mistakesCount);
+    mergePresses(pressesCount);
 
     const topMistakes = Object.entries(mistakesCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
 
@@ -1143,6 +1189,11 @@ function initRaptor() {
             ${topMistakes.map(([ch, count]) => `<span class="mistake-chip">${displayChar(ch)}<b>${count}</b></span>`).join("")}
           </div>` : ""}
 
+        <div class="kb-heat">
+          <span class="kb-heat-label">Mapa acumulado de fallos</span>
+          <div id="kbHeat"></div>
+        </div>
+
         <p class="result-comparison">${comparisonMsg}</p>
 
         <div class="result-actions">
@@ -1153,6 +1204,12 @@ function initRaptor() {
     `;
 
     drawGraph(document.getElementById("wpmGraph"));
+    // Se pinta con el acumulado, no con la partida: en 30 s casi ninguna tecla
+    // llega a los intentos que hacen falta para que un porcentaje signifique algo.
+    window.RaptorKeyboard?.render(document.getElementById("kbHeat"), {
+      mistakes: loadMistakeMap(),
+      presses: loadPressMap()
+    });
     document.getElementById("retryBtn")?.addEventListener("click", () => {
       restartGame();
       input.focus({ preventScroll: true });

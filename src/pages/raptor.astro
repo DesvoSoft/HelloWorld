@@ -123,7 +123,11 @@ import '../styles/page-specific/raptor.css';
         </div>
     </section>
 
+    <!-- El mapa de teclado se carga antes que el motor porque este solo lo usa
+         al terminar una partida, y así la página del historial puede reutilizar
+         el mismo fichero sin arrastrar el motor entero. -->
     <script>
+        import "../scripts/raptor-keyboard.js";
         import "../scripts/raptor.js";
     </script>
 </Layout>
