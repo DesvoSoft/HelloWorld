@@ -3,7 +3,7 @@ const navLinks = [
     { href: "/HelloWorld/python/", label: "Python" },
     { href: "/HelloWorld/cpp/", label: "C++" },
     { href: "/HelloWorld/java/", label: "Java" },
-    { href: "/HelloWorld/git/", label: "Git" },
+    { href: "/HelloWorld/git/", label: "Git", dividerAfter: true },
     { href: "/HelloWorld/raptor/", label: "Raptor" },
     { href: "/HelloWorld/crypto/", label: "Crypto" },
     { href: "/HelloWorld/#contact", label: "Contacto" },
@@ -21,7 +21,10 @@ const isActive = (href: string) =>
     <div class="nav-right-group">
         <nav class="vitra-navbar-links">
             {navLinks.map((link) => (
-                <a href={link.href} class="vitra-navbar-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+                <>
+                    <a href={link.href} class="vitra-navbar-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+                    {link.dividerAfter && <span class="vitra-navbar-divider" aria-hidden="true"></span>}
+                </>
             ))}
         </nav>
 
@@ -43,7 +46,10 @@ const isActive = (href: string) =>
     </div>
     <div class="vitra-drawer-body">
         {navLinks.map((link) => (
-            <a href={link.href} class="vitra-drawer-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+            <>
+                <a href={link.href} class="vitra-drawer-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
+                {link.dividerAfter && <hr class="vitra-drawer-divider" aria-hidden="true" />}
+            </>
         ))}
     </div>
 </div>
@@ -53,6 +59,31 @@ const isActive = (href: string) =>
         display: flex;
         align-items: center;
         gap: var(--vitra-space-4, 1.5rem);
+    }
+
+    .vitra-navbar-divider {
+        display: inline-block;
+        width: 1px;
+        height: 1.3rem;
+        margin-inline: 0.25rem;
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 45%),
+            transparent
+        );
+    }
+
+    .vitra-drawer-divider {
+        border: none;
+        height: 1px;
+        margin: 0.6rem 0;
+        background: linear-gradient(
+            to right,
+            transparent,
+            hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 35%),
+            transparent
+        );
     }
 </style>
 

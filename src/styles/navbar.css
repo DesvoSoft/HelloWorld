@@ -2,6 +2,31 @@
               Navbar
    ============================ */
 
+/* Vitra's dark-theme navbar border is near-neutral (accent hue at 20%
+   sat / 95% light -> reads as plain white). Swap for a soft accent wash
+   + gradient underline so the bar doesn't sit flat/gray against the
+   colorful hero and cards below it. */
+.vitra-navbar,
+.vitra-navbar-glass {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 7%),
+    transparent 40%,
+    transparent 60%,
+    hsl(var(--cool-accent-h, var(--vitra-color-accent-h)) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 7%)
+  );
+  border-bottom-color: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 22%) !important;
+}
+
+.vitra-navbar-link {
+  opacity: 0.82;
+}
+
+.vitra-navbar-link.is-active,
+.vitra-drawer-link.is-active {
+  opacity: 1;
+}
+
 .code-line-logo {
   color: var(--vitra-color-accent, greenyellow);
   position: relative;

@@ -72,18 +72,9 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
                             <span class="project-lang"><span class="project-lang-dot" data-lang="python"></span>Python</span>
                         </div>
                         <p class="project-desc">
-                            Gestor de self-hosting para servidores de Minecraft: tunneling integrado, auto-healing y backups de un clic.
+                            App de escritorio que convierte cualquier PC en un servidor de Minecraft sin configuración técnica: túnel integrado con Playit.gg (sin abrir puertos ni tocar el router), auto-sanación con reinicio ante caídas, backups programados con un clic y un navegador de mods conectado a Modrinth que instala y actualiza todo por ti.
                         </p>
-                        <div class="project-tags">
-                            <span>gui</span>
-                            <span>backup</span>
-                            <span>minecraft-server</span>
-                            <span>sysadmin</span>
-                            <span>game-server</span>
-                            <span>self-hosting</span>
-                        </div>
                         <div class="project-meta">
-                            <span class="project-stars">★ 4</span>
                             <span>GNU AGPLv3</span>
                         </div>
                         <span class="project-cta">Visitar sitio <span class="project-cta-arrow">→</span></span>
@@ -95,11 +86,10 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
                             <span class="project-lang"><span class="project-lang-dot" data-lang="css"></span>CSS</span>
                         </div>
                         <p class="project-desc">
-                            Framework CSS ligero enfocado en glassmorphism. El mismo framework que da estilo a este sitio.
+                            Framework CSS propio pensado para glassmorphism y motion design: arquitectura en capas <code>@layer</code>, sistema de partículas, escenografías animadas y siete temas intercambiables (claro, oscuro, neón, océano...). Es, de hecho, el mismo framework que le da estilo a este sitio.
                         </p>
-                        <div class="project-tags">
-                            <span>frontend</span>
-                            <span>ui-components</span>
+                        <div class="project-meta">
+                            <span>ISC License</span>
                         </div>
                         <span class="project-cta">Visitar sitio <span class="project-cta-arrow">→</span></span>
                     </a>
@@ -325,6 +315,7 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
   .project-card {
     display: flex;
     flex-direction: column;
+    height: 100%;
     gap: 0.75rem;
     padding: var(--vitra-space-4, 2rem);
     border-radius: 14px;
@@ -377,30 +368,12 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
     line-height: 1.5;
   }
 
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .project-tags span {
-    font-size: 0.72rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    background: var(--accent-soft, hsl(var(--vitra-color-accent-h) 80% 60% / 18%));
-    color: var(--vitra-color-accent, #4c9df5);
-  }
-
   .project-meta {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: 0.8rem;
     color: var(--text-muted, #cbd6e6);
     margin-top: auto;
-  }
-
-  .project-stars {
-    color: var(--vitra-color-accent, #4c9df5);
   }
 
   .project-cta {
