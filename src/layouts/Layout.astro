@@ -61,6 +61,8 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.css" integrity="sha256-aKZPxSYkeZQfenXrPana9MGvzOFE0eCsdPLpzU+EBE4=" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.js" integrity="sha256-8cQKCN/ypSOrZmry8+eH2w3dgVQiaNqB92DHS2aqI/s=" crossorigin="anonymous" defer></script>
         {useSwiper && <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>}
+
+        <slot name="head" />
 	</head>
 	<body>
         <div class="mesh-bg" aria-hidden="true">
