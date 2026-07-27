@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/page-specific/info-pages.css';
+import '../styles/page-specific/raptor.css';
+---
+
+<Layout title="Raptor - Historial" description="Historial de partidas de Raptor: progresión, récords por configuración y mapa de errores.">
+    <Fragment slot="head">
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap"
+            rel="stylesheet"
+        />
+    </Fragment>
+
+    <section class="doc-section raptor-section">
+        <div id="raptorCrt" class="raptor-crt">
+            <div class="raptor-screen">
+                <div class="raptor-scanlines" aria-hidden="true"></div>
+                <div class="raptor-glare" aria-hidden="true"></div>
+
+                <div class="raptor-screen-inner">
+                    <header class="raptor-tty">
+                        <h1 class="tty-title">HISTORIAL</h1>
+                        <span class="tty-rule" aria-hidden="true"></span>
+                        <span class="tty-meta">tty1</span>
+                        <a class="tty-btn" href="/HelloWorld/raptor/">volver al test</a>
+                    </header>
+
+                    <p class="raptor-boot">
+                        <span class="boot-sigil" aria-hidden="true">&gt;</span>
+                        todo lo que sigue vive en este navegador; nada sale de aquí
+                    </p>
+
+                    <div id="histEmpty" class="hist-empty" hidden>
+                        <p>Todavía no hay partidas guardadas.</p>
+                        <p><a href="/HelloWorld/raptor/">Haz la primera</a> y vuelve.</p>
+                    </div>
+
+                    <div id="histBody" hidden>
+                        <div class="hist-summary" id="histSummary"></div>
+
+                        <section class="hist-block">
+                            <div class="hist-block-head">
+                                <h2>Progresión</h2>
+                                <!-- Un solo filtro: mezclar 15 s con 120 s en una
+                                     misma línea produce dientes de sierra que no
+                                     significan nada. -->
+                                <label class="raptor-field" for="histFilter">
+                                    <span class="raptor-field-label">config</span>
+                                    <select id="histFilter"></select>
+                                </label>
+                            </div>
+                            <canvas id="histChart" width="900" height="260" role="img"
+                                    aria-label="Evolución de las pulsaciones por minuto"></canvas>
+                            <p class="hist-note" id="histChartNote"></p>
+                        </section>
+
+                        <section class="hist-block">
+                            <h2>Récords por configuración</h2>
+                            <div class="hist-table-wrap">
+                                <table class="hist-table" id="histBests"></table>
+                            </div>
+                        </section>
+
+                        <section class="hist-block">
+                            <h2>Mapa acumulado de fallos</h2>
+                            <div id="kbHeat"></div>
+                        </section>
+
+                        <section class="hist-block" id="histBigramBlock" hidden>
+                            <h2>Transiciones más lentas</h2>
+                            <div class="bigram-list" id="histBigrams"></div>
+                        </section>
+
+                        <section class="hist-block">
+                            <div class="hist-block-head">
+                                <h2>Últimas partidas</h2>
+                                <span class="hist-note" id="histRunsNote"></span>
+                            </div>
+                            <div class="hist-table-wrap">
+                                <table class="hist-table" id="histRuns"></table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="hist-actions">
+                        <button id="histExportBtn" type="button">exportar json</button>
+                        <button id="histClearBtn" class="hist-danger" type="button">borrar todo</button>
+                    </div>
+                    <p class="hist-note" id="histStatus" role="status" aria-live="polite"></p>
+                </div>
+            </div>
+
+            <p class="raptor-bezel-label" aria-hidden="true">DESVOSOFT · MODEL R-1</p>
+        </div>
+    </section>
+
+    <script>
+        import "../scripts/raptor-keyboard.js";
+        import "../scripts/raptor-history.js";
+    </script>
+</Layout>
