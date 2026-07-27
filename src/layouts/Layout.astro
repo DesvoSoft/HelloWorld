@@ -7,24 +7,60 @@ import Navbar from '../components/Navbar.astro';
 interface Props {
 	title: string;
     description?: string;
+    useSwiper?: boolean;
+    noindex?: boolean;
 }
 
-const { title, description = "DesvoSoft: Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital." } = Astro.props;
+const { title, description = "DesvoSoft: Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.", useSwiper = false, noindex = false } = Astro.props;
+const pageTitle = `${title} · DesvoSoft`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="es" data-theme="dark">
 	<head>
 		<meta charset="UTF-8" />
         <meta name="google-site-verification" content="t61vFNx51RZSU9UsbAIbH6cTzFvAJKXvFHbvUo0UAH0" />
 		<meta name="description" content={description} />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/x-icon" href="/HelloWorld/images/theme.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<title>{pageTitle}</title>
+        <link rel="canonical" href={canonicalURL} />
+        {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:image" content={ogImageURL} />
+        <meta property="og:locale" content="es_ES" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImageURL} />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+        <script type="application/ld+json" set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "DesvoSoft",
+            "description": "DesvoSoft: Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.",
+            "url": "https://desvosoft.github.io/HelloWorld/",
+            "publisher": {
+                "@type": "Organization",
+                "name": "DesvoSoft",
+                "url": "https://github.com/DesvoSoft"
+            }
+        })} />
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.css" integrity="sha256-aKZPxSYkeZQfenXrPana9MGvzOFE0eCsdPLpzU+EBE4=" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.js" integrity="sha256-8cQKCN/ypSOrZmry8+eH2w3dgVQiaNqB92DHS2aqI/s=" crossorigin="anonymous" defer></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        {useSwiper && <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>}
 	</head>
 	<body>
         <div class="mesh-bg" aria-hidden="true">
@@ -51,7 +87,9 @@ const { title, description = "DesvoSoft: Aprende Git, Python y más en este siti
 
                 <div class="footer-socials">
                     <a href="https://github.com/DesvoSoft/HelloWorld" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
-                        <img src="https://cdn.afterdawn.fi/v3/news/original/github-logo.png" alt="" width="20">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12 .5C5.73.5.98 5.24.98 11.5c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55l-.01-2.14c-3.16.69-3.83-1.36-3.83-1.36-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.73 0c2.18-1.47 3.14-1.16 3.14-1.16.63 1.58.23 2.75.12 3.04.73.8 1.17 1.81 1.17 3.05 0 4.35-2.65 5.31-5.18 5.59.41.36.77 1.06.77 2.14l-.01 3.17c0 .31.2.66.79.55A11.5 11.5 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/>
+                        </svg>
                     </a>
                     <a href="https://discord.gg/aCaHssJJu" target="_blank" rel="noopener" aria-label="Discord" title="Discord">
                         <img src="https://www.tradingdigits.io/assets/images/discordLogo.png" alt="" width="20">
@@ -76,7 +114,7 @@ const { title, description = "DesvoSoft: Aprende Git, Python y más en este siti
             <p class="footer-credits">Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
         </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" is:inline></script>
+        {useSwiper && <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" is:inline defer></script>}
         <script is:inline>
             const footerYear = document.getElementById('footer-year');
             if (footerYear) footerYear.textContent = new Date().getFullYear();

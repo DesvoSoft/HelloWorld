@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import '../styles/page-specific/info-pages.css';
 ---
 
-<Layout title="Página no encontrada">
+<Layout title="Página no encontrada" description="La página que buscas no existe. Volvé al inicio de Hello World." noindex={true}>
     <section class="doc-section">
         <div class="not-found-card vitra-glass">
             <h1>404 - Página no encontrada</h1>
@@ -17,6 +17,7 @@ import '../styles/page-specific/info-pages.css';
                 <li><a href="/HelloWorld/cpp/">C++</a></li>
                 <li><a href="/HelloWorld/java/">Java</a></li>
                 <li><a href="/HelloWorld/git/">Git</a></li>
+                <li><a href="/HelloWorld/raptor/">Raptor</a></li>
                 <li><a href="/HelloWorld/crypto/">Crypto</a></li>
                 <li><a href="/HelloWorld/#contact">Contacto</a></li>
             </ul>

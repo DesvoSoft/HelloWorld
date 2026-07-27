@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/MarkdownLayout.astro
 title: Guía de Git
+description: "Guía de Git: control de versiones, ramas, commits y flujo de trabajo colaborativo con GitHub."
 videoUrl: https://www.youtube.com/embed/zZdVwTjUtjg?si=W1LgM0J8b2Dbf1kl?autoplay=1&controls=0&loop=0&vq=hd1080
 buttonText: git push
 ---

@@ -8,6 +8,42 @@
 
 .swiper-slide img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swiper-slide {
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ============================
+    SECCION: Ensayo (Galeria)
+============================ */
+.gallery-essay {
+    max-width: 68ch;
+    margin: 2.5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--surface-border, rgba(76, 157, 245, 0.35));
+}
+
+.gallery-essay .essay-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent, var(--vitra-color-accent));
+    margin: 0 0 0.5rem;
+}
+
+.gallery-essay h3 {
+    margin-top: 0;
+}
+
+.gallery-essay p {
+    color: var(--text-body, #e6eefc);
+    line-height: 1.7;
 }
 
 /* ============================

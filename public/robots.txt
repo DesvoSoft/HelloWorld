@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://desvosoft.github.io/HelloWorld/sitemap-index.xml

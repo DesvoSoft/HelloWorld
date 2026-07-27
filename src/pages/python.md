@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/MarkdownLayout.astro
 title: Fundamentos de Python
+description: "Fundamentos de Python: operadores, variables, tipos de datos y estructuras de control. Guía práctica para empezar a programar."
 videoUrl: https://www.youtube.com/embed/5-sfG8BV8wU?autoplay=1&controls=0&loop=0&vq=hd1080
 buttonText: JUST DO IT
 ---

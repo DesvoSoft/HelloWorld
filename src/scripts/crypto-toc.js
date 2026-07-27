@@ -9,6 +9,8 @@
   const scrollButtons = Array.from(nav.querySelectorAll('.toc-scroll-btn'));
   const tocLinks = Array.from(nav.querySelectorAll('.toc-link[data-toc-id]'));
   const sections = Array.from(document.querySelectorAll('.doc-section[id]'));
+  const mobileToggle = nav.querySelector('.toc-mobile-toggle');
+  const mobileOverlay = document.querySelector('[data-toc-overlay]');
 
   if (!track || tocLinks.length === 0 || sections.length === 0) {
     return;
@@ -191,9 +193,43 @@
     }
   });
 
+  const isMobilePanelOpen = () => nav.dataset.mobileOpen === 'true';
+
+  const openMobilePanel = () => {
+    nav.dataset.mobileOpen = 'true';
+    mobileToggle?.setAttribute('aria-expanded', 'true');
+    mobileOverlay?.classList.add('open');
+  };
+
+  const closeMobilePanel = () => {
+    nav.dataset.mobileOpen = 'false';
+    mobileToggle?.setAttribute('aria-expanded', 'false');
+    mobileOverlay?.classList.remove('open');
+  };
+
+  mobileToggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (isMobilePanelOpen()) {
+      closeMobilePanel();
+    } else {
+      openMobilePanel();
+    }
+  });
+
+  mobileOverlay?.addEventListener('click', closeMobilePanel);
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 640 && isMobilePanelOpen()) {
+      closeMobilePanel();
+    }
+  });
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       closeSubmenu(openTrigger);
+      if (isMobilePanelOpen()) {
+        closeMobilePanel();
+      }
     }
   });
 
@@ -201,6 +237,9 @@
     const link = event.target.closest('.toc-link');
     if (link) {
       window.requestAnimationFrame(() => closeSubmenu());
+      if (isMobilePanelOpen()) {
+        closeMobilePanel();
+      }
     }
   });
 })();

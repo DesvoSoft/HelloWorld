@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/MarkdownLayout.astro
 title: Fundamentos de C++
+description: "Fundamentos de C++: sintaxis, tipos de datos, punteros y compilación. Guía práctica para empezar a programar en C++."
 videoUrl: https://www.youtube.com/embed/Rub-JsjMhWQ?autoplay=1&controls=0&loop=0&vq=hd1080
 buttonText: COMENZAR
 ---

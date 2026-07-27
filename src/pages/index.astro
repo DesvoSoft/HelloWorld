@@ -1,10 +1,23 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import '../styles/page-specific/home.css';
 import '../styles/page-specific/info-pages.css';
+import gallery1 from '../assets/gallery/1.webp';
+import gallery2 from '../assets/gallery/2.webp';
+import gallery3 from '../assets/gallery/3.webp';
+import gallery4 from '../assets/gallery/4.webp';
+import gallery5 from '../assets/gallery/5.webp';
+import gallery6 from '../assets/gallery/6.webp';
+import gallery7 from '../assets/gallery/7.webp';
+import gallery8 from '../assets/gallery/8.webp';
+import gallery9 from '../assets/gallery/9.webp';
+import gallery10 from '../assets/gallery/10.webp';
+
+const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6, gallery7, gallery8, gallery9, gallery10];
 ---
 
-<Layout title="Hello World">
+<Layout title="Hello World" useSwiper={true}>
     <div class="vitra-container home-container">
         <section id="home" class="vitra-scenery-inline">
             <div class="vitra-scenery-sky" aria-hidden="true"></div>
@@ -40,8 +53,10 @@ import '../styles/page-specific/info-pages.css';
                     Puedes encontrar el código del sitio en:
                 </p>
 
-                <a href="https://github.com/DesvoSoft/HelloWorld" class="vitra-btn vitra-btn-glass github-link" target="_blank">
-                    <img src="https://cdn.afterdawn.fi/v3/news/original/github-logo.png" alt="github" width="28">
+                <a href="https://github.com/DesvoSoft/HelloWorld" class="vitra-btn vitra-btn-glass github-link" target="_blank" rel="noopener">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 .5C5.73.5.98 5.24.98 11.5c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55l-.01-2.14c-3.16.69-3.83-1.36-3.83-1.36-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.73 0c2.18-1.47 3.14-1.16 3.14-1.16.63 1.58.23 2.75.12 3.04.73.8 1.17 1.81 1.17 3.05 0 4.35-2.65 5.31-5.18 5.59.41.36.77 1.06.77 2.14l-.01 3.17c0 .31.2.66.79.55A11.5 11.5 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/>
+                    </svg>
                     <span>GitHub</span>
                 </a>
             </div>
@@ -51,7 +66,7 @@ import '../styles/page-specific/info-pages.css';
             <div class="section-inner projects-inner">
                 <h2>Proyectos principales</h2>
                 <div class="project-grid">
-                    <a href="https://github.com/DesvoSoft/ZeroBlockBridge" target="_blank" rel="noopener" class="project-card vitra-glass">
+                    <a href="https://desvosoft.github.io/ZeroBlockBridge/" target="_blank" rel="noopener" class="project-card vitra-glass">
                         <div class="project-card-head">
                             <h3>ZeroBlockBridge</h3>
                             <span class="project-lang"><span class="project-lang-dot" data-lang="python"></span>Python</span>
@@ -71,9 +86,10 @@ import '../styles/page-specific/info-pages.css';
                             <span class="project-stars">★ 4</span>
                             <span>GNU AGPLv3</span>
                         </div>
+                        <span class="project-cta">Visitar sitio <span class="project-cta-arrow">→</span></span>
                     </a>
 
-                    <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener" class="project-card vitra-glass">
+                    <a href="https://desvosoft.github.io/Vitra/" target="_blank" rel="noopener" class="project-card vitra-glass">
                         <div class="project-card-head">
                             <h3>Vitra</h3>
                             <span class="project-lang"><span class="project-lang-dot" data-lang="css"></span>CSS</span>
@@ -85,6 +101,7 @@ import '../styles/page-specific/info-pages.css';
                             <span>frontend</span>
                             <span>ui-components</span>
                         </div>
+                        <span class="project-cta">Visitar sitio <span class="project-cta-arrow">→</span></span>
                     </a>
                 </div>
             </div>
@@ -97,50 +114,57 @@ import '../styles/page-specific/info-pages.css';
             <br>
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/1.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/2.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/3.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/4.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/5.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/6.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/7.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/8.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/9.png" loading="lazy">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="/HelloWorld/images/gallery/10.png" loading="lazy">
-                    </div>
+                    {galleryImages.map((img, i) => (
+                        <div class="swiper-slide">
+                            <Image src={img} loading="lazy" alt={`Imagen generada con Stable Diffusion 1.5 - ${i + 1}`} />
+                        </div>
+                    ))}
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
+            </div>
+
+            <div class="gallery-essay">
+                <p class="essay-kicker">Reflexión · sobre estas imágenes</p>
+                <h3>El año en que todavía se le notaban las costuras</h3>
+                <p>
+                    2022. Stable Diffusion 1.5 recién salía al mundo y bastaba mirar dos segundos
+                    para saber que algo ahí no era del todo real: manos con seis dedos, rostros que
+                    se derretían en los bordes, texto imposible garabateado en un letrero, una
+                    simetría casi correcta pero nunca del todo. El ojo humano, sin entrenamiento
+                    alguno, era un detector casi perfecto. La falla era la firma.
+                </p>
+                <p>
+                    Esa facilidad para detectar no era mérito nuestro. Era la torpeza del modelo.
+                    Cada nueva versión —SDXL, Midjourney v6, los difusores que vinieron después—
+                    fue puliendo exactamente esas costuras: las manos se corrigieron, la luz empezó
+                    a comportarse como luz real, la coherencia geométrica dejó de ser un lujo. Lo
+                    que antes delataba a la máquina, hoy simplemente desapareció.
+                </p>
+                <p>
+                    Ahí hay algo incómodo: nuestra capacidad de distinguir lo generado de lo
+                    fotografiado nunca dependió de nuestra percepción, dependía de qué tan buena
+                    fuera la máquina en engañarnos. A medida que ese campo avanza, el margen para
+                    confiar en "se ve raro, seguro es IA" se va cerrando hasta cero. La imagen deja
+                    de ser evidencia por sí sola.
+                </p>
+                <p>
+                    Vale la pena recordar de dónde viene todo esto. La visión por computadora nació
+                    con una ambición mucho más modesta: reconocer, clasificar, medir. Los primeros
+                    sistemas de los años 60 y 70 aprendían a distinguir un borde de una sombra, una
+                    letra de un garabato — visión como herramienta de análisis, nunca de creación.
+                    Que esa misma disciplina termine produciendo imágenes con intención estética,
+                    que un modelo entrenado para reconocer patrones acabe proponiendo composición,
+                    color y atmósfera, es un giro que sus fundadores difícilmente imaginaron. La
+                    máquina que antes solo describía el mundo, ahora se atreve a proponer uno.
+                </p>
+                <p>
+                    Por eso estas diez imágenes ya no son solo una galería, son casi un registro
+                    fósil: la prueba de un momento breve donde la inteligencia artificial todavía
+                    no sabía mentir bien, apenas empezaba a descubrir que también podía ser artista.
+                    Vale la pena mirarlas así, sabiendo que esa torpeza visible no va a volver.
+                </p>
             </div>
             </div>
         </section>
@@ -377,6 +401,29 @@ import '../styles/page-specific/info-pages.css';
 
   .project-stars {
     color: var(--vitra-color-accent, #4c9df5);
+  }
+
+  .project-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--vitra-color-accent, #4c9df5), var(--vitra-color-accent-2, #64ffda));
+    color: #05101f;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .project-cta-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .project-card:hover .project-cta-arrow {
+    transform: translateX(4px);
   }
 
   .github-link,

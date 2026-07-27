@@ -1,0 +1,123 @@
+.raptor-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem;
+}
+
+.raptor-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.raptor-controls label {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.raptor-controls select {
+  background: var(--surface-elevated);
+  color: var(--text-strong);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+}
+
+.raptor-controls button {
+  background: var(--accent);
+  color: #0a192f;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.raptor-controls button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+#info {
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+#words {
+  font-family: var(--font-mono);
+  line-height: 1.9;
+  font-size: 1.35rem;
+  word-spacing: 0.2em;
+}
+
+.word {
+  margin-right: 7px;
+  display: inline-block;
+}
+
+.letter {
+  padding: 2px;
+  transition: color 0.15s ease;
+}
+
+.faded {
+  color: var(--text-muted);
+  opacity: 0.45;
+}
+
+.correct {
+  color: var(--text-strong);
+}
+
+.incorrect {
+  color: #ff6b6b;
+}
+
+.cursor {
+  background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
+  border-radius: 3px;
+  animation: raptor-cursor-blink 0.8s infinite;
+}
+
+@keyframes raptor-cursor-blink {
+  0%,
+  100% {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 20%);
+  }
+  50% {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 50%);
+  }
+}
+
+#result:empty {
+  display: none;
+}
+
+#result {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  color: var(--text-body);
+}
+
+.resultBox h2 {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .raptor-card {
+    padding: 1.5rem;
+  }
+
+  #words {
+    font-size: 1.1rem;
+  }
+}

@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/page-specific/info-pages.css';
+import '../styles/page-specific/raptor.css';
+---
+
+<Layout title="Raptor - Typing Test" description="Raptor: prueba de velocidad de escritura estilo Monkeytype.">
+    <section class="doc-section">
+        <div class="raptor-card vitra-glass">
+            <h1>Raptor</h1>
+            <p>Web para practicar velocidad de escritura.</p>
+
+            <div id="controls" class="raptor-controls">
+                <label for="durationSelect">Duración:</label>
+                <select id="durationSelect">
+                    <option value="30">30 segundos</option>
+                    <option value="60">60 segundos</option>
+                </select>
+
+                <label for="modeSelect">Modo:</label>
+                <select id="modeSelect">
+                    <option value="random">Random</option>
+                    <option value="terry">Terry Davis</option>
+                    <option value="prompts">Prompts IA</option>
+                </select>
+
+                <button id="newGameBtn" type="button">Start</button>
+            </div>
+
+            <div id="info">Time: 30</div>
+
+            <div id="words"></div>
+
+            <div id="result"></div>
+        </div>
+    </section>
+
+    <script>
+        import "../scripts/raptor.js";
+    </script>
+</Layout>

@@ -1,7 +1,7 @@
 :root {
   /* Layout tokens not covered by Vitra */
   --content-max-width: 1100px;
-  --navbar-h: 64px;
+  --navbar-h: 90px;
 
   /* Legacy aliases mapped onto Vitra tokens, for pages not yet migrated */
   --cool-accent-h: calc(var(--vitra-color-accent-h) + 30);

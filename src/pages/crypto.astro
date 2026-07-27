@@ -6,7 +6,7 @@ import '../styles/page-specific/crypto.css';
 import '../styles/crypto-toc.css';
 ---
 
-<Layout title="Guía de Criptomonedas">
+<Layout title="Guía de Criptomonedas" description="Guía de criptomonedas: Bitcoin, análisis técnico y fundamental, gestión de riesgos, ETFs, estrategia RSI + Bandas de Bollinger y seguimiento de precios en vivo.">
     <style>
       .doc-section {
         scroll-margin-top: calc(var(--navbar-h, 64px) + 76px);
@@ -33,6 +33,48 @@ import '../styles/crypto-toc.css';
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
         padding: 0 1.5rem;
+      }
+
+      .tv-chart-card {
+        overflow: hidden;
+        padding: 0;
+        margin: 1.5rem 0 0;
+        aspect-ratio: 16 / 9;
+        min-height: 320px;
+      }
+
+      .tv-chart-frame {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border: 0;
+      }
+
+      @media (max-width: 640px) {
+        .tv-chart-card {
+          aspect-ratio: 4 / 5;
+          min-height: 380px;
+        }
+      }
+
+      .tv-open-link-wrap {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0.5rem 0 0;
+      }
+
+      .tv-open-link {
+        color: var(--vitra-color-accent, #64ffda);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        opacity: 0.85;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .tv-open-link:hover {
+        opacity: 1;
+        transform: translateX(2px);
       }
 
       .tracker-grid {
@@ -204,10 +246,20 @@ import '../styles/crypto-toc.css';
       class="page-index toc"
       aria-label="Índice del artículo"
       data-toc-scope="crypto"
+      data-mobile-open="false"
     >
-      <div class="toc-ribbon vitra-glass" role="navigation" aria-label="Índice navegable">
+      <div class="toc-ribbon" role="navigation" aria-label="Índice navegable">
         <div class="toc-head">
           <p class="toc-eyebrow">Índice</p>
+          <button
+            class="toc-mobile-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="toc-list"
+          >
+            Secciones
+            <span class="toc-mobile-toggle-icon" aria-hidden="true"></span>
+          </button>
           <div class="toc-scroll-controls" aria-hidden="true">
             <button
               class="toc-scroll-btn"
@@ -340,15 +392,36 @@ import '../styles/crypto-toc.css';
         </div>
       </div>
     </nav>
+    <div class="toc-mobile-overlay" data-toc-overlay></div>
     <div class="content-shell">
         <main>
-            <section id="intro" class="doc-section vitra-scroll-reveal">
+            <section id="intro" class="doc-section vitra-scroll-reveal vitra-glass">
                 <h1>Bitcoin</h1>
                 <p>Bitcoin es un activo escaso (oferta máxima de 21 millones) y descentralizado, considerado "oro digital". Eventos como los halvings, donde se reduce la recompensa por bloque, refuerzan esta escasez y suelen preceder subidas de precio.</p>
                 <p>Por ejemplo, quien invirtió $1,000 en BTC a comienzos de 2015 tendría ~$350,000 en 2024. Aunque el rendimiento pasado no garantiza resultados futuros, demuestra el potencial a largo plazo.</p>
 
                 <div class="disclaimer-btn">
                     <button class="show-popup-btn vitra-glass" id="showPopupBtn">Ver disclaimer</button>
+                </div>
+
+                <div class="tv-chart-card vitra-glass">
+                    <iframe
+                        class="tv-chart-frame"
+                        src="https://s.tradingview.com/widgetembed/?frameElementId=tv-btc-chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=090c0c&backgroundColor=%23090c0c&gridColor=rgba(71%2C235%2C226%2C0.08)&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%22paneProperties.background%22%3A%22%23090c0c%22%2C%22paneProperties.backgroundType%22%3A%22solid%22%2C%22paneProperties.vertGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22paneProperties.horzGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22scalesProperties.textColor%22%3A%22%23cbd6e6%22%7D&locale=es&utm_source=&utm_medium=widget&utm_campaign=chart"
+                        title="Gráfico BTC/USDT en vivo (TradingView)"
+                        loading="lazy"
+                        allowtransparency="true"
+                        frameborder="0"
+                    ></iframe>
+                </div>
+
+                <div class="tv-open-link-wrap">
+                    <a
+                        class="tv-open-link"
+                        href="https://www.tradingview.com/chart/?symbol=BINANCE%3ABTCUSDT"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >Abrir en TradingView →</a>
                 </div>
 
                 <div class="tracker-grid">
@@ -359,7 +432,7 @@ import '../styles/crypto-toc.css';
 
             </section>
 
-        <section id="investment-types" class="doc-section vitra-scroll-reveal">
+        <section id="investment-types" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Tipos de inversión</h2>
             <ul>
                 <li><strong>HODLing estratégico (largo plazo):</strong> Comprar y mantener BTC durante años. Es simple y tiene potencial de grandes ganancias, pero requiere disciplina y seguridad.</li>
@@ -374,7 +447,7 @@ import '../styles/crypto-toc.css';
             </ul>
         </section>
 
-        <section id="risk-management" class="doc-section vitra-scroll-reveal">
+        <section id="risk-management" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Gestión de riesgos</h2>
             <p>Proteger tu capital viene antes que buscar ganancias. Estas reglas marcan la diferencia:</p>
             <ul>
@@ -386,7 +459,7 @@ import '../styles/crypto-toc.css';
             </ul>
         </section>
 
-        <section id="technical-analysis" class="doc-section vitra-scroll-reveal">
+        <section id="technical-analysis" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Análisis técnico</h2>
             <ul>
                 <li>
@@ -408,7 +481,7 @@ import '../styles/crypto-toc.css';
             </p>
         </section>
 
-        <section id="fundamental-analysis" class="doc-section vitra-scroll-reveal">
+        <section id="fundamental-analysis" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Análisis fundamental</h2>
             <ul>
                 <li>
@@ -426,7 +499,7 @@ import '../styles/crypto-toc.css';
             </ul>
         </section>
 
-        <section id="derivatives" class="doc-section vitra-scroll-reveal">
+        <section id="derivatives" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Futuros y derivados</h2>
             
             <h3>¿Qué son los contratos de futuros?</h3>
@@ -509,7 +582,7 @@ import '../styles/crypto-toc.css';
             
         </section>
         
-        <section id="etfs" class="doc-section vitra-scroll-reveal">
+        <section id="etfs" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>ETFs (Fondos Cotizados en Bolsa)</h2>
             
             <h3>¿Qué es un ETF?</h3>
@@ -592,7 +665,7 @@ import '../styles/crypto-toc.css';
             
         </section>
         
-        <section id="beginner-guide" class="doc-section vitra-scroll-reveal">
+        <section id="beginner-guide" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Guía para principiantes</h2>
             
             <h3>Recomendaciones clave</h3>
@@ -633,7 +706,7 @@ import '../styles/crypto-toc.css';
             
         </section>
         
-        <section id="tax-regulation" class="doc-section vitra-scroll-reveal">
+        <section id="tax-regulation" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Aspectos fiscales y regulatorios</h2>
             
             <h3>Fiscalidad general</h3>
@@ -701,7 +774,7 @@ import '../styles/crypto-toc.css';
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-practical">
-        <section id="rsi-bb-strategy" class="doc-section vitra-scroll-reveal">
+        <section id="rsi-bb-strategy" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Estrategia práctica: RSI + Bandas de Bollinger (BTC Spot)</h2>
             <p>
                 Esta estrategia combina un oscilador de momentum (RSI) with un
@@ -922,7 +995,7 @@ import '../styles/crypto-toc.css';
             </ul>
         </section>
 
-        <section id="why-it-works" class="doc-section vitra-scroll-reveal">
+        <section id="why-it-works" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Por qué funciona esta combinación</h2>
             <p>
                 El RSI identifica condiciones extremas de momentum, mientras que las
@@ -934,7 +1007,7 @@ import '../styles/crypto-toc.css';
         </section>
 
 
-        <section id="example" class="doc-section vitra-scroll-reveal">
+        <section id="example" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Ejemplo práctico (resumen)</h2>
             <p>
                 Imagina BTC en 4H: RSI baja a 28 y la vela toca la banda inferior.
@@ -947,7 +1020,7 @@ import '../styles/crypto-toc.css';
         </section>
 
 
-        <section id="recommended-times" class="doc-section vitra-scroll-reveal">
+        <section id="recommended-times" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Horarios recomendados para revisar (CST, UTC−6)</h2>
             <p>
                 Aquí tienes una guía práctica para revisar tus gráficos en timeframe
@@ -1057,7 +1130,7 @@ import '../styles/crypto-toc.css';
         </section>
 
 
-        <section id="swing-trading-guide" class="doc-section vitra-scroll-reveal">
+        <section id="swing-trading-guide" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Swing trading — guía práctica</h2>
             <p>
                 El swing trading busca capturar movimientos intermedios (desde horas
@@ -1172,7 +1245,7 @@ import '../styles/crypto-toc.css';
             </div>
         </section>
 
-        <section id="advanced-strategies" class="doc-section vitra-scroll-reveal">
+        <section id="advanced-strategies" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Estrategias avanzadas</h2>
             <ul>
                 <li>
@@ -1191,7 +1264,7 @@ import '../styles/crypto-toc.css';
         </section>
 
         <hr class="section-sep" data-sep-purpose="pre-footer">
-        <section id="resources" class="doc-section vitra-scroll-reveal">
+        <section id="resources" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Recursos adicionales</h2>
             <ul>
                 <li>
@@ -1224,7 +1297,7 @@ import '../styles/crypto-toc.css';
             </p>
         </section>
         
-        <section id="conclusion" class="doc-section vitra-scroll-reveal">
+        <section id="conclusion" class="doc-section vitra-scroll-reveal vitra-glass">
             <h2>Conclusión</h2>
             <p>Los contratos de futuros y los ETFs son herramientas poderosas para invertir y gestionar riesgos, pero requieren conocimiento, disciplina y una gestión adecuada del riesgo. Los futuros permiten especular tanto al alza como a la baja, con la posibilidad de usar apalancamiento, pero también con el riesgo de liquidaciones rápidas y pérdidas significativas, especialmente en mercados volátiles como el de las criptomonedas.</p>
             

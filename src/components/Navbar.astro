@@ -4,8 +4,9 @@ const navLinks = [
     { href: "/HelloWorld/cpp/", label: "C++" },
     { href: "/HelloWorld/java/", label: "Java" },
     { href: "/HelloWorld/git/", label: "Git" },
+    { href: "/HelloWorld/raptor/", label: "Raptor" },
     { href: "/HelloWorld/crypto/", label: "Crypto" },
-    { href: "#contact", label: "Contacto" },
+    { href: "/HelloWorld/#contact", label: "Contacto" },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -73,6 +74,17 @@ const isActive = (href: string) =>
     overlay?.classList.toggle("open", !!isOpen);
     burger?.classList.toggle("active", !!isOpen);
     burger?.setAttribute("aria-expanded", String(!!isOpen));
+  }
+
+  const navbarEl = document.querySelector(".vitra-navbar");
+  const syncNavbarHeight = () => {
+    if (!navbarEl) return;
+    document.documentElement.style.setProperty("--navbar-h", `${navbarEl.getBoundingClientRect().height}px`);
+  };
+  syncNavbarHeight();
+  window.addEventListener("resize", syncNavbarHeight);
+  if ("ResizeObserver" in window && navbarEl) {
+    new ResizeObserver(syncNavbarHeight).observe(navbarEl);
   }
 
   if (burger && drawer && overlay) {
