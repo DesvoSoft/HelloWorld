@@ -8,7 +8,7 @@ import '../styles/page-specific/raptor.css';
     <section class="doc-section">
         <div class="raptor-card vitra-glass">
             <h1>Raptor</h1>
-            <p>Web para practicar velocidad de escritura.</p>
+            <p>Practica velocidad de escritura con feedback en vivo y práctica dirigida a tus errores.</p>
 
             <div id="controls" class="raptor-controls">
                 <label for="durationSelect">Duración:</label>
@@ -22,14 +22,26 @@ import '../styles/page-specific/raptor.css';
                     <option value="random">Random</option>
                     <option value="terry">Terry Davis</option>
                     <option value="prompts">Prompts IA</option>
+                    <option value="practice">Practicar mis errores</option>
                 </select>
 
-                <button id="newGameBtn" type="button">Start</button>
+                <button id="newGameBtn" type="button">Reiniciar</button>
+                <button id="soundToggleBtn" type="button" aria-pressed="true" title="Silenciar sonido">🔊</button>
             </div>
 
-            <div id="info">Time: 30</div>
+            <p id="practiceHint" class="raptor-hint" hidden></p>
 
-            <div id="words"></div>
+            <div id="info" class="raptor-stats">
+                <span class="stat"><span class="stat-label">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
+                <span class="stat"><span class="stat-label">WPM</span><span id="statWpm" class="stat-value">0</span></span>
+                <span class="stat"><span class="stat-label">Precisión</span><span id="statAcc" class="stat-value">100%</span></span>
+            </div>
+
+            <div class="words-viewport">
+                <div id="words" class="words-inner"></div>
+            </div>
+
+            <p class="raptor-shortcut-hint">Presiona <kbd>Tab</kbd> para reiniciar</p>
 
             <div id="result"></div>
         </div>
