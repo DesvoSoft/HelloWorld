@@ -31,6 +31,7 @@ function initRaptor() {
   const soundToggleBtn = document.getElementById("soundToggleBtn");
   const practiceHint = document.getElementById("practiceHint");
   const statTime = document.getElementById("statTime");
+  const statTimeLabel = document.getElementById("statTimeLabel");
   const statWpm = document.getElementById("statWpm");
   const statAcc = document.getElementById("statAcc");
 
@@ -296,6 +297,9 @@ function initRaptor() {
   const REFILL_COUNT = 30;
   const MAX_EXTRA_CHARS = 10;
   const TICK_MS = 100;
+  // Techo del modo palabras: sin cuenta atrás, un test abandonado seguiría
+  // muestreando para siempre.
+  const WORD_MODE_MAX_SEC = 600;
 
   let words = [];
   /** Caché de nodos. Antes cada pulsación hacía hasta 5 `querySelectorAll`
@@ -305,7 +309,24 @@ function initRaptor() {
   let cursorEl = null;
   let cursorAtEnd = false;
 
+  /**
+   * El selector codifica las dos familias de test en un solo control: `t30` son
+   * 30 segundos, `w25` son 25 palabras. Un valor numérico suelto se lee como
+   * segundos, que es como estaba antes de existir el modo por palabras.
+   */
+  function parseTestSetting(raw) {
+    const m = /^([tw])(\d+)$/.exec(String(raw || ""));
+    if (m) {
+      const amount = parseInt(m[2], 10);
+      return { testMode: m[1] === "w" ? "words" : "time", amount };
+    }
+    const n = parseInt(raw, 10);
+    return { testMode: "time", amount: Number.isFinite(n) && n > 0 ? n : 30 };
+  }
+
+  let testMode = "time";
   let duration = 30;
+  let targetWords = 0;
   let currentWordIndex = 0;
   let currentLetterIndex = 0;
 
@@ -363,21 +384,35 @@ function initRaptor() {
     tickInterval = setInterval(tick, TICK_MS);
   }
 
+  /** En modo tiempo el marcador descuenta segundos; en modo palabras no hay
+   *  cuenta atrás que mostrar, así que enseña el avance sobre el objetivo. */
+  function updateProgressStat() {
+    if (testMode === "words") {
+      statTime.textContent = `${Math.min(wordRecords.length, targetWords)}/${targetWords}`;
+      return;
+    }
+    statTime.textContent = String(Math.max(0, Math.ceil(duration - elapsedSec())));
+  }
+
   function tick() {
     if (paused || !running) return;
     const el = elapsedSec();
-    statTime.textContent = String(Math.max(0, Math.ceil(duration - el)));
+    updateProgressStat();
 
     // Recupera los segundos que se hayan perdido si el navegador estranguló el
     // intervalo (pestaña en segundo plano), en vez de saltárselos.
-    const upTo = Math.floor(Math.min(el, duration));
+    // En modo palabras no hay tope de tiempo, pero el muestreo sí necesita uno:
+    // sin él, un test abandonado con la pestaña abierta crece sin límite.
+    const cap = testMode === "time" ? duration : Math.min(el, WORD_MODE_MAX_SEC);
+    const upTo = Math.floor(Math.min(el, cap));
     while (lastSampledSecond < upTo) {
       lastSampledSecond++;
       sampleSecond();
     }
 
     updateLiveStats();
-    if (el >= duration) endGame();
+    if (testMode === "time" && el >= duration) endGame();
+    else if (testMode === "words" && el >= WORD_MODE_MAX_SEC) endGame();
   }
 
   function sampleSecond() {
@@ -515,6 +550,8 @@ function initRaptor() {
   }
 
   function maybeRefill() {
+    // El modo palabras genera exactamente su objetivo: recargar lo alargaría.
+    if (testMode === "words") return;
     if (currentWordIndex >= words.length - REFILL_THRESHOLD) {
       const more = generateWords(REFILL_COUNT);
       words = words.concat(more);
@@ -526,7 +563,11 @@ function initRaptor() {
     clearInterval(tickInterval);
     tickInterval = null;
 
-    duration = parseInt(durationSelect.value, 10);
+    const setting = parseTestSetting(durationSelect.value);
+    testMode = setting.testMode;
+    duration = testMode === "time" ? setting.amount : 0;
+    targetWords = testMode === "words" ? setting.amount : 0;
+
     modeSelect.disabled = false;
     durationSelect.disabled = false;
 
@@ -557,7 +598,8 @@ function initRaptor() {
     cursorAtEnd = false;
     terryCursor = 0;
 
-    statTime.textContent = String(duration);
+    if (statTimeLabel) statTimeLabel.textContent = testMode === "words" ? "Palabras" : "Tiempo";
+    updateProgressStat();
     statWpm.textContent = "0";
     statAcc.textContent = "100%";
     resultDisplay.innerHTML = "";
@@ -569,7 +611,7 @@ function initRaptor() {
     letterEls = [];
     wordsContainer.innerHTML = "";
     wordsContainer.style.transform = "translateY(0px)";
-    words = generateWords(INITIAL_WORD_COUNT);
+    words = generateWords(testMode === "words" ? targetWords : INITIAL_WORD_COUNT);
     appendWords(words);
 
     moveCursor();
@@ -626,21 +668,18 @@ function initRaptor() {
       playIncorrectSound();
     }
     currentLetterIndex++;
+    if (finishIfLastWordDone()) return;
     moveCursor();
     updateLiveStats();
   }
 
-  function processSpace() {
-    // Espacio al principio de palabra: no-op. Antes marcaba la palabra entera
-    // como fallada y avanzaba, así que machacar espacio destrozaba la partida.
-    if (currentLetterIndex === 0) return;
-    startIfNeeded();
-
+  /** Cierra la palabra en curso y avanza. `countSpace` distingue el cierre
+   *  normal (el espacio separador cuenta para el neto) del cierre automático de
+   *  la última palabra en modo palabras, donde nadie escribe un espacio final. */
+  function commitCurrentWord(countSpace) {
     const letters = letterEls[currentWordIndex];
     const target = words[currentWordIndex];
     if (!letters || target === undefined) return;
-
-    spacesPressed++;
 
     const correct = currentLetterIndex === target.length &&
       letters.slice(0, target.length).every((l) => l.classList.contains("correct"));
@@ -653,17 +692,61 @@ function initRaptor() {
     }
 
     wordRecords.push({ word: target, correct });
-    if (correct) committedNetChars += target.length + 1;
+    if (correct) committedNetChars += target.length + (countSpace ? 1 : 0);
 
     flashWord(wordEls[currentWordIndex], correct);
-    playWordSound();
 
     currentWordIndex++;
     currentLetterIndex = 0;
+  }
+
+  const wordTestComplete = () => testMode === "words" && wordRecords.length >= targetWords;
+
+  function processSpace() {
+    // Espacio al principio de palabra: no-op. Antes marcaba la palabra entera
+    // como fallada y avanzaba, así que machacar espacio destrozaba la partida.
+    if (currentLetterIndex === 0) return;
+    startIfNeeded();
+
+    const letters = letterEls[currentWordIndex];
+    const target = words[currentWordIndex];
+    if (!letters || target === undefined) return;
+
+    spacesPressed++;
+    commitCurrentWord(true);
+    playWordSound();
+
+    if (wordTestComplete()) {
+      moveCursor();
+      endGame();
+      return;
+    }
+
     maybeRefill();
     moveCursor();
     updateScroll();
+    updateProgressStat();
     updateLiveStats();
+  }
+
+  /** En modo palabras la última palabra no lleva espacio detrás, así que el test
+   *  se cierra en cuanto queda completa y correcta. Si la dejas mal, sigue
+   *  esperando el espacio: aún puedes volver atrás a arreglarla. */
+  function finishIfLastWordDone() {
+    if (testMode !== "words") return false;
+    if (currentWordIndex !== targetWords - 1) return false;
+
+    const target = words[currentWordIndex];
+    const letters = letterEls[currentWordIndex];
+    if (target === undefined || !letters) return false;
+    if (currentLetterIndex !== target.length) return false;
+    if (!letters.slice(0, target.length).every((l) => l.classList.contains("correct"))) return false;
+
+    commitCurrentWord(false);
+    playWordSound();
+    moveCursor();
+    endGame();
+    return true;
   }
 
   function deleteLetter() {
@@ -870,18 +953,25 @@ function initRaptor() {
   // ---------- Fin de partida ----------
   function endGame() {
     if (finished) return;
+    // El tiempo hay que leerlo ANTES de parar el reloj: elapsedSec() devuelve 0
+    // en cuanto `running` pasa a false.
+    const elapsed = elapsedSec();
     finished = true;
     running = false;
     clearInterval(tickInterval);
     tickInterval = null;
-    statTime.textContent = "0";
     modeSelect.disabled = false;
     durationSelect.disabled = false;
     typingArea.classList.add("is-finished");
     setCapsWarning(false);
 
-    const finalWpm = computeWpm(netChars(), duration);
-    const rawWpm = computeWpm(keypresses + spacesPressed, duration);
+    // En modo tiempo el denominador es la duración pactada, no el instante en
+    // que el tick detectó el final. En modo palabras sí es el tiempo real.
+    const seconds = testMode === "time" ? duration : Math.max(elapsed, 0.001);
+    statTime.textContent = testMode === "words" ? `${targetWords}/${targetWords}` : "0";
+
+    const finalWpm = computeWpm(netChars(), seconds);
+    const rawWpm = computeWpm(keypresses + spacesPressed, seconds);
     const acc = accuracy();
     const consistency = computeConsistency(rawWpmPerSecond);
     const correctWords = wordRecords.filter((r) => r.correct).length;
@@ -892,8 +982,15 @@ function initRaptor() {
     playFinishSound();
 
     const mode = modeSelect.value;
+    const target = testMode === "time" ? duration : targetWords;
     const history = loadHistory();
-    const sameSettings = history.filter((r) => r.mode === mode && r.duration === duration);
+    // Solo se compara contra partidas del mismo test. Un 100 wpm a 15 s no dice
+    // nada frente a un 100 wpm a 120 s. Los registros previos al modo palabras
+    // no llevan `testMode`, así que se leen como tiempo.
+    const settingKey = `${testMode}:${target}`;
+    const sameSettings = history.filter(
+      (r) => r.mode === mode && `${r.testMode || "time"}:${r.target ?? r.duration}` === settingKey
+    );
     const previousBest = sameSettings.reduce((best, r) => Math.max(best, r.wpm), 0);
     const isRecord = finalWpm > 0 && finalWpm > previousBest;
     const last10 = sameSettings.slice(-10);
@@ -904,7 +1001,9 @@ function initRaptor() {
     history.push({
       date: new Date().toISOString(),
       mode,
-      duration,
+      testMode,
+      target,
+      duration: testMode === "time" ? duration : Math.round(seconds),
       wpm: finalWpm,
       rawWpm,
       accuracy: acc,

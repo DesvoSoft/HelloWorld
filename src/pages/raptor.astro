@@ -40,10 +40,22 @@ import '../styles/page-specific/raptor.css';
 
                     <div id="controls" class="raptor-controls">
                         <label class="raptor-field" for="durationSelect">
-                            <span class="raptor-field-label">duración</span>
+                            <span class="raptor-field-label">test</span>
+                            <!-- Un solo control para las dos familias: `t` son
+                                 segundos, `w` son palabras. -->
                             <select id="durationSelect">
-                                <option value="30">30 s</option>
-                                <option value="60">60 s</option>
+                                <optgroup label="tiempo">
+                                    <option value="t15">15 s</option>
+                                    <option value="t30" selected>30 s</option>
+                                    <option value="t60">60 s</option>
+                                    <option value="t120">120 s</option>
+                                </optgroup>
+                                <optgroup label="palabras">
+                                    <option value="w10">10 palabras</option>
+                                    <option value="w25">25 palabras</option>
+                                    <option value="w50">50 palabras</option>
+                                    <option value="w100">100 palabras</option>
+                                </optgroup>
                             </select>
                         </label>
 
@@ -63,7 +75,7 @@ import '../styles/page-specific/raptor.css';
                     <p id="practiceHint" class="raptor-hint" hidden></p>
 
                     <div id="info" class="raptor-stats" aria-live="off">
-                        <span class="stat"><span class="stat-label">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
+                        <span class="stat"><span class="stat-label" id="statTimeLabel">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
                         <span class="stat"><span class="stat-label">WPM neto</span><span id="statWpm" class="stat-value">0</span></span>
                         <span class="stat"><span class="stat-label">Precisión</span><span id="statAcc" class="stat-value">100%</span></span>
                     </div>
