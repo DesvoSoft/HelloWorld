@@ -5,64 +5,99 @@ import '../styles/page-specific/raptor.css';
 ---
 
 <Layout title="Raptor - Typing Test" description="Raptor: prueba de velocidad de escritura estilo Monkeytype.">
-    <section class="doc-section">
-        <div class="raptor-card vitra-glass">
-            <h1>Raptor</h1>
-            <p>Practica velocidad de escritura con feedback en vivo y práctica dirigida a tus errores.</p>
+    <Fragment slot="head">
+        <!-- JetBrains Mono para el texto que se teclea: distingue l/1/I y 0/O sin
+             ambigüedad, que es justo lo que no se puede sacrificar en un test de
+             precisión. VT323 solo para el cromo del chasis y los marcadores. -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap"
+            rel="stylesheet"
+        />
+    </Fragment>
 
-            <div id="controls" class="raptor-controls">
-                <label for="durationSelect">Duración:</label>
-                <select id="durationSelect">
-                    <option value="30">30 segundos</option>
-                    <option value="60">60 segundos</option>
-                </select>
+    <section class="doc-section raptor-section">
+        <!-- Chasis CRT. Las capas decorativas (scanlines, brillo) son hermanas del
+             contenido y no lo envuelven, para que ningún filtro caiga sobre el
+             texto que hay que leer con precisión. -->
+        <div id="raptorCrt" class="raptor-crt">
+            <div class="raptor-screen">
+                <div class="raptor-scanlines" aria-hidden="true"></div>
+                <div class="raptor-glare" aria-hidden="true"></div>
 
-                <label for="modeSelect">Modo:</label>
-                <select id="modeSelect">
-                    <option value="random">Random</option>
-                    <option value="terry">Terry Davis</option>
-                    <option value="prompts">Prompts IA</option>
-                    <option value="practice">Practicar mis errores</option>
-                </select>
+                <div class="raptor-screen-inner">
+                    <header class="raptor-tty">
+                        <h1 class="tty-title">RAPTOR</h1>
+                        <span class="tty-rule" aria-hidden="true"></span>
+                        <span class="tty-meta">tty0</span>
+                        <button id="crtToggleBtn" class="tty-btn" type="button" aria-pressed="true">CRT</button>
+                        <button id="soundToggleBtn" class="tty-btn" type="button" aria-pressed="true" title="Silenciar sonido">🔊</button>
+                    </header>
 
-                <button id="newGameBtn" type="button">Reiniciar</button>
-                <button id="soundToggleBtn" type="button" aria-pressed="true" title="Silenciar sonido">🔊</button>
-            </div>
+                    <p class="raptor-boot">
+                        <span class="boot-sigil" aria-hidden="true">&gt;</span>
+                        velocidad de escritura con feedback en vivo y práctica dirigida a tus errores
+                    </p>
 
-            <p id="practiceHint" class="raptor-hint" hidden></p>
+                    <div id="controls" class="raptor-controls">
+                        <label class="raptor-field" for="durationSelect">
+                            <span class="raptor-field-label">duración</span>
+                            <select id="durationSelect">
+                                <option value="30">30 s</option>
+                                <option value="60">60 s</option>
+                            </select>
+                        </label>
 
-            <div id="info" class="raptor-stats" aria-live="off">
-                <span class="stat"><span class="stat-label">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
-                <span class="stat"><span class="stat-label">WPM neto</span><span id="statWpm" class="stat-value">0</span></span>
-                <span class="stat"><span class="stat-label">Precisión</span><span id="statAcc" class="stat-value">100%</span></span>
-            </div>
+                        <label class="raptor-field" for="modeSelect">
+                            <span class="raptor-field-label">modo</span>
+                            <select id="modeSelect">
+                                <option value="random">random</option>
+                                <option value="terry">terry davis</option>
+                                <option value="prompts">prompts ia</option>
+                                <option value="practice">mis errores</option>
+                            </select>
+                        </label>
 
-            <p id="capsWarning" class="raptor-caps-warning" hidden>⚠ Bloq Mayús activado</p>
+                        <button id="newGameBtn" type="button">reiniciar</button>
+                    </div>
 
-            <div id="typingArea" class="raptor-typing-area">
-                <input
-                    id="raptorInput"
-                    class="raptor-input"
-                    type="text"
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    aria-label="Área de escritura del test"
-                />
-                <div class="words-viewport">
-                    <div id="words" class="words-inner"></div>
+                    <p id="practiceHint" class="raptor-hint" hidden></p>
+
+                    <div id="info" class="raptor-stats" aria-live="off">
+                        <span class="stat"><span class="stat-label">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
+                        <span class="stat"><span class="stat-label">WPM neto</span><span id="statWpm" class="stat-value">0</span></span>
+                        <span class="stat"><span class="stat-label">Precisión</span><span id="statAcc" class="stat-value">100%</span></span>
+                    </div>
+
+                    <p id="capsWarning" class="raptor-caps-warning" hidden>⚠ Bloq Mayús activado</p>
+
+                    <div id="typingArea" class="raptor-typing-area">
+                        <input
+                            id="raptorInput"
+                            class="raptor-input"
+                            type="text"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            aria-label="Área de escritura del test"
+                        />
+                        <div class="words-viewport">
+                            <div id="words" class="words-inner"></div>
+                        </div>
+                        <div id="focusOverlay" class="raptor-focus-overlay" hidden>
+                            <span>Haz clic o pulsa una tecla para continuar</span>
+                        </div>
+                    </div>
+
+                    <p class="raptor-shortcut-hint">
+                        <kbd>Tab</kbd> reiniciar · <kbd>Ctrl</kbd>+<kbd>&#9003;</kbd> borrar palabra
+                    </p>
+
+                    <div id="result" role="status" aria-live="polite"></div>
                 </div>
-                <div id="focusOverlay" class="raptor-focus-overlay" hidden>
-                    <span>Haz clic o pulsa una tecla para continuar</span>
-                </div>
             </div>
 
-            <p class="raptor-shortcut-hint">
-                <kbd>Tab</kbd> reiniciar · <kbd>Ctrl</kbd>+<kbd>&#9003;</kbd> borrar palabra
-            </p>
-
-            <div id="result" role="status" aria-live="polite"></div>
+            <p class="raptor-bezel-label" aria-hidden="true">DESVOSOFT · MODEL R-1</p>
         </div>
     </section>
 

@@ -163,6 +163,29 @@ function initRaptor() {
     if (!muted) getAudioCtx();
   });
 
+  // ---------- Tratamiento CRT ----------
+  // Las scanlines y el brillo de fósforo son decoración: a quien le molesten
+  // para leer, las apaga y la preferencia queda guardada. El motor del test no
+  // depende de ninguna de las dos.
+  const crtEl = document.getElementById("raptorCrt");
+  const crtToggleBtn = document.getElementById("crtToggleBtn");
+  const CRT_KEY = "raptor_crt";
+  let crtOn = localStorage.getItem(CRT_KEY) !== "0";
+
+  function updateCrt() {
+    crtEl?.classList.toggle("crt-off", !crtOn);
+    if (!crtToggleBtn) return;
+    crtToggleBtn.setAttribute("aria-pressed", String(crtOn));
+    crtToggleBtn.title = crtOn ? "Desactivar efecto CRT" : "Activar efecto CRT";
+  }
+  updateCrt();
+
+  crtToggleBtn?.addEventListener("click", () => {
+    crtOn = !crtOn;
+    localStorage.setItem(CRT_KEY, crtOn ? "1" : "0");
+    updateCrt();
+  });
+
   // ---------- Persistencia ----------
   // v2: las métricas guardadas en v1 se calculaban con otro modelo (precisión
   // reversible por backspace, WPM sin espacios) y no son comparables. Se deja

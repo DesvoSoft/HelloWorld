@@ -1,242 +1,328 @@
-.raptor-card {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 2.5rem;
+/* Raptor — chasis CRT.
+   Todo el tratamiento retro se apoya en los tokens de color que ya usa el sitio
+   (`--vitra-color-accent-*`, `--vitra-color-bg`, `--text-*`); no introduce una
+   paleta nueva, solo la trata como fósforo sobre un tubo.
+
+   El texto que se teclea no lleva blur, ni curvatura, ni distorsión: en un test
+   de precisión la legibilidad manda sobre el efecto. Las capas decorativas son
+   hermanas del contenido, nunca contenedores suyos. */
+
+.raptor-section {
+  --raptor-font-type: "JetBrains Mono", ui-monospace, "Fira Code", monospace;
+  --raptor-font-crt: "VT323", "JetBrains Mono", monospace;
+  --raptor-phosphor: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l));
+  --raptor-error: #ff6b6b;
 }
+
+/* ---------- Chasis y pantalla ---------- */
+
+.raptor-crt {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 16px 10px;
+  border-radius: 22px;
+  background: linear-gradient(165deg, #17273f 0%, #0c1727 55%, #070e19 100%);
+  box-shadow:
+    0 0 0 1px hsl(var(--vitra-color-accent-h) 40% 45% / 20%),
+    0 30px 64px rgba(2, 8, 20, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.raptor-screen {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 1.6rem 1.9rem 1.9rem;
+  background:
+    radial-gradient(130% 90% at 50% -10%, hsl(var(--vitra-color-accent-h) 45% 16% / 55%) 0%, transparent 70%),
+    var(--vitra-color-bg, #050b16);
+  box-shadow:
+    inset 0 0 70px rgba(0, 0, 0, 0.65),
+    inset 0 0 140px hsl(var(--vitra-color-accent-h) 60% 22% / 18%);
+}
+
+.raptor-screen-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* Líneas de barrido. 1px opaco cada 3px: se lee como textura de tubo sin
+   comerse el trazo de las letras. */
+.raptor-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0px,
+    rgba(0, 0, 0, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: raptor-flicker 5.5s steps(1, end) infinite;
+}
+
+/* Reflejo superior + viñeta en las esquinas: la curvatura se sugiere con luz,
+   no deformando el texto. */
+.raptor-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    radial-gradient(75% 45% at 50% -12%, rgba(255, 255, 255, 0.07) 0%, transparent 62%),
+    radial-gradient(125% 115% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+@keyframes raptor-flicker {
+  0%, 96%, 100% { opacity: 0.5; }
+  97% { opacity: 0.62; }
+  98% { opacity: 0.44; }
+  99% { opacity: 0.57; }
+}
+
+.raptor-bezel-label {
+  margin: 10px 0 0;
+  text-align: right;
+  padding-right: 4px;
+  font-family: var(--raptor-font-crt);
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  color: hsl(var(--vitra-color-accent-h) 25% 60% / 32%);
+}
+
+/* Interruptor del tratamiento CRT: los efectos son gusto, no funcionalidad. */
+.raptor-crt.crt-off .raptor-scanlines,
+.raptor-crt.crt-off .raptor-glare {
+  display: none;
+}
+
+.raptor-crt.crt-off .raptor-screen {
+  box-shadow: inset 0 0 0 1px var(--surface-border);
+}
+
+.raptor-crt.crt-off .raptor-screen-inner :is(.tty-title, .stat-value, .result-wpm-value, .correct, .cursor.cursor-after::after) {
+  text-shadow: none;
+}
+
+/* ---------- Cabecera tty ---------- */
+
+.raptor-tty {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tty-title {
+  margin: 0;
+  font-family: var(--raptor-font-crt);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-shadow: 0 0 14px hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 45%);
+}
+
+.tty-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    hsl(var(--vitra-color-accent-h) 50% 55% / 35%),
+    hsl(var(--vitra-color-accent-h) 50% 55% / 5%)
+  );
+}
+
+.tty-meta {
+  font-family: var(--raptor-font-crt);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.tty-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  padding: 0.15rem 0.55rem;
+  font-family: var(--raptor-font-crt);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.tty-btn:hover {
+  color: var(--accent);
+  border-color: hsl(var(--vitra-color-accent-h) 60% 55% / 55%);
+}
+
+.tty-btn[aria-pressed="false"] {
+  opacity: 0.5;
+}
+
+.raptor-boot {
+  margin: 0 0 1.4rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.boot-sigil {
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+/* ---------- Controles ---------- */
 
 .raptor-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1.25rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.raptor-controls label {
+.raptor-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.raptor-field-label {
+  font-family: var(--raptor-font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   color: var(--text-muted);
-  font-size: 0.95rem;
 }
 
-.raptor-controls select {
-  background: var(--surface-elevated);
+/* Los <select> se mantienen como <select> por accesibilidad y soporte táctil;
+   solo se les da el marco de corchetes del resto del cromo. */
+.raptor-controls select,
+.raptor-controls button {
+  background: hsl(var(--vitra-color-accent-h) 40% 20% / 22%);
   color: var(--text-strong);
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  padding: 0.4rem 0.6rem;
-  font-family: var(--font-main);
-  font-size: 0.95rem;
+  border-radius: 4px;
+  padding: 0.32rem 0.6rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.raptor-controls select:hover:not(:disabled),
+.raptor-controls button:hover {
+  border-color: hsl(var(--vitra-color-accent-h) 60% 55% / 60%);
+  color: var(--accent);
 }
 
 .raptor-controls button {
-  background: var(--accent);
-  color: #0a192f;
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem 1.25rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s, filter 0.2s;
-}
-
-.raptor-controls button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
 }
 
 .raptor-controls select:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-#soundToggleBtn {
-  background: var(--surface-elevated);
-  color: var(--text-strong);
-  padding: 0.4rem 0.7rem;
-  font-size: 1.1rem;
-  line-height: 1;
+.raptor-controls select:focus-visible,
+.raptor-controls button:focus-visible,
+.tty-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .raptor-hint {
-  background: var(--surface);
+  background: hsl(var(--vitra-color-accent-h) 40% 20% / 20%);
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  padding: 0.6rem 0.9rem;
+  border-left: 2px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.55rem 0.85rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.85rem;
   margin: 0 0 1rem;
 }
 
+/* ---------- Marcadores ---------- */
+
 .raptor-stats {
   display: flex;
-  gap: 1.75rem;
+  gap: 2rem;
   margin-bottom: 1rem;
 }
 
 .raptor-stats .stat {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .raptor-stats .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
   color: var(--text-muted);
 }
 
+/* VT323 tiene una altura de x pequeña: necesita ~1.3x de cuerpo para pesar lo
+   mismo que el resto de la interfaz. */
 .raptor-stats .stat-value {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-family: var(--raptor-font-crt);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 12px hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 40%);
+}
+
+.raptor-caps-warning {
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  color: var(--raptor-error);
+  font-family: var(--raptor-font-type);
+  font-size: 0.85rem;
+}
+
+.raptor-caps-warning[hidden] {
+  display: none;
 }
 
 .raptor-shortcut-hint {
   color: var(--text-muted);
-  font-size: 0.85rem;
-  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  margin: 0.9rem 0 0;
 }
 
 .raptor-shortcut-hint kbd {
-  background: var(--surface-elevated);
+  background: hsl(var(--vitra-color-accent-h) 40% 25% / 30%);
   border: 1px solid var(--surface-border);
-  border-radius: 4px;
-  padding: 0.05rem 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-
-.words-viewport {
-  overflow: hidden;
-  font-size: 1.35rem;
-  line-height: 1.9;
-  height: calc(1.9em * 3);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-}
-
-#words {
-  font-family: var(--font-mono);
-  line-height: 1.9;
-  font-size: 1.35rem;
-  word-spacing: 0.2em;
-  transition: transform 0.25s ease;
-  will-change: transform;
-}
-
-.word {
-  margin-right: 7px;
-  display: inline-block;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.word.word-flash-correct {
-  background-color: rgba(100, 255, 218, 0.18);
-}
-
-.word.word-flash-incorrect {
-  background-color: rgba(255, 107, 107, 0.18);
-}
-
-/* Sin `transition: color`: a 100+ wpm son 10 letras por segundo y una
-   transición de 150ms deja el color siempre por detrás del dedo. */
-.letter {
-  padding: 2px;
-  position: relative;
-}
-
-.letter.extra {
-  text-decoration: underline;
-  text-decoration-color: #ff6b6b;
-}
-
-.faded {
-  color: var(--text-muted);
-  opacity: 0.45;
-}
-
-.correct {
-  color: var(--text-strong);
-}
-
-.incorrect {
-  color: #ff6b6b;
-}
-
-/* Letras que nunca llegaste a pulsar porque mandaste la palabra a medias. No
-   cuentan como error de precisión, pero sí invalidan la palabra para el neto,
-   así que se marcan distinto de un fallo real. */
-.skipped {
-  color: #ff6b6b;
-  opacity: 0.5;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 3px;
-}
-
-.cursor {
-  background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
   border-radius: 3px;
-  animation: raptor-cursor-blink 0.8s infinite;
+  padding: 0.05rem 0.4rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.75rem;
 }
 
-/* Cursor al final de la palabra: barra a la derecha de la última letra en vez
-   de resaltar una letra ya escrita. */
-.cursor.cursor-after {
-  background: transparent;
-  animation: none;
-}
+/* ---------- Área de escritura ---------- */
 
-.cursor.cursor-after::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: 0.15em;
-  bottom: 0.15em;
-  width: 2px;
-  border-radius: 1px;
-  background: var(--accent);
-  animation: raptor-caret-blink 0.8s infinite;
-}
-
-@keyframes raptor-cursor-blink {
-  0%,
-  100% {
-    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 20%);
-  }
-  50% {
-    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 50%);
-  }
-}
-
-@keyframes raptor-caret-blink {
-  0%,
-  100% { opacity: 1; }
-  50% { opacity: 0.25; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cursor,
-  .cursor.cursor-after::after {
-    animation: none;
-  }
-
-  .cursor {
-    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 35%);
-  }
-
-  #words {
-    transition: none;
-  }
-}
-
-/* ---------- Área de escritura, foco y avisos ---------- */
-
-/* El juego lee de este input, no del documento. Antes un listener global en
-   `document` capturaba las teclas incluso con el foco en un <select>, así que
-   escribir cambiaba el desplegable y contaba en la partida a la vez. */
+/* El juego lee de este input, no del documento. Un listener global capturaba
+   las teclas incluso con el foco en un <select>, así que escribir cambiaba el
+   desplegable y contaba en la partida a la vez. */
 .raptor-typing-area {
   position: relative;
 }
@@ -261,14 +347,32 @@
   outline: none;
 }
 
+.words-viewport {
+  overflow: hidden;
+  font-size: 1.35rem;
+  line-height: 1.9;
+  height: calc(1.9em * 3);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+#words {
+  font-family: var(--raptor-font-type);
+  line-height: 1.9;
+  font-size: 1.35rem;
+  word-spacing: 0.2em;
+  transition: transform 0.25s ease;
+  will-change: transform;
+}
+
 .raptor-typing-area.is-unfocused .words-viewport {
   filter: blur(3px);
-  opacity: 0.55;
+  opacity: 0.5;
   transition: filter 0.2s ease, opacity 0.2s ease;
 }
 
 .raptor-typing-area.is-finished .words-viewport {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .raptor-focus-overlay {
@@ -280,59 +384,111 @@
   pointer-events: none;
   z-index: 3;
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.9rem;
 }
 
 .raptor-focus-overlay[hidden] {
   display: none;
 }
 
-.raptor-caps-warning {
-  margin: 0 0 0.75rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  background: rgba(255, 107, 107, 0.12);
-  border: 1px solid rgba(255, 107, 107, 0.35);
-  color: #ff6b6b;
-  font-size: 0.85rem;
-}
+/* ---------- Palabras y letras ---------- */
 
-.raptor-caps-warning[hidden] {
-  display: none;
-}
-
-.graph-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: -0.5rem 0 1rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.legend-item::before {
-  content: "";
+.word {
+  margin-right: 7px;
   display: inline-block;
-  width: 14px;
-  height: 2px;
-  margin-right: 0.4rem;
-  vertical-align: middle;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
 }
 
-.legend-net::before {
+.word.word-flash-correct {
+  background-color: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 16%);
+}
+
+.word.word-flash-incorrect {
+  background-color: rgba(255, 107, 107, 0.18);
+}
+
+/* Sin `transition: color`: a 100+ wpm son 10 letras por segundo y una
+   transición de 150ms deja el color siempre por detrás del dedo. */
+.letter {
+  padding: 2px;
+  position: relative;
+}
+
+.letter.extra {
+  text-decoration: underline;
+  text-decoration-color: var(--raptor-error);
+}
+
+.faded {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
+/* Brillo de fósforo muy contenido: da el aire de tubo sin restar nitidez a lo
+   que hay que leer para acertar la siguiente tecla. */
+.correct {
+  color: var(--text-strong);
+  text-shadow: 0 0 8px hsl(var(--vitra-color-accent-h) 70% 65% / 22%);
+}
+
+.incorrect {
+  color: var(--raptor-error);
+  text-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+}
+
+/* Letras que nunca llegaste a pulsar porque mandaste la palabra a medias. No
+   cuentan como error de precisión, pero sí invalidan la palabra para el neto,
+   así que se marcan distinto de un fallo real. */
+.skipped {
+  color: var(--raptor-error);
+  opacity: 0.45;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.cursor {
+  background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
+  border-radius: 2px;
+  animation: raptor-cursor-blink 0.8s infinite;
+}
+
+/* Cursor al final de la palabra: barra a la derecha de la última letra en vez
+   de resaltar una letra ya escrita. */
+.cursor.cursor-after {
+  background: transparent;
+  animation: none;
+}
+
+.cursor.cursor-after::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 0.12em;
+  bottom: 0.12em;
+  width: 2px;
   background: var(--accent);
+  box-shadow: 0 0 8px hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 70%);
+  animation: raptor-caret-blink 0.8s infinite;
 }
 
-.legend-raw::before {
-  background: rgba(255, 255, 255, 0.4);
+@keyframes raptor-cursor-blink {
+  0%, 100% {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 20%);
+  }
+  50% {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 50%);
+  }
 }
 
-.legend-err::before {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ff6b6b;
+@keyframes raptor-caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
+
+/* ---------- Resultado ---------- */
 
 #result:empty {
   display: none;
@@ -341,14 +497,10 @@
 #result {
   margin-top: 1.5rem;
   padding: 1.25rem 1.5rem;
-  background: var(--surface);
+  background: hsl(var(--vitra-color-accent-h) 40% 18% / 25%);
   border: 1px solid var(--surface-border);
-  border-radius: 12px;
+  border-radius: 6px;
   color: var(--text-body);
-}
-
-.resultBox h2 {
-  margin-top: 0;
 }
 
 .result-headline {
@@ -366,17 +518,20 @@
 }
 
 .result-wpm-value {
-  font-size: 3rem;
-  font-weight: 800;
+  font-family: var(--raptor-font-crt);
+  font-size: 4.4rem;
+  font-weight: 400;
   color: var(--accent);
-  line-height: 1;
+  line-height: 0.85;
+  text-shadow: 0 0 20px hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 45%);
 }
 
 .result-wpm-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
   color: var(--text-muted);
+  margin-top: 0.35rem;
 }
 
 .result-grid {
@@ -392,22 +547,53 @@
 }
 
 .result-stat-value {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: var(--raptor-font-crt);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
   color: var(--text-strong);
   font-variant-numeric: tabular-nums;
 }
 
 .result-stat-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
+  margin-top: 0.2rem;
 }
 
 .wpm-graph {
   display: block;
   width: 100%;
   height: 120px;
-  margin: 1rem 0;
+  margin: 1rem 0 0.5rem;
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.legend-net::before { background: var(--accent); }
+.legend-raw::before { background: rgba(255, 255, 255, 0.4); }
+
+.legend-err::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--raptor-error);
 }
 
 .mistake-chips {
@@ -420,31 +606,33 @@
 
 .mistake-chips-label {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin-right: 0.25rem;
 }
 
 .mistake-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   background: rgba(255, 107, 107, 0.12);
-  color: #ff6b6b;
+  color: var(--raptor-error);
   border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 999px;
-  padding: 0.2rem 0.7rem;
-  font-family: var(--font-mono);
+  border-radius: 3px;
+  padding: 0.15rem 0.6rem;
+  font-family: var(--raptor-font-type);
   font-size: 0.9rem;
 }
 
 .mistake-chip b {
   color: var(--text-muted);
   font-weight: 600;
+  font-size: 0.8rem;
 }
 
 .result-comparison {
   color: var(--text-body);
-  font-size: 0.95rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.9rem;
   margin: 1rem 0;
 }
 
@@ -455,30 +643,81 @@
 }
 
 .result-actions button {
-  background: var(--accent);
-  color: #0a192f;
-  border: none;
-  border-radius: 10px;
-  padding: 0.55rem 1.25rem;
-  font-weight: 600;
+  background: hsl(var(--vitra-color-accent-h) 40% 20% / 30%);
+  color: var(--text-strong);
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  padding: 0.45rem 1.1rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: transform 0.2s, filter 0.2s;
+  transition: border-color 0.2s, color 0.2s;
 }
 
 .result-actions button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+  border-color: hsl(var(--vitra-color-accent-h) 60% 55% / 60%);
+  color: var(--accent);
 }
 
-#practiceBtn {
-  background: var(--surface-elevated);
-  color: var(--text-strong);
-  border: 1px solid var(--surface-border);
+.result-actions button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#retryBtn {
+  border-color: hsl(var(--vitra-color-accent-h) 60% 55% / 50%);
+  color: var(--accent);
+}
+
+/* ---------- Accesibilidad y responsive ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .cursor.cursor-after::after,
+  .raptor-scanlines {
+    animation: none;
+  }
+
+  .cursor {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 35%);
+  }
+
+  #words,
+  .word {
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(100px, 1fr));
+  }
 }
 
 @media (max-width: 600px) {
-  .raptor-card {
-    padding: 1.5rem;
+  .raptor-crt {
+    padding: 10px 10px 6px;
+    border-radius: 16px;
+  }
+
+  .raptor-screen {
+    padding: 1.1rem 1rem 1.3rem;
+  }
+
+  .tty-title {
+    font-size: 1.7rem;
+  }
+
+  .tty-meta {
+    display: none;
+  }
+
+  .raptor-stats {
+    gap: 1.25rem;
+  }
+
+  .raptor-stats .stat-value {
+    font-size: 1.75rem;
   }
 
   .words-viewport,
@@ -486,11 +725,11 @@
     font-size: 1.1rem;
   }
 
-  .result-grid {
-    grid-template-columns: 1fr 1fr;
+  .result-wpm-value {
+    font-size: 3.2rem;
   }
 
-  .result-wpm-value {
-    font-size: 2.4rem;
+  .result-stat-value {
+    font-size: 1.4rem;
   }
 }
