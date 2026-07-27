@@ -243,6 +243,43 @@
   outline-offset: 2px;
 }
 
+.raptor-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.raptor-toggle input {
+  accent-color: var(--accent);
+  width: 0.95rem;
+  height: 0.95rem;
+  cursor: pointer;
+}
+
+.raptor-toggle:hover {
+  color: var(--accent);
+}
+
+.raptor-toggle:has(input:checked) {
+  color: var(--accent);
+}
+
+.raptor-toggle:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.raptor-toggle input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .raptor-hint {
   background: hsl(var(--vitra-color-accent-h) 40% 20% / 20%);
   border: 1px solid var(--surface-border);

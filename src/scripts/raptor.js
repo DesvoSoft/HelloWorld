@@ -29,6 +29,8 @@ function initRaptor() {
   const modeSelect = document.getElementById("modeSelect");
   const resultDisplay = document.getElementById("result");
   const soundToggleBtn = document.getElementById("soundToggleBtn");
+  const punctToggle = document.getElementById("punctToggle");
+  const numbersToggle = document.getElementById("numbersToggle");
   const practiceHint = document.getElementById("practiceHint");
   const statTime = document.getElementById("statTime");
   const statTimeLabel = document.getElementById("statTimeLabel");
@@ -107,6 +109,76 @@ function initRaptor() {
       out.push(terryWords[terryCursor % terryWords.length]);
       terryCursor++;
     }
+    return out;
+  }
+
+  // ---------- Puntuación y números ----------
+  // Ambos se aplican DESPUÉS de generar el banco, así que respetan el modo
+  // elegido y no alteran el número de palabras: el modo por palabras sigue
+  // contando lo que promete.
+  const PUNCT_KEY = "raptor_punct";
+  const NUMBERS_KEY = "raptor_numbers";
+  let punctuationOn = localStorage.getItem(PUNCT_KEY) === "1";
+  let numbersOn = localStorage.getItem(NUMBERS_KEY) === "1";
+
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // Los signos de fin de frase van repetidos a propósito: el punto debe salir
+  // mucho más que la exclamación, igual que en texto real.
+  const SENTENCE_ENDERS = [".", ".", ".", ".", "!", "?"];
+  const INNER_MARKS = [",", ",", ",", ";", ":"];
+
+  // El estado de frase sobrevive entre llamadas: en modo tiempo el banco se
+  // recarga a mitad de partida y, sin esto, cada recarga metía una mayúscula
+  // suelta detrás de una coma.
+  let pendingSentenceStart = true;
+
+  function applyPunctuation(list) {
+    const out = list.slice();
+
+    for (let i = 0; i < out.length; i++) {
+      let w = out[i];
+      if (!w) continue;
+
+      if (pendingSentenceStart) {
+        w = w[0].toUpperCase() + w.slice(1);
+        pendingSentenceStart = false;
+      }
+
+      const r = Math.random();
+      if (r < 0.13) {
+        w += pick(SENTENCE_ENDERS);
+        pendingSentenceStart = true;
+      } else if (r < 0.24) {
+        w += pick(INNER_MARKS);
+      } else if (r < 0.28) {
+        w = `"${w}"`;
+      } else if (r < 0.31) {
+        w = `(${w})`;
+      } else if (r < 0.34) {
+        w += "'s";
+      }
+      out[i] = w;
+    }
+    return out;
+  }
+
+  /** Longitudes mezcladas: teclear 7 siempre es mucho más fácil que teclear
+   *  4096, y la fila superior solo se entrena de verdad con números largos. */
+  function applyNumbers(list) {
+    return list.map((w) => {
+      if (Math.random() >= 0.16) return w;
+      const digits = 1 + Math.floor(Math.random() * 4);
+      let n = "";
+      for (let i = 0; i < digits; i++) n += Math.floor(Math.random() * 10);
+      return n;
+    });
+  }
+
+  function decorate(list) {
+    let out = list;
+    if (numbersOn) out = applyNumbers(out);
+    if (punctuationOn) out = applyPunctuation(out);
     return out;
   }
 
@@ -373,11 +445,19 @@ function initRaptor() {
     return Math.round((chars / 5) / (sec / 60));
   }
 
+  /** Los ajustes que cambian el texto se congelan mientras corre el reloj: si
+   *  no, tocar uno a mitad de partida regeneraría lo que estás tecleando. */
+  function setSettingsDisabled(on) {
+    modeSelect.disabled = on;
+    durationSelect.disabled = on;
+    if (punctToggle) punctToggle.disabled = on;
+    if (numbersToggle) numbersToggle.disabled = on;
+  }
+
   function startIfNeeded() {
     if (running || finished) return;
     running = true;
-    modeSelect.disabled = true;
-    durationSelect.disabled = true;
+    setSettingsDisabled(true);
     startTime = performance.now();
     pausedTotal = 0;
     paused = false;
@@ -543,10 +623,10 @@ function initRaptor() {
   // ---------- Generación ----------
   function generateWords(count) {
     const mode = modeSelect.value;
-    if (mode === "prompts") return generatePromptWords(count);
-    if (mode === "terry") return generateTerryWords(count);
-    if (mode === "practice") return buildPracticeWords(count);
-    return generateRandomWords(count, baseWordBank);
+    if (mode === "prompts") return decorate(generatePromptWords(count));
+    if (mode === "terry") return decorate(generateTerryWords(count));
+    if (mode === "practice") return decorate(buildPracticeWords(count));
+    return decorate(generateRandomWords(count, baseWordBank));
   }
 
   function maybeRefill() {
@@ -568,8 +648,7 @@ function initRaptor() {
     duration = testMode === "time" ? setting.amount : 0;
     targetWords = testMode === "words" ? setting.amount : 0;
 
-    modeSelect.disabled = false;
-    durationSelect.disabled = false;
+    setSettingsDisabled(false);
 
     running = false;
     finished = false;
@@ -597,6 +676,7 @@ function initRaptor() {
     cursorEl = null;
     cursorAtEnd = false;
     terryCursor = 0;
+    pendingSentenceStart = true;
 
     if (statTimeLabel) statTimeLabel.textContent = testMode === "words" ? "Palabras" : "Tiempo";
     updateProgressStat();
@@ -960,8 +1040,7 @@ function initRaptor() {
     running = false;
     clearInterval(tickInterval);
     tickInterval = null;
-    modeSelect.disabled = false;
-    durationSelect.disabled = false;
+    setSettingsDisabled(false);
     typingArea.classList.add("is-finished");
     setCapsWarning(false);
 
@@ -987,10 +1066,12 @@ function initRaptor() {
     // Solo se compara contra partidas del mismo test. Un 100 wpm a 15 s no dice
     // nada frente a un 100 wpm a 120 s. Los registros previos al modo palabras
     // no llevan `testMode`, así que se leen como tiempo.
-    const settingKey = `${testMode}:${target}`;
-    const sameSettings = history.filter(
-      (r) => r.mode === mode && `${r.testMode || "time"}:${r.target ?? r.duration}` === settingKey
-    );
+    // La puntuación y los números hunden el WPM, así que entran en la clave: un
+    // récord limpio no se bate con una tirada sin signos.
+    const keyOf = (r) =>
+      `${r.testMode || "time"}:${r.target ?? r.duration}:${r.punctuation ? 1 : 0}${r.numbers ? 1 : 0}`;
+    const settingKey = keyOf({ testMode, target, punctuation: punctuationOn, numbers: numbersOn });
+    const sameSettings = history.filter((r) => r.mode === mode && keyOf(r) === settingKey);
     const previousBest = sameSettings.reduce((best, r) => Math.max(best, r.wpm), 0);
     const isRecord = finalWpm > 0 && finalWpm > previousBest;
     const last10 = sameSettings.slice(-10);
@@ -1003,6 +1084,8 @@ function initRaptor() {
       mode,
       testMode,
       target,
+      punctuation: punctuationOn,
+      numbers: numbersOn,
       duration: testMode === "time" ? duration : Math.round(seconds),
       wpm: finalWpm,
       rawWpm,
@@ -1097,6 +1180,26 @@ function initRaptor() {
   modeSelect.addEventListener("change", () => {
     if (!running) loadWords();
   });
+
+  if (punctToggle) {
+    punctToggle.checked = punctuationOn;
+    punctToggle.addEventListener("change", () => {
+      punctuationOn = punctToggle.checked;
+      localStorage.setItem(PUNCT_KEY, punctuationOn ? "1" : "0");
+      if (!running) loadWords();
+      input.focus({ preventScroll: true });
+    });
+  }
+
+  if (numbersToggle) {
+    numbersToggle.checked = numbersOn;
+    numbersToggle.addEventListener("change", () => {
+      numbersOn = numbersToggle.checked;
+      localStorage.setItem(NUMBERS_KEY, numbersOn ? "1" : "0");
+      if (!running) loadWords();
+      input.focus({ preventScroll: true });
+    });
+  }
 
   // El alto de línea está en `em` y cambia con el breakpoint de 600px, así que
   // la caché se invalida al redimensionar o el scroll se desalinea.
