@@ -71,9 +71,7 @@ Actualmente, el sitio cubre los siguientes temas:
 - `src/layouts/`: Plantillas base (`Layout.astro`) y especializadas (`MarkdownLayout.astro`).
 - `src/styles/`: Archivos CSS organizados por propósito y página.
 - `src/scripts/`: Scripts JavaScript para funcionalidades interactivas.
-- `public/`: Activos estáticos organizados en subcarpetas:
-  - `public/images/gallery/`: Galería de imágenes generadas con IA
-  - `public/images/docs/`: Imágenes de documentación y diagramas
-  - `public/images/`: Iconos y recursos generales
+- `src/assets/`: Imágenes procesadas por Astro (galería de IA), optimizadas en build.
+- `public/`: Activos estáticos servidos tal cual (favicon, robots.txt, imágenes de documentación).
 
 © 2026 DesvoSoft
