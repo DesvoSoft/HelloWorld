@@ -140,9 +140,11 @@
   background-color: rgba(255, 107, 107, 0.18);
 }
 
+/* Sin `transition: color`: a 100+ wpm son 10 letras por segundo y una
+   transición de 150ms deja el color siempre por detrás del dedo. */
 .letter {
   padding: 2px;
-  transition: color 0.15s ease;
+  position: relative;
 }
 
 .letter.extra {
@@ -163,10 +165,40 @@
   color: #ff6b6b;
 }
 
+/* Letras que nunca llegaste a pulsar porque mandaste la palabra a medias. No
+   cuentan como error de precisión, pero sí invalidan la palabra para el neto,
+   así que se marcan distinto de un fallo real. */
+.skipped {
+  color: #ff6b6b;
+  opacity: 0.5;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
 .cursor {
   background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
   border-radius: 3px;
   animation: raptor-cursor-blink 0.8s infinite;
+}
+
+/* Cursor al final de la palabra: barra a la derecha de la última letra en vez
+   de resaltar una letra ya escrita. */
+.cursor.cursor-after {
+  background: transparent;
+  animation: none;
+}
+
+.cursor.cursor-after::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+  animation: raptor-caret-blink 0.8s infinite;
 }
 
 @keyframes raptor-cursor-blink {
@@ -177,6 +209,129 @@
   50% {
     background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 50%);
   }
+}
+
+@keyframes raptor-caret-blink {
+  0%,
+  100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .cursor.cursor-after::after {
+    animation: none;
+  }
+
+  .cursor {
+    background: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 35%);
+  }
+
+  #words {
+    transition: none;
+  }
+}
+
+/* ---------- Área de escritura, foco y avisos ---------- */
+
+/* El juego lee de este input, no del documento. Antes un listener global en
+   `document` capturaba las teclas incluso con el foco en un <select>, así que
+   escribir cambiaba el desplegable y contaba en la partida a la vez. */
+.raptor-typing-area {
+  position: relative;
+}
+
+.raptor-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  opacity: 0;
+  cursor: text;
+  z-index: 2;
+}
+
+.raptor-input:focus {
+  outline: none;
+}
+
+.raptor-typing-area.is-unfocused .words-viewport {
+  filter: blur(3px);
+  opacity: 0.55;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.raptor-typing-area.is-finished .words-viewport {
+  opacity: 0.6;
+}
+
+.raptor-focus-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.raptor-focus-overlay[hidden] {
+  display: none;
+}
+
+.raptor-caps-warning {
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  color: #ff6b6b;
+  font-size: 0.85rem;
+}
+
+.raptor-caps-warning[hidden] {
+  display: none;
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: -0.5rem 0 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.legend-net::before {
+  background: var(--accent);
+}
+
+.legend-raw::before {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.legend-err::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff6b6b;
 }
 
 #result:empty {
@@ -226,7 +381,7 @@
 
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, minmax(110px, 1fr));
   gap: 0.75rem 1.5rem;
   flex: 1;
 }

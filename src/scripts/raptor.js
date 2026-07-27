@@ -1,5 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Raptor — motor de test de mecanografía.
+ *
+ * Modelo de métricas alineado con Monkeytype:
+ *
+ *  - Precisión: pulsaciones correctas / pulsaciones totales. Es INMUTABLE: el
+ *    backspace corrige el texto en pantalla pero no borra el error del
+ *    historial. Solo cuentan teclas realmente pulsadas, así que las letras que
+ *    te saltas al mandar una palabra a medias no la penalizan.
+ *  - WPM neto: solo cuentan los caracteres de palabras 100% correctas, más su
+ *    espacio separador. Es lo que castiga saltarse palabras.
+ *  - WPM bruto: todas las pulsaciones, correctas o no, espacios incluidos.
+ *  - Consistencia: coeficiente de variación del WPM bruto *instantáneo* de cada
+ *    segundo (delta de caracteres), no del promedio acumulado. El promedio
+ *    acumulado converge por construcción y daba siempre ~95%.
+ *
+ * El tiempo sale siempre de performance.now(), nunca de contar ticks, así que
+ * no acumula drift ni se descuadra si el navegador estrangula los timers en una
+ * pestaña en segundo plano.
+ */
+function initRaptor() {
   const wordsContainer = document.getElementById("words");
+  const typingArea = document.getElementById("typingArea");
+  const input = document.getElementById("raptorInput");
+  const focusOverlay = document.getElementById("focusOverlay");
+  const capsWarning = document.getElementById("capsWarning");
   const newGameBtn = document.getElementById("newGameBtn");
   const durationSelect = document.getElementById("durationSelect");
   const modeSelect = document.getElementById("modeSelect");
@@ -10,7 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const statWpm = document.getElementById("statWpm");
   const statAcc = document.getElementById("statAcc");
 
-  if (!wordsContainer || !newGameBtn || !durationSelect || !modeSelect || !resultDisplay || !statTime || !statWpm || !statAcc) return;
+  if (!wordsContainer || !typingArea || !input || !newGameBtn || !durationSelect ||
+      !modeSelect || !resultDisplay || !statTime || !statWpm || !statAcc) return;
 
   // ---------- Bancos de palabras ----------
   const baseWordBank = [
@@ -36,28 +61,51 @@ document.addEventListener("DOMContentLoaded", () => {
     "it works on my machine", "have you tried turning it off and on again",
     "add more logs", "wrap it in try catch", "delete node modules and reinstall",
     "todo fix this later", "this is temporary i promise", "one more console log wont hurt",
-    "chatgpt wrote this dont judge me", "we will refactor later", "just use a global variable",
-    "copy paste from stack overflow", "works in dev breaks in prod", "add a comment nobody will read",
-    "commit message fix stuff", "force push and pray", "rm rf and hope for the best",
-    "blame the intern", "it is not a bug it is a feature", "cache is the problem it is always the cache",
-    "as an ai language model i cannot", "can you fix this real quick", "trust me it is fine",
-    "works for me shrug", "act as a senior developer", "make it more professional",
+    "chatgpt wrote this dont judge me", "we will refactor later", "just use global variable",
+    "copy paste from stack overflow", "works in dev breaks in prod", "add comment nobody will read",
+    "commit message fix stuff", "force push pray", "rm rf hope best",
+    "blame intern", "it is not bug it is feature", "cache is problem it always cache",
+    "as ai language model i cannot", "can you fix this real quick", "trust me it is fine",
+    "works me shrug", "act as senior developer", "make it more professional",
     "can you make it better", "why does this only break in production", "who wrote this code",
     "git blame says it was me"
   ];
 
+  /** Fisher-Yates. `sort(() => Math.random() - 0.5)` no produce una permutación
+   *  uniforme: los comparadores inconsistentes sesgan el resultado según el
+   *  algoritmo de ordenación del motor. */
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
   function generatePromptWords(count) {
     let out = [];
     while (out.length < count) {
-      const shuffled = [...promptPhrases].sort(() => Math.random() - 0.5);
-      out = out.concat(shuffled.join(" ").split(" "));
+      out = out.concat(shuffle(promptPhrases).join(" ").split(" "));
     }
-    return out;
+    return out.slice(0, count);
   }
 
   function generateRandomWords(count, bank) {
     const out = [];
     for (let i = 0; i < count; i++) out.push(bank[Math.floor(Math.random() * bank.length)]);
+    return out;
+  }
+
+  /** El texto de Terry se recorre en bucle con un cursor persistente. Antes cada
+   *  recarga reinyectaba el texto entero, así que el DOM crecía sin límite. */
+  let terryCursor = 0;
+  function generateTerryWords(count) {
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      out.push(terryWords[terryCursor % terryWords.length]);
+      terryCursor++;
+    }
     return out;
   }
 
@@ -115,8 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!muted) getAudioCtx();
   });
 
-  // ---------- Persistencia (historial + mapa de errores) ----------
-  const HISTORY_KEY = "raptor_history_v1";
+  // ---------- Persistencia ----------
+  // v2: las métricas guardadas en v1 se calculaban con otro modelo (precisión
+  // reversible por backspace, WPM sin espacios) y no son comparables. Se deja
+  // v1 intacto en localStorage en vez de migrarlo con números inventados.
+  const HISTORY_KEY = "raptor_history_v2";
   const MISTAKES_KEY = "raptor_mistakes_v1";
   const HISTORY_LIMIT = 100;
 
@@ -158,247 +209,526 @@ document.addEventListener("DOMContentLoaded", () => {
     practiceHint.hidden = true;
   }
 
+  const displayChar = (ch) => (ch === " " ? "␣" : ch);
+
+  /**
+   * Práctica dirigida. La versión anterior filtraba con
+   * `bank.filter(w => weakChars.some(c => w.includes(c)))` sobre las 8 teclas
+   * más falladas; como esas 8 casi siempre incluyen e/a/t/o, el filtro matcheaba
+   * prácticamente todo el banco y el modo era indistinguible de random.
+   *
+   * Ahora se puntúa cada palabra por *densidad* de error (fallos acumulados de
+   * sus caracteres / longitud) y se muestrea con probabilidad proporcional a esa
+   * puntuación, así que las palabras cargadas de teclas débiles salen mucho más.
+   */
   function buildPracticeWords(count) {
     const cumulative = loadMistakeMap();
-    const entries = Object.entries(cumulative).sort((a, b) => b[1] - a[1]).slice(0, 8);
-    const totalMistakes = entries.reduce((sum, [, c]) => sum + c, 0);
-    if (entries.length === 0 || totalMistakes < 5) {
+    const totalMistakes = Object.values(cumulative).reduce((s, c) => s + c, 0);
+    if (totalMistakes < 5) {
       showPracticeHint("Completa una partida para desbloquear práctica dirigida a tus errores. Usando modo random mientras tanto.");
       return generateRandomWords(count, baseWordBank);
     }
-    hidePracticeHint();
-    const weakChars = entries.map(([c]) => c);
-    const weighted = baseWordBank.filter(w => weakChars.some(c => w.includes(c)));
-    const pool = weighted.length >= 5 ? weighted : baseWordBank;
-    return generateRandomWords(count, pool);
+
+    const scored = baseWordBank
+      .map((word) => {
+        let s = 0;
+        for (const ch of word) s += cumulative[ch] || 0;
+        return { word, score: s / word.length };
+      })
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score);
+
+    if (scored.length < 5) {
+      showPracticeHint("Aún hay pocos datos de errores. Usando modo random mientras tanto.");
+      return generateRandomWords(count, baseWordBank);
+    }
+
+    // Nos quedamos con el tercio más cargado (mínimo 10 palabras) para que la
+    // sesión sea claramente distinta de random, no una versión levemente sesgada.
+    const pool = scored.slice(0, Math.max(10, Math.ceil(scored.length / 3)));
+    const totalScore = pool.reduce((s, x) => s + x.score, 0);
+
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      let r = Math.random() * totalScore;
+      let pick = pool[pool.length - 1].word;
+      for (const x of pool) {
+        r -= x.score;
+        if (r <= 0) { pick = x.word; break; }
+      }
+      out.push(pick);
+    }
+
+    const topChars = Object.entries(cumulative)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([c]) => displayChar(c));
+    showPracticeHint(`Práctica dirigida a tus teclas más falladas: ${topChars.join("  ")}`);
+    return out;
   }
 
-  // ---------- Estado del juego ----------
+  // ---------- Estado ----------
   const INITIAL_WORD_COUNT = 60;
-  const REFILL_THRESHOLD = 10;
+  const REFILL_THRESHOLD = 15;
   const REFILL_COUNT = 30;
+  const MAX_EXTRA_CHARS = 10;
+  const TICK_MS = 100;
 
   let words = [];
-  let duration = parseInt(durationSelect.value, 10);
-  let timer = duration;
-  let timerInterval = null;
+  /** Caché de nodos. Antes cada pulsación hacía hasta 5 `querySelectorAll`
+   *  sobre cientos de nodos (uno de ellos global a todo el documento). */
+  let wordEls = [];
+  let letterEls = [];
+  let cursorEl = null;
+  let cursorAtEnd = false;
+
+  let duration = 30;
   let currentWordIndex = 0;
   let currentLetterIndex = 0;
-  let totalWordsTyped = 0;
-  let correctChars = 0;
-  let incorrectChars = 0;
-  let extraChars = 0;
-  let mistakesCount = {};
-  let timerStarted = false;
-  let wpmSamples = [];
-  let scrollOffset = 0;
 
-  function generateInitialWords() {
-    const mode = modeSelect.value;
-    if (mode === "prompts") return generatePromptWords(INITIAL_WORD_COUNT);
-    if (mode === "terry") return terryWords.slice();
-    if (mode === "practice") return buildPracticeWords(INITIAL_WORD_COUNT);
-    return generateRandomWords(INITIAL_WORD_COUNT, baseWordBank);
+  // Contadores de pulsación: NUNCA se decrementan. Backspace corrige el texto,
+  // no la historia. Aquí es donde vivía el bug central de precisión.
+  let keypresses = 0;
+  let errors = 0;
+  let spacesPressed = 0;
+
+  // Caracteres que cuentan para el WPM neto (solo palabras 100% correctas).
+  let committedNetChars = 0;
+  let wordRecords = [];
+  let mistakesCount = {};
+
+  let running = false;
+  let finished = false;
+  let paused = false;
+  let startTime = 0;
+  let pausedAt = 0;
+  let pausedTotal = 0;
+  let tickInterval = null;
+  let lastSampledSecond = 0;
+  let lastSampleChars = 0;
+  let lastSampleErrors = 0;
+  let rawWpmPerSecond = [];
+  let netWpmPerSecond = [];
+  let errorsPerSecond = [];
+
+  let scrollOffset = 0;
+  let lineHeightPx = 0;
+  let focused = false;
+
+  // ---------- Reloj ----------
+  function elapsedSec() {
+    if (!running) return 0;
+    const now = paused ? pausedAt : performance.now();
+    return Math.max(0, (now - startTime - pausedTotal) / 1000);
   }
 
-  function generateMoreWords(count) {
+  function computeWpm(chars, sec) {
+    // Por debajo de medio segundo el cociente explota (1 carácter en 40ms son
+    // ~300 wpm) y el marcador en vivo parpadea con basura.
+    if (sec < 0.5) return 0;
+    return Math.round((chars / 5) / (sec / 60));
+  }
+
+  function startIfNeeded() {
+    if (running || finished) return;
+    running = true;
+    modeSelect.disabled = true;
+    durationSelect.disabled = true;
+    startTime = performance.now();
+    pausedTotal = 0;
+    paused = false;
+    tickInterval = setInterval(tick, TICK_MS);
+  }
+
+  function tick() {
+    if (paused || !running) return;
+    const el = elapsedSec();
+    statTime.textContent = String(Math.max(0, Math.ceil(duration - el)));
+
+    // Recupera los segundos que se hayan perdido si el navegador estranguló el
+    // intervalo (pestaña en segundo plano), en vez de saltárselos.
+    const upTo = Math.floor(Math.min(el, duration));
+    while (lastSampledSecond < upTo) {
+      lastSampledSecond++;
+      sampleSecond();
+    }
+
+    updateLiveStats();
+    if (el >= duration) endGame();
+  }
+
+  function sampleSecond() {
+    const totalChars = keypresses + spacesPressed;
+    const deltaChars = totalChars - lastSampleChars;
+    lastSampleChars = totalChars;
+    // WPM bruto instantáneo del segundo: (chars/5) escalado a un minuto.
+    rawWpmPerSecond.push((deltaChars / 5) * 60);
+
+    const deltaErrors = errors - lastSampleErrors;
+    lastSampleErrors = errors;
+    errorsPerSecond.push(deltaErrors);
+
+    netWpmPerSecond.push(computeWpm(netChars(), lastSampledSecond));
+  }
+
+  function pauseClock() {
+    if (!running || finished || paused) return;
+    paused = true;
+    pausedAt = performance.now();
+  }
+
+  function resumeClock() {
+    if (!paused) return;
+    paused = false;
+    pausedTotal += performance.now() - pausedAt;
+  }
+
+  // ---------- Métricas ----------
+  /** Prefijo de la palabra en curso que aún va perfecto. Si hay un solo fallo
+   *  la palabra entera deja de contar para el neto, igual que en Monkeytype. */
+  function inProgressNetChars() {
+    const letters = letterEls[currentWordIndex];
+    if (!letters) return 0;
+    for (let i = 0; i < currentLetterIndex; i++) {
+      if (!letters[i] || !letters[i].classList.contains("correct")) return 0;
+    }
+    return currentLetterIndex;
+  }
+
+  function netChars() {
+    return committedNetChars + inProgressNetChars();
+  }
+
+  function accuracy() {
+    if (keypresses === 0) return 100;
+    return Math.round(((keypresses - errors) / keypresses) * 100);
+  }
+
+  function computeConsistency(samples) {
+    if (samples.length < 2) return 100;
+    const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
+    if (mean <= 0) return 0;
+    const variance = samples.reduce((a, b) => a + (b - mean) ** 2, 0) / samples.length;
+    const cv = Math.sqrt(variance) / mean;
+    return Math.max(0, Math.round(100 - cv * 100));
+  }
+
+  function updateLiveStats() {
+    statWpm.textContent = String(computeWpm(netChars(), elapsedSec()));
+    statAcc.textContent = accuracy() + "%";
+  }
+
+  // ---------- Render ----------
+  function buildWordEl(word) {
+    const wordEl = document.createElement("span");
+    wordEl.className = "word";
+    const letters = [];
+    for (const ch of word) {
+      const letterEl = document.createElement("span");
+      letterEl.className = "letter faded";
+      letterEl.textContent = ch;
+      wordEl.appendChild(letterEl);
+      letters.push(letterEl);
+    }
+    return { wordEl, letters };
+  }
+
+  function appendWords(newWords) {
+    const frag = document.createDocumentFragment();
+    for (const w of newWords) {
+      const { wordEl, letters } = buildWordEl(w);
+      frag.appendChild(wordEl);
+      frag.appendChild(document.createTextNode(" "));
+      wordEls.push(wordEl);
+      letterEls.push(letters);
+    }
+    wordsContainer.appendChild(frag);
+  }
+
+  function moveCursor() {
+    const letters = letterEls[currentWordIndex] || [];
+    const atEnd = currentLetterIndex >= letters.length;
+    const target = (atEnd ? letters[letters.length - 1] : letters[currentLetterIndex]) || null;
+    if (target === cursorEl && atEnd === cursorAtEnd) return;
+    if (cursorEl) cursorEl.classList.remove("cursor", "cursor-after");
+    cursorEl = target;
+    cursorAtEnd = atEnd;
+    if (cursorEl) {
+      cursorEl.classList.add("cursor");
+      if (atEnd) cursorEl.classList.add("cursor-after");
+    }
+  }
+
+  /** Solo se llama al cambiar de palabra: `offsetTop` fuerza un reflujo y no
+   *  hace falta recalcularlo con cada letra. */
+  function updateScroll() {
+    const wordEl = wordEls[currentWordIndex];
+    if (!wordEl) return;
+    if (!lineHeightPx) {
+      lineHeightPx = parseFloat(getComputedStyle(wordsContainer).lineHeight) || 32;
+    }
+    const target = Math.max(0, wordEl.offsetTop - lineHeightPx);
+    if (target !== scrollOffset) {
+      scrollOffset = target;
+      wordsContainer.style.transform = `translateY(-${target}px)`;
+    }
+  }
+
+  function flashWord(wordEl, isCorrect) {
+    if (!wordEl) return;
+    wordEl.classList.add(isCorrect ? "word-flash-correct" : "word-flash-incorrect");
+    setTimeout(() => {
+      wordEl.classList.remove("word-flash-correct", "word-flash-incorrect");
+    }, 260);
+  }
+
+  // ---------- Generación ----------
+  function generateWords(count) {
     const mode = modeSelect.value;
     if (mode === "prompts") return generatePromptWords(count);
-    if (mode === "terry") return terryWords.slice();
+    if (mode === "terry") return generateTerryWords(count);
     if (mode === "practice") return buildPracticeWords(count);
     return generateRandomWords(count, baseWordBank);
   }
 
-  function wordHTML(word) {
-    return `<span class="word">${word.split("").map(l => `<span class="letter faded">${l}</span>`).join("")}</span>`;
-  }
-
-  function appendWordsToDOM(newWords) {
-    wordsContainer.insertAdjacentHTML("beforeend", newWords.map(wordHTML).join(" ") + " ");
+  function maybeRefill() {
+    if (currentWordIndex >= words.length - REFILL_THRESHOLD) {
+      const more = generateWords(REFILL_COUNT);
+      words = words.concat(more);
+      appendWords(more);
+    }
   }
 
   function loadWords() {
+    clearInterval(tickInterval);
+    tickInterval = null;
+
+    duration = parseInt(durationSelect.value, 10);
     modeSelect.disabled = false;
     durationSelect.disabled = false;
-    duration = parseInt(durationSelect.value, 10);
-    timer = duration;
-    statTime.textContent = String(timer);
+
+    running = false;
+    finished = false;
+    paused = false;
+    startTime = 0;
+    pausedTotal = 0;
+    lastSampledSecond = 0;
+    lastSampleChars = 0;
+    lastSampleErrors = 0;
+    rawWpmPerSecond = [];
+    netWpmPerSecond = [];
+    errorsPerSecond = [];
+
+    currentWordIndex = 0;
+    currentLetterIndex = 0;
+    keypresses = 0;
+    errors = 0;
+    spacesPressed = 0;
+    committedNetChars = 0;
+    wordRecords = [];
+    mistakesCount = {};
+
+    scrollOffset = 0;
+    lineHeightPx = 0;
+    cursorEl = null;
+    cursorAtEnd = false;
+    terryCursor = 0;
+
+    statTime.textContent = String(duration);
     statWpm.textContent = "0";
     statAcc.textContent = "100%";
     resultDisplay.innerHTML = "";
-    timerStarted = false;
-    currentWordIndex = 0;
-    currentLetterIndex = 0;
-    totalWordsTyped = 0;
-    correctChars = 0;
-    incorrectChars = 0;
-    extraChars = 0;
-    mistakesCount = {};
-    wpmSamples = [];
-    scrollOffset = 0;
+    typingArea.classList.remove("is-finished");
 
     if (modeSelect.value !== "practice") hidePracticeHint();
 
-    words = generateInitialWords();
-    wordsContainer.innerHTML = words.map(wordHTML).join(" ") + " ";
+    wordEls = [];
+    letterEls = [];
+    wordsContainer.innerHTML = "";
     wordsContainer.style.transform = "translateY(0px)";
-    updateUI();
+    words = generateWords(INITIAL_WORD_COUNT);
+    appendWords(words);
+
+    moveCursor();
+    updateScroll();
   }
 
-  function maybeRefillWords() {
-    if (currentWordIndex >= words.length - REFILL_THRESHOLD) {
-      const more = generateMoreWords(REFILL_COUNT);
-      words = words.concat(more);
-      appendWordsToDOM(more);
-    }
-  }
-
-  function updateWordScroll() {
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (!currentWordSpan) return;
-    const lineHeightPx = parseFloat(getComputedStyle(wordsContainer).lineHeight) || 32;
-    const wordTop = currentWordSpan.offsetTop;
-    const targetOffset = Math.max(0, wordTop - lineHeightPx);
-    if (targetOffset !== scrollOffset) {
-      scrollOffset = targetOffset;
-      wordsContainer.style.transform = `translateY(-${targetOffset}px)`;
-    }
-  }
-
-  function updateUI() {
-    document.querySelectorAll(".letter").forEach(l => l.classList.remove("cursor"));
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (currentWordSpan) {
-      const letters = currentWordSpan.querySelectorAll(".letter");
-      letters.forEach((letter, index) => {
-        if (index >= currentLetterIndex) letter.classList.add("faded");
-        else letter.classList.remove("faded");
-      });
-      const cursorTarget = letters[currentLetterIndex] || letters[letters.length - 1];
-      if (cursorTarget) cursorTarget.classList.add("cursor");
-    }
-    updateWordScroll();
-  }
-
-  function countMistake(letter) {
-    mistakesCount[letter] = (mistakesCount[letter] || 0) + 1;
+  // ---------- Entrada ----------
+  function countMistake(expectedChar) {
+    // Siempre se registra el carácter ESPERADO, nunca el pulsado. Antes las
+    // letras extra guardaban la tecla pulsada y el resto la esperada, así que el
+    // mapa de errores mezclaba dos cosas distintas.
+    mistakesCount[expectedChar] = (mistakesCount[expectedChar] || 0) + 1;
   }
 
   function checkLetter(key) {
-    if (!timerStarted) {
-      timerStarted = true;
-      modeSelect.disabled = true;
-      durationSelect.disabled = true;
-      startTimer();
-    }
+    startIfNeeded();
 
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (!currentWordSpan) return;
-    const letters = currentWordSpan.querySelectorAll(".letter");
+    const letters = letterEls[currentWordIndex];
+    const target = words[currentWordIndex];
+    if (!letters || target === undefined) return;
 
-    if (currentLetterIndex >= letters.length) {
-      const extraSpan = document.createElement("span");
-      extraSpan.className = "letter extra incorrect";
-      extraSpan.textContent = key;
-      currentWordSpan.appendChild(extraSpan);
-      extraChars++;
-      incorrectChars++;
-      countMistake(key);
+    // Carácter sobrante: la palabra ya está completa y sigues escribiendo.
+    if (currentLetterIndex >= target.length) {
+      if (currentLetterIndex - target.length >= MAX_EXTRA_CHARS) return;
+      keypresses++;
+      errors++;
+      // Lo que fallaste aquí es el espacio, no una letra concreta.
+      countMistake(" ");
+      const extra = document.createElement("span");
+      extra.className = "letter extra incorrect";
+      extra.textContent = key;
+      wordEls[currentWordIndex].appendChild(extra);
+      letters.push(extra);
       playIncorrectSound();
       currentLetterIndex++;
-      updateUI();
+      moveCursor();
       updateLiveStats();
       return;
     }
 
-    const currentLetter = letters[currentLetterIndex];
-    if (key === currentLetter.textContent) {
-      currentLetter.classList.add("correct");
-      correctChars++;
+    keypresses++;
+    const el = letters[currentLetterIndex];
+    const expected = target[currentLetterIndex];
+    el.classList.remove("faded", "skipped");
+    if (key === expected) {
+      el.classList.remove("incorrect");
+      el.classList.add("correct");
       playCorrectSound();
     } else {
-      currentLetter.classList.add("incorrect");
-      countMistake(currentLetter.textContent);
-      incorrectChars++;
+      el.classList.remove("correct");
+      el.classList.add("incorrect");
+      errors++;
+      countMistake(expected);
       playIncorrectSound();
     }
-    currentLetter.classList.remove("faded");
     currentLetterIndex++;
-    updateUI();
+    moveCursor();
     updateLiveStats();
   }
 
-  function flashWord(isCorrect) {
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (!currentWordSpan) return;
-    currentWordSpan.classList.add(isCorrect ? "word-flash-correct" : "word-flash-incorrect");
-    setTimeout(() => {
-      currentWordSpan.classList.remove("word-flash-correct", "word-flash-incorrect");
-    }, 260);
-  }
-
   function processSpace() {
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (!currentWordSpan) return;
-    const letters = currentWordSpan.querySelectorAll(".letter:not(.extra)");
-    const wordCorrect = currentLetterIndex === letters.length;
-    for (let i = currentLetterIndex; i < letters.length; i++) {
-      letters[i].classList.add("incorrect");
+    // Espacio al principio de palabra: no-op. Antes marcaba la palabra entera
+    // como fallada y avanzaba, así que machacar espacio destrozaba la partida.
+    if (currentLetterIndex === 0) return;
+    startIfNeeded();
+
+    const letters = letterEls[currentWordIndex];
+    const target = words[currentWordIndex];
+    if (!letters || target === undefined) return;
+
+    spacesPressed++;
+
+    const correct = currentLetterIndex === target.length &&
+      letters.slice(0, target.length).every((l) => l.classList.contains("correct"));
+
+    // Letras que nunca pulsaste: no son errores de precisión, pero invalidan la
+    // palabra para el WPM neto.
+    for (let i = currentLetterIndex; i < target.length; i++) {
       letters[i].classList.remove("faded");
-      countMistake(letters[i].textContent);
-      incorrectChars++;
+      letters[i].classList.add("skipped");
     }
 
-    flashWord(wordCorrect);
+    wordRecords.push({ word: target, correct });
+    if (correct) committedNetChars += target.length + 1;
+
+    flashWord(wordEls[currentWordIndex], correct);
     playWordSound();
 
-    totalWordsTyped++;
     currentWordIndex++;
     currentLetterIndex = 0;
-    maybeRefillWords();
-    updateUI();
+    maybeRefill();
+    moveCursor();
+    updateScroll();
     updateLiveStats();
   }
 
   function deleteLetter() {
-    if (currentLetterIndex === 0 && currentWordIndex > 0) {
+    if (currentLetterIndex === 0) {
+      if (currentWordIndex === 0) return;
+      const prev = wordRecords[currentWordIndex - 1];
+      // Monkeytype solo deja retroceder a palabras que quedaron mal. Si no,
+      // podrías reescribir una palabra ya buena y rehacer el neto a voluntad.
+      if (!prev || prev.correct) return;
+
       currentWordIndex--;
-      const prevWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-      const letters = prevWordSpan.querySelectorAll(".letter");
-      currentLetterIndex = letters.length;
-    }
-    const currentWordSpan = wordsContainer.querySelectorAll(".word")[currentWordIndex];
-    if (!currentWordSpan) return;
-    if (currentLetterIndex === 0) return;
-    currentLetterIndex--;
-    const letters = currentWordSpan.querySelectorAll(".letter");
-    const letterSpan = letters[currentLetterIndex];
-    if (!letterSpan) return;
-    if (letterSpan.classList.contains("extra")) {
-      if (letterSpan.classList.contains("incorrect")) {
-        incorrectChars--;
-        extraChars--;
+      wordRecords.pop();
+      spacesPressed = Math.max(0, spacesPressed - 1);
+
+      const letters = letterEls[currentWordIndex];
+      let typed = letters.length;
+      for (const l of letters) {
+        if (l.classList.contains("skipped")) {
+          l.classList.remove("skipped");
+          l.classList.add("faded");
+        }
       }
-      letterSpan.remove();
-    } else {
-      if (letterSpan.classList.contains("correct")) correctChars--;
-      if (letterSpan.classList.contains("incorrect")) incorrectChars--;
-      letterSpan.classList.remove("correct", "incorrect");
-      letterSpan.classList.add("faded");
+      while (typed > 0 &&
+             !letters[typed - 1].classList.contains("correct") &&
+             !letters[typed - 1].classList.contains("incorrect")) {
+        typed--;
+      }
+      currentLetterIndex = typed;
+      moveCursor();
+      updateScroll();
+      updateLiveStats();
+      return;
     }
-    updateUI();
+
+    const letters = letterEls[currentWordIndex];
+    currentLetterIndex--;
+    const el = letters[currentLetterIndex];
+    if (!el) return;
+    if (el.classList.contains("extra")) {
+      el.remove();
+      letters.splice(currentLetterIndex, 1);
+    } else {
+      el.classList.remove("correct", "incorrect", "skipped");
+      el.classList.add("faded");
+    }
+    // keypresses/errors intactos a propósito: la precisión no se deshace.
+    moveCursor();
     updateLiveStats();
   }
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Tab") {
-      const tag = document.activeElement ? document.activeElement.tagName : "";
-      if (tag === "SELECT" || tag === "BUTTON" || tag === "INPUT" || tag === "A") return;
-      e.preventDefault();
-      restartGame();
+  function deleteWord() {
+    if (currentLetterIndex === 0) {
+      deleteLetter();
       return;
     }
-    if (timer <= 0) return;
+    while (currentLetterIndex > 0) deleteLetter();
+  }
+
+  function setCapsWarning(on) {
+    if (!capsWarning) return;
+    capsWarning.hidden = !on;
+  }
+
+  function handleKey(e) {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      restartGame();
+      input.focus({ preventScroll: true });
+      return;
+    }
+
+    if (typeof e.getModifierState === "function") {
+      setCapsWarning(e.getModifierState("CapsLock"));
+    }
+
+    // Ctrl+Backspace (y Alt+Backspace en macOS) borra la palabra en curso.
+    if ((e.ctrlKey || e.altKey) && !e.metaKey && e.key === "Backspace") {
+      e.preventDefault();
+      if (!finished) deleteWord();
+      return;
+    }
+
+    // Cualquier otro atajo con modificador es del navegador, no del juego. Antes
+    // `Ctrl+V` o `Ctrl+R` colaban una "v"/"r" como carácter tecleado.
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    if (finished) return;
+
     if (e.key === " ") {
       e.preventDefault();
       processSpace();
@@ -406,55 +736,56 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       deleteLetter();
     } else if (e.key.length === 1) {
+      e.preventDefault();
       checkLetter(e.key);
+    }
+  }
+
+  input.addEventListener("keydown", handleKey);
+  // El input no debe acumular texto nunca; handleKey ya hace preventDefault,
+  // esto solo cubre pegado y entrada por IME.
+  input.addEventListener("input", () => { input.value = ""; });
+  input.addEventListener("paste", (e) => e.preventDefault());
+
+  function setFocused(on) {
+    focused = on;
+    typingArea.classList.toggle("is-unfocused", !on);
+    if (focusOverlay) focusOverlay.hidden = on;
+  }
+
+  input.addEventListener("focus", () => {
+    setFocused(true);
+    resumeClock();
+  });
+  input.addEventListener("blur", () => {
+    setFocused(false);
+    setCapsWarning(false);
+    // Se pausa el reloj: perder el foco no debería costarte la partida.
+    pauseClock();
+  });
+
+  typingArea.addEventListener("mousedown", (e) => {
+    if (e.target === input) return;
+    e.preventDefault();
+    input.focus({ preventScroll: true });
+  });
+
+  // Si escribes con el foco fuera del input (y no dentro de otro control),
+  // devolvemos el foco y reproducimos esa misma tecla para no perderla.
+  document.addEventListener("keydown", (e) => {
+    if (focused || finished) return;
+    const tag = document.activeElement ? document.activeElement.tagName : "";
+    if (tag === "SELECT" || tag === "BUTTON" || tag === "INPUT" || tag === "TEXTAREA" || tag === "A") return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key.length === 1 || e.key === "Backspace" || e.key === "Tab") {
+      input.focus({ preventScroll: true });
+      handleKey(e);
     }
   });
 
-  function elapsedSeconds() {
-    return duration - Math.max(timer, 0);
-  }
-
-  function computeWpm(chars, elapsedSec) {
-    const minutes = elapsedSec / 60;
-    if (minutes <= 0) return 0;
-    return Math.round((chars / 5) / minutes);
-  }
-
-  function recordWpmSample() {
-    wpmSamples.push(computeWpm(correctChars, elapsedSeconds()));
-  }
-
-  function updateLiveStats() {
-    const elapsed = timerStarted ? elapsedSeconds() : 0;
-    const wpm = computeWpm(correctChars, elapsed);
-    const totalTyped = correctChars + incorrectChars;
-    const acc = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 100;
-    statWpm.textContent = String(wpm);
-    statAcc.textContent = acc + "%";
-  }
-
-  function startTimer() {
-    timerInterval = setInterval(() => {
-      timer--;
-      statTime.textContent = String(Math.max(timer, 0));
-      recordWpmSample();
-      updateLiveStats();
-      if (timer <= 0) endGame();
-    }, 1000);
-  }
-
-  function computeConsistency(samples) {
-    const valid = samples.filter(s => s > 0);
-    if (valid.length < 2) return 100;
-    const mean = valid.reduce((a, b) => a + b, 0) / valid.length;
-    if (mean === 0) return 100;
-    const variance = valid.reduce((a, b) => a + (b - mean) ** 2, 0) / valid.length;
-    const cv = Math.sqrt(variance) / mean;
-    return Math.max(0, Math.round(100 - cv * 100));
-  }
-
-  function drawWpmGraph(canvas, samples) {
-    if (!canvas || samples.length < 2) return;
+  // ---------- Gráfico ----------
+  function drawGraph(canvas) {
+    if (!canvas || netWpmPerSecond.length < 2) return;
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
     const width = canvas.clientWidth;
@@ -466,9 +797,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const styles = getComputedStyle(document.documentElement);
     const accent = styles.getPropertyValue("--accent").trim() || "#64ffda";
-    const padding = 8;
-    const max = Math.max(...samples, 1);
-    const stepX = (width - padding * 2) / (samples.length - 1);
+    const padding = 10;
+    const max = Math.max(...netWpmPerSecond, ...rawWpmPerSecond, 1);
+    const n = netWpmPerSecond.length;
+    const stepX = (width - padding * 2) / Math.max(1, n - 1);
+    const yFor = (v) => height - padding - (v / max) * (height - padding * 2);
 
     ctx.strokeStyle = "rgba(255,255,255,0.08)";
     ctx.lineWidth = 1;
@@ -480,40 +813,64 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.stroke();
     }
 
-    ctx.beginPath();
-    samples.forEach((wpm, i) => {
+    const line = (series, color, lineWidth, dashed) => {
+      ctx.beginPath();
+      series.forEach((v, i) => {
+        const x = padding + i * stepX;
+        const y = yFor(v);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.setLineDash(dashed ? [4, 4] : []);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.lineJoin = "round";
+      ctx.stroke();
+      ctx.setLineDash([]);
+    };
+
+    line(rawWpmPerSecond, "rgba(255,255,255,0.28)", 1.5, true);
+    line(netWpmPerSecond, accent, 2, false);
+
+    // Marcas de error: un punto por segundo en el que fallaste algo.
+    ctx.fillStyle = "#ff6b6b";
+    errorsPerSecond.forEach((count, i) => {
+      if (count <= 0) return;
       const x = padding + i * stepX;
-      const y = height - padding - (wpm / max) * (height - padding * 2);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      const y = yFor(rawWpmPerSecond[i] ?? 0);
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
     });
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 2;
-    ctx.lineJoin = "round";
-    ctx.stroke();
   }
 
+  // ---------- Fin de partida ----------
   function endGame() {
-    clearInterval(timerInterval);
-    timer = 0;
+    if (finished) return;
+    finished = true;
+    running = false;
+    clearInterval(tickInterval);
+    tickInterval = null;
     statTime.textContent = "0";
     modeSelect.disabled = false;
     durationSelect.disabled = false;
+    typingArea.classList.add("is-finished");
+    setCapsWarning(false);
 
-    const finalWpm = computeWpm(correctChars, duration);
-    const rawWpm = computeWpm(correctChars + incorrectChars, duration);
-    const totalTyped = correctChars + incorrectChars;
-    const accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 100;
-    const consistency = computeConsistency(wpmSamples);
+    const finalWpm = computeWpm(netChars(), duration);
+    const rawWpm = computeWpm(keypresses + spacesPressed, duration);
+    const acc = accuracy();
+    const consistency = computeConsistency(rawWpmPerSecond);
+    const correctWords = wordRecords.filter((r) => r.correct).length;
 
     statWpm.textContent = String(finalWpm);
-    statAcc.textContent = accuracy + "%";
+    statAcc.textContent = acc + "%";
 
     playFinishSound();
 
     const mode = modeSelect.value;
     const history = loadHistory();
-    const sameSettings = history.filter(r => r.mode === mode && r.duration === duration);
+    const sameSettings = history.filter((r) => r.mode === mode && r.duration === duration);
     const previousBest = sameSettings.reduce((best, r) => Math.max(best, r.wpm), 0);
     const isRecord = finalWpm > 0 && finalWpm > previousBest;
     const last10 = sameSettings.slice(-10);
@@ -527,11 +884,12 @@ document.addEventListener("DOMContentLoaded", () => {
       duration,
       wpm: finalWpm,
       rawWpm,
-      accuracy,
+      accuracy: acc,
       consistency,
-      correctChars,
-      incorrectChars,
-      extraChars
+      keypresses,
+      errors,
+      correctWords,
+      totalWords: wordRecords.length
     });
     saveHistory(history);
     mergeMistakes(mistakesCount);
@@ -540,7 +898,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let comparisonMsg;
     if (isRecord) {
-      comparisonMsg = previousBest > 0 ? `🏆 ¡Nuevo récord personal! (anterior: ${previousBest} wpm)` : "🏆 ¡Primer récord registrado!";
+      comparisonMsg = previousBest > 0
+        ? `🏆 ¡Nuevo récord personal! (anterior: ${previousBest} wpm)`
+        : "🏆 ¡Primer récord registrado!";
     } else if (avgLast10 !== null) {
       const diff = finalWpm - avgLast10;
       comparisonMsg = `${diff >= 0 ? "+" + diff : diff} wpm vs tu media de las últimas ${last10.length} partidas (${avgLast10} wpm)`;
@@ -557,18 +917,25 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="result-grid">
             <div class="result-stat"><span class="result-stat-value">${rawWpm}</span><span class="result-stat-label">WPM bruto</span></div>
-            <div class="result-stat"><span class="result-stat-value">${accuracy}%</span><span class="result-stat-label">Precisión</span></div>
+            <div class="result-stat"><span class="result-stat-value">${acc}%</span><span class="result-stat-label">Precisión</span></div>
             <div class="result-stat"><span class="result-stat-value">${consistency}%</span><span class="result-stat-label">Consistencia</span></div>
-            <div class="result-stat"><span class="result-stat-value">${correctChars} / ${incorrectChars} / ${extraChars}</span><span class="result-stat-label">Correctos / Incorrectos / Extra</span></div>
+            <div class="result-stat"><span class="result-stat-value">${correctWords} / ${wordRecords.length}</span><span class="result-stat-label">Palabras correctas</span></div>
+            <div class="result-stat"><span class="result-stat-value">${keypresses - errors} / ${keypresses}</span><span class="result-stat-label">Pulsaciones acertadas</span></div>
+            <div class="result-stat"><span class="result-stat-value">${errors}</span><span class="result-stat-label">Errores</span></div>
           </div>
         </div>
 
         <canvas id="wpmGraph" class="wpm-graph"></canvas>
+        <div class="graph-legend">
+          <span class="legend-item legend-net">WPM neto</span>
+          <span class="legend-item legend-raw">WPM bruto</span>
+          <span class="legend-item legend-err">Errores</span>
+        </div>
 
         ${topMistakes.length > 0 ? `
           <div class="mistake-chips">
             <span class="mistake-chips-label">Teclas más falladas:</span>
-            ${topMistakes.map(([ch, count]) => `<span class="mistake-chip">${ch === " " ? "␣" : ch}<b>${count}</b></span>`).join("")}
+            ${topMistakes.map(([ch, count]) => `<span class="mistake-chip">${displayChar(ch)}<b>${count}</b></span>`).join("")}
           </div>` : ""}
 
         <p class="result-comparison">${comparisonMsg}</p>
@@ -580,28 +947,50 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    drawWpmGraph(document.getElementById("wpmGraph"), wpmSamples);
-    document.getElementById("retryBtn")?.addEventListener("click", () => restartGame());
+    drawGraph(document.getElementById("wpmGraph"));
+    document.getElementById("retryBtn")?.addEventListener("click", () => {
+      restartGame();
+      input.focus({ preventScroll: true });
+    });
     document.getElementById("practiceBtn")?.addEventListener("click", () => {
       modeSelect.value = "practice";
       restartGame();
+      input.focus({ preventScroll: true });
     });
   }
 
   function restartGame() {
-    clearInterval(timerInterval);
     loadWords();
   }
 
-  newGameBtn.addEventListener("click", () => restartGame());
+  newGameBtn.addEventListener("click", () => {
+    restartGame();
+    input.focus({ preventScroll: true });
+  });
 
   durationSelect.addEventListener("change", () => {
-    if (!timerStarted) loadWords();
+    if (!running) loadWords();
   });
 
   modeSelect.addEventListener("change", () => {
-    if (!timerStarted) loadWords();
+    if (!running) loadWords();
+  });
+
+  // El alto de línea está en `em` y cambia con el breakpoint de 600px, así que
+  // la caché se invalida al redimensionar o el scroll se desalinea.
+  window.addEventListener("resize", () => {
+    lineHeightPx = 0;
+    scrollOffset = -1;
+    updateScroll();
   });
 
   loadWords();
-});
+  setFocused(false);
+  input.focus({ preventScroll: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initRaptor);
+} else {
+  initRaptor();
+}

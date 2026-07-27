@@ -31,19 +31,38 @@ import '../styles/page-specific/raptor.css';
 
             <p id="practiceHint" class="raptor-hint" hidden></p>
 
-            <div id="info" class="raptor-stats">
+            <div id="info" class="raptor-stats" aria-live="off">
                 <span class="stat"><span class="stat-label">Tiempo</span><span id="statTime" class="stat-value">30</span></span>
-                <span class="stat"><span class="stat-label">WPM</span><span id="statWpm" class="stat-value">0</span></span>
+                <span class="stat"><span class="stat-label">WPM neto</span><span id="statWpm" class="stat-value">0</span></span>
                 <span class="stat"><span class="stat-label">Precisión</span><span id="statAcc" class="stat-value">100%</span></span>
             </div>
 
-            <div class="words-viewport">
-                <div id="words" class="words-inner"></div>
+            <p id="capsWarning" class="raptor-caps-warning" hidden>⚠ Bloq Mayús activado</p>
+
+            <div id="typingArea" class="raptor-typing-area">
+                <input
+                    id="raptorInput"
+                    class="raptor-input"
+                    type="text"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Área de escritura del test"
+                />
+                <div class="words-viewport">
+                    <div id="words" class="words-inner"></div>
+                </div>
+                <div id="focusOverlay" class="raptor-focus-overlay" hidden>
+                    <span>Haz clic o pulsa una tecla para continuar</span>
+                </div>
             </div>
 
-            <p class="raptor-shortcut-hint">Presiona <kbd>Tab</kbd> para reiniciar</p>
+            <p class="raptor-shortcut-hint">
+                <kbd>Tab</kbd> reiniciar · <kbd>Ctrl</kbd>+<kbd>&#9003;</kbd> borrar palabra
+            </p>
 
-            <div id="result"></div>
+            <div id="result" role="status" aria-live="polite"></div>
         </div>
     </section>
 
