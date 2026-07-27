@@ -316,6 +316,54 @@ function initRaptor() {
     localStorage.setItem(PRESSES_KEY, JSON.stringify(cumulative));
   }
 
+  /**
+   * Tiempos de transición entre pares de teclas.
+   *
+   * La precisión y las pulsaciones por minuto no cuentan toda la historia: se
+   * puede escribir al 100% y perder medio segundo cada vez que aparece `br`.
+   * Esas paradas no salen en ninguna media, porque quedan absorbidas por los
+   * cientos de transiciones rápidas que las rodean.
+   *
+   * Solo se mide entre aciertos consecutivos dentro de la misma palabra. Un
+   * fallo o una corrección contamina el intervalo con tiempo de decisión, no de
+   * movimiento; y el hueco antes de un espacio mezcla la transición con la
+   * lectura de la palabra siguiente.
+   */
+  const BIGRAMS_KEY = "raptor_bigrams_v1";
+  // Por encima de esto ya no es una transición, es una pausa: leer, dudar,
+  // rascarse la nariz. Incluirlas convertiría la media en un detector de
+  // distracciones.
+  const BIGRAM_MAX_MS = 1000;
+  // Por debajo, rodillo o rebote de teclado; tampoco es un movimiento medible.
+  const BIGRAM_MIN_MS = 15;
+  // Con menos muestras la media la decide cualquier pausa suelta.
+  const BIGRAM_MIN_SAMPLES = 4;
+
+  function loadBigramMap() {
+    try {
+      return JSON.parse(localStorage.getItem(BIGRAMS_KEY)) || {};
+    } catch {
+      return {};
+    }
+  }
+  function mergeBigrams(sessionBigrams) {
+    const cumulative = loadBigramMap();
+    for (const [pair, stat] of Object.entries(sessionBigrams)) {
+      const prev = cumulative[pair] || { n: 0, totalMs: 0 };
+      cumulative[pair] = { n: prev.n + stat.n, totalMs: prev.totalMs + stat.totalMs };
+    }
+    localStorage.setItem(BIGRAMS_KEY, JSON.stringify(cumulative));
+  }
+
+  /** Pares más lentos, con muestra suficiente para que la media signifique algo. */
+  function slowestBigrams(map, limit = 5) {
+    return Object.entries(map)
+      .filter(([, s]) => s.n >= BIGRAM_MIN_SAMPLES)
+      .map(([pair, s]) => ({ pair, ms: Math.round(s.totalMs / s.n), n: s.n }))
+      .sort((a, b) => b.ms - a.ms)
+      .slice(0, limit);
+  }
+
   /** Tasa de fallo de una tecla. Cuando no hay datos de intentos (historial
    *  anterior a este contador) se cae al peor caso, que deja el mapa igual de
    *  ordenado que antes en vez de dividir por cero. */
@@ -447,6 +495,11 @@ function initRaptor() {
   let wordRecords = [];
   let mistakesCount = {};
   let pressesCount = {};
+  let bigramsCount = {};
+  // Última tecla ACERTADA y su instante. En null cuando la cadena está rota
+  // (arranque, fallo, corrección o salto de palabra).
+  let lastKeyChar = null;
+  let lastKeyAt = 0;
 
   let running = false;
   let finished = false;
@@ -706,6 +759,8 @@ function initRaptor() {
     wordRecords = [];
     mistakesCount = {};
     pressesCount = {};
+    bigramsCount = {};
+    lastKeyChar = null;
 
     scrollOffset = 0;
     lineHeightPx = 0;
@@ -746,6 +801,26 @@ function initRaptor() {
     mistakesCount[expectedChar] = (mistakesCount[expectedChar] || 0) + 1;
   }
 
+  /**
+   * Cronometra la transición desde la tecla acertada anterior hasta esta.
+   * `ok` en false rompe la cadena: tras un fallo el siguiente intervalo incluye
+   * el tiempo de darse cuenta, y eso no es velocidad de dedos.
+   */
+  function countBigram(expectedChar, ok) {
+    const now = performance.now();
+    const prev = lastKeyChar;
+    const prevAt = lastKeyAt;
+    lastKeyChar = ok ? expectedChar : null;
+    lastKeyAt = now;
+    if (!ok || prev === null) return;
+    const delta = now - prevAt;
+    if (delta < BIGRAM_MIN_MS || delta > BIGRAM_MAX_MS) return;
+    const pair = prev + expectedChar;
+    const stat = bigramsCount[pair] || (bigramsCount[pair] = { n: 0, totalMs: 0 });
+    stat.n++;
+    stat.totalMs += delta;
+  }
+
   function checkLetter(key) {
     startIfNeeded();
 
@@ -761,6 +836,7 @@ function initRaptor() {
       // Lo que fallaste aquí es el espacio, no una letra concreta.
       countPress(" ");
       countMistake(" ");
+      countBigram(" ", false);
       const extra = document.createElement("span");
       extra.className = "letter extra incorrect";
       extra.textContent = key;
@@ -777,6 +853,7 @@ function initRaptor() {
     const el = letters[currentLetterIndex];
     const expected = target[currentLetterIndex];
     countPress(expected);
+    countBigram(expected, key === expected);
     el.classList.remove("faded", "skipped");
     if (key === expected) {
       el.classList.remove("incorrect");
@@ -838,6 +915,9 @@ function initRaptor() {
     // El espacio acertado también es un intento: sin él, la barra solo tendría
     // fallos en el denominador y saldría siempre roja en el mapa.
     countPress(" ");
+    // El salto de palabra corta la cadena: el hueco que viene después no mide un
+    // movimiento de dedos, mide leer la palabra siguiente.
+    countBigram(" ", false);
     commitCurrentWord(true);
     playWordSound();
 
@@ -875,6 +955,9 @@ function initRaptor() {
   }
 
   function deleteLetter() {
+    // Corregir rompe la cadena de tiempos: lo que venga después mide relectura,
+    // no la transición entre dos teclas.
+    lastKeyChar = null;
     if (currentLetterIndex === 0) {
       if (currentWordIndex === 0) return;
       const prev = wordRecords[currentWordIndex - 1];
@@ -1144,8 +1227,12 @@ function initRaptor() {
     saveHistory(history);
     mergeMistakes(mistakesCount);
     mergePresses(pressesCount);
+    mergeBigrams(bigramsCount);
 
     const topMistakes = Object.entries(mistakesCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    // Acumulado, no de la partida: en 30 s ningún par llega a las muestras que
+    // hacen falta para que su media no sea una pausa disfrazada.
+    const slowPairs = slowestBigrams(loadBigramMap());
 
     let comparisonMsg;
     if (isRecord) {
@@ -1187,6 +1274,12 @@ function initRaptor() {
           <div class="mistake-chips">
             <span class="mistake-chips-label">Teclas más falladas:</span>
             ${topMistakes.map(([ch, count]) => `<span class="mistake-chip">${displayChar(ch)}<b>${count}</b></span>`).join("")}
+          </div>` : ""}
+
+        ${slowPairs.length > 0 ? `
+          <div class="bigram-list">
+            <span class="bigram-label">Transiciones más lentas:</span>
+            ${slowPairs.map(({ pair, ms, n }) => `<span class="bigram-chip" title="${n} muestras">${displayChar(pair[0])}${displayChar(pair[1])}<b>${ms}ms</b></span>`).join("")}
           </div>` : ""}
 
         <div class="kb-heat">

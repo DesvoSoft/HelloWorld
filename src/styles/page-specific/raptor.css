@@ -666,6 +666,43 @@
   font-size: 0.8rem;
 }
 
+/* ── Transiciones lentas ─────────────────────────────────────────────────── */
+
+/* En ámbar, no en rojo: una transición lenta no es un error, es un freno. */
+.bigram-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.bigram-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-right: 0.25rem;
+}
+
+.bigram-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 176, 84, 0.1);
+  color: #ffb054;
+  border: 1px solid rgba(255, 176, 84, 0.28);
+  border-radius: 3px;
+  padding: 0.15rem 0.6rem;
+  font-family: var(--raptor-font-type);
+  font-size: 0.9rem;
+  cursor: default;
+}
+
+.bigram-chip b {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
 /* ── Mapa de calor del teclado ───────────────────────────────────────────── */
 
 .kb-heat {
