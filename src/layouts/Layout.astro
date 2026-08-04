@@ -73,12 +73,7 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         <slot name="head" />
 	</head>
 	<body>
-        <div class="mesh-bg" aria-hidden="true">
-            <div class="mesh-blob mesh-blob-1"></div>
-            <div class="mesh-blob mesh-blob-2"></div>
-            <div class="mesh-blob mesh-blob-3"></div>
-            <div class="mesh-blob mesh-blob-4"></div>
-        </div>
+        <div class="mesh-bg" aria-hidden="true"></div>
 
         <header>
             <slot name="header" />
@@ -93,7 +88,7 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
                 <div class="footer-top">
                     <div class="footer-brand">
                         <span class="code-line-logo">Hello World</span>
-                        <p class="footer-tagline">Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.</p>
+                        <p class="footer-tagline">&copy; <span id="footer-year">2025</span> DesvoSoft · Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
                     </div>
 
                     <div class="footer-socials">
@@ -116,11 +111,6 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
                             <span class="footer-email-icon">@</span>
                         </a>
                     </div>
-                </div>
-
-                <div class="footer-bottom">
-                    <p class="footer-copyright" data-i18n="footerCopyright">&copy; <span id="footer-year">2025</span> DesvoSoft</p>
-                    <p class="footer-credits">Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
                 </div>
             </div>
         </footer>
@@ -145,9 +135,9 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         font-size: 0.9rem;
     }
 
-    /* Una sola tarjeta: marca + redes arriba, créditos abajo, separados por una
-       regla en vez de por un salto fuera del cristal. Antes el copyright vivía
-       suelto debajo de la tarjeta y se leía como un segundo footer. */
+    /* Una sola fila: marca+créditos a la izquierda, redes a la derecha. Antes
+       el copyright vivía en una segunda fila bajo una regla y se leía como un
+       segundo footer; ahora el año y los créditos son la propia bajada de marca. */
     .footer-inner {
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
@@ -163,15 +153,6 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         align-items: center;
         justify-content: space-between;
         gap: var(--vitra-space-4, 2rem);
-    }
-
-    .footer-bottom {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--vitra-space-2, 1rem);
-        padding-top: var(--vitra-space-3, 1.5rem);
-        border-top: 1px solid var(--surface-border, rgba(76, 157, 245, 0.35));
     }
 
     .footer-brand {
@@ -192,6 +173,16 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         line-height: 1.6;
         font-size: 0.85rem;
         color: var(--vitra-color-text-secondary, #ffffffb3);
+    }
+
+    .footer-tagline a {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .footer-tagline a:hover {
+        color: var(--vitra-color-text-strong, #fff);
     }
 
     .footer-socials {
@@ -234,40 +225,11 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         font-weight: 600;
     }
 
-    .footer-copyright {
-        margin: 0;
-        font-size: 0.8rem;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-
-    .footer-credits {
-        margin: 0;
-        font-size: 0.8rem;
-        color: var(--vitra-color-text-secondary, #ffffffb3);
-    }
-
-    .footer-credits a {
-        color: inherit;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-    }
-
-    .footer-credits a:hover {
-        color: var(--vitra-color-text-strong, #fff);
-    }
-
     @media (max-width: 640px) {
-        .footer-top,
-        .footer-bottom {
+        .footer-top {
             flex-direction: column;
             align-items: flex-start;
             gap: var(--vitra-space-3, 1.5rem);
-        }
-
-        .footer-bottom {
-            gap: 0.35rem;
         }
 
         /* Las redes ya no compiten con la marca por el ancho: se alinean al
