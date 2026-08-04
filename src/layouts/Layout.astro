@@ -1,8 +1,14 @@
 ---
+import '../styles/fonts.css';
 import '../styles/variables.css';
 import '../styles/responsive.css';
 import '../styles/navbar.css';
 import Navbar from '../components/Navbar.astro';
+
+// Terceros auto-hospedados desde public/. Antes venian de jsdelivr, lo que
+// anadia un salto DNS+TLS bloqueante y dejaba el CSS del sitio a merced de que
+// el CDN estuviera en pie.
+const base = import.meta.env.BASE_URL;
 
 interface Props {
 	title: string;
@@ -27,6 +33,10 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
 
 		<title>{pageTitle}</title>
         <link rel="canonical" href={canonicalURL} />
+        {/* public/favicon.svg existia pero nunca se declaraba, asi que el
+            navegador caia al /favicon.ico implicito de la raiz del dominio
+            (fuera de /HelloWorld/) y se llevaba un 404 en cada pagina. */}
+        <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
         {noindex && <meta name="robots" content="noindex, nofollow" />}
 
         <meta property="og:type" content="website" />
@@ -40,10 +50,8 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImageURL} />
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/roboto-400-latin.woff2`} crossorigin />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/fira-code-400-latin.woff2`} crossorigin />
 
         <script type="application/ld+json" set:html={JSON.stringify({
             "@context": "https://schema.org",
@@ -58,9 +66,9 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
             }
         })} />
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.css" integrity="sha256-aKZPxSYkeZQfenXrPana9MGvzOFE0eCsdPLpzU+EBE4=" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/gh/DesvoSoft/Vitra@v1.12.1/dist/vitra.min.js" integrity="sha256-8cQKCN/ypSOrZmry8+eH2w3dgVQiaNqB92DHS2aqI/s=" crossorigin="anonymous" defer></script>
-        {useSwiper && <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>}
+        <link rel="stylesheet" href={`${base}vendor/vitra/vitra.min.css`} />
+        <script src={`${base}vendor/vitra/vitra.min.js`} is:inline defer></script>
+        {useSwiper && <link rel="stylesheet" href={`${base}vendor/swiper/swiper-bundle.min.css`} />}
 
         <slot name="head" />
 	</head>
@@ -82,41 +90,42 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
 
         <footer class="site-footer">
             <div class="footer-inner vitra-glass">
-                <div class="footer-brand">
-                    <span class="code-line-logo">Hello World</span>
-                    <p class="footer-tagline">Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.</p>
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <span class="code-line-logo">Hello World</span>
+                        <p class="footer-tagline">Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.</p>
+                    </div>
+
+                    <div class="footer-socials">
+                        <a href="https://github.com/DesvoSoft/HelloWorld" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12 .5C5.73.5.98 5.24.98 11.5c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55l-.01-2.14c-3.16.69-3.83-1.36-3.83-1.36-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.73 0c2.18-1.47 3.14-1.16 3.14-1.16.63 1.58.23 2.75.12 3.04.73.8 1.17 1.81 1.17 3.05 0 4.35-2.65 5.31-5.18 5.59.41.36.77 1.06.77 2.14l-.01 3.17c0 .31.2.66.79.55A11.5 11.5 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/>
+                            </svg>
+                        </a>
+                        <a href="https://discord.gg/NUd5HsuYX" target="_blank" rel="noopener" aria-label="Discord" title="Discord">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057 13.0129 13.0129 0 0 1-1.8722-.8923.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286ZM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189Zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.youtube.com/@desvosoft" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
+                            </svg>
+                        </a>
+                        <a href="mailto:desvox23@gmail.com" aria-label="Email" title="desvox23@gmail.com">
+                            <span class="footer-email-icon">@</span>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="footer-socials">
-                    <a href="https://github.com/DesvoSoft/HelloWorld" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M12 .5C5.73.5.98 5.24.98 11.5c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55l-.01-2.14c-3.16.69-3.83-1.36-3.83-1.36-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.73 0c2.18-1.47 3.14-1.16 3.14-1.16.63 1.58.23 2.75.12 3.04.73.8 1.17 1.81 1.17 3.05 0 4.35-2.65 5.31-5.18 5.59.41.36.77 1.06.77 2.14l-.01 3.17c0 .31.2.66.79.55A11.5 11.5 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/>
-                        </svg>
-                    </a>
-                    <a href="https://discord.gg/aCaHssJJu" target="_blank" rel="noopener" aria-label="Discord" title="Discord">
-                        <img src="https://www.tradingdigits.io/assets/images/discordLogo.png" alt="" width="20">
-                    </a>
-                    <a href="https://www.youtube.com/@desvosoft" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
-                        </svg>
-                    </a>
-                    <a href="https://x.com/DesvoSoft" target="_blank" rel="noopener" aria-label="X" title="X">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M18.9 2h3.3l-7.2 8.2L23.5 22h-6.6l-5.2-6.8L5.7 22H2.4l7.7-8.8L1.5 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.8L7.4 4h-1.9l12.2 16Z"/>
-                        </svg>
-                    </a>
-                    <a href="mailto:desvox23@gmail.com" aria-label="Email" title="desvox23@gmail.com">
-                        <span class="footer-email-icon">@</span>
-                    </a>
+                <div class="footer-bottom">
+                    <p class="footer-copyright" data-i18n="footerCopyright">&copy; <span id="footer-year">2025</span> DesvoSoft</p>
+                    <p class="footer-credits">Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
                 </div>
             </div>
-
-            <p class="footer-copyright" data-i18n="footerCopyright">&copy; <span id="footer-year">2025</span> DesvoSoft</p>
-            <p class="footer-credits">Hecho con <a href="https://github.com/DesvoSoft/Vitra" target="_blank" rel="noopener">Vitra CSS</a> + <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></p>
         </footer>
 
-        {useSwiper && <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" is:inline defer></script>}
+        {useSwiper && <script src={`${base}vendor/swiper/swiper-bundle.min.js`} is:inline defer></script>}
         <script is:inline>
             const footerYear = document.getElementById('footer-year');
             if (footerYear) footerYear.textContent = new Date().getFullYear();
@@ -136,15 +145,33 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         font-size: 0.9rem;
     }
 
+    /* Una sola tarjeta: marca + redes arriba, créditos abajo, separados por una
+       regla en vez de por un salto fuera del cristal. Antes el copyright vivía
+       suelto debajo de la tarjeta y se leía como un segundo footer. */
     .footer-inner {
         max-width: var(--content-max-width, 1100px);
         margin: 0 auto;
         padding: var(--vitra-space-4, 2rem) var(--vitra-space-5, 2.5rem);
         border-radius: 16px;
         display: flex;
+        flex-direction: column;
+        gap: var(--vitra-space-3, 1.5rem);
+    }
+
+    .footer-top {
+        display: flex;
         align-items: center;
         justify-content: space-between;
         gap: var(--vitra-space-4, 2rem);
+    }
+
+    .footer-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--vitra-space-2, 1rem);
+        padding-top: var(--vitra-space-3, 1.5rem);
+        border-top: 1px solid var(--surface-border, rgba(76, 157, 245, 0.35));
     }
 
     .footer-brand {
@@ -178,8 +205,8 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         color: var(--vitra-color-text-secondary, #ffffffb3);
         transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
@@ -208,19 +235,16 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
     }
 
     .footer-copyright {
-        text-align: center;
-        margin: var(--vitra-space-3, 1.5rem) 0 0;
+        margin: 0;
         font-size: 0.8rem;
         display: flex;
-        justify-content: center;
         align-items: center;
         gap: 0.3rem;
     }
 
     .footer-credits {
-        text-align: center;
-        margin: 0.35rem 0 0;
-        font-size: 0.75rem;
+        margin: 0;
+        font-size: 0.8rem;
         color: var(--vitra-color-text-secondary, #ffffffb3);
     }
 
@@ -235,10 +259,23 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
     }
 
     @media (max-width: 640px) {
-        .footer-inner {
+        .footer-top,
+        .footer-bottom {
             flex-direction: column;
             align-items: flex-start;
             gap: var(--vitra-space-3, 1.5rem);
+        }
+
+        .footer-bottom {
+            gap: 0.35rem;
+        }
+
+        /* Las redes ya no compiten con la marca por el ancho: se alinean al
+           borde izquierdo y el área táctil de 44px se compensa hacia fuera
+           para que los iconos sigan a ras del texto de arriba. */
+        .footer-socials {
+            margin-left: -10px;
+            gap: var(--vitra-space-1, 0.5rem);
         }
     }
 </style>

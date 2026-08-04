@@ -50,6 +50,48 @@ import '../styles/crypto-toc.css';
         border: 0;
       }
 
+      .tv-chart-facade {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        border: 0;
+        cursor: pointer;
+        color: var(--text-body, #e6eefc);
+        font-family: inherit;
+        text-align: center;
+        padding: 1.5rem;
+        background:
+          linear-gradient(180deg, rgba(9, 12, 12, 0.15), rgba(9, 12, 12, 0.55)),
+          repeating-linear-gradient(0deg, rgba(71, 235, 226, 0.07) 0 1px, transparent 1px 44px),
+          repeating-linear-gradient(90deg, rgba(71, 235, 226, 0.07) 0 1px, transparent 1px 64px),
+          #090c0c;
+        transition: color 0.2s ease;
+      }
+
+      .tv-chart-facade:hover,
+      .tv-chart-facade:focus-visible {
+        color: var(--vitra-color-accent, #64ffda);
+      }
+
+      .tv-facade-icon {
+        color: var(--vitra-color-accent, #64ffda);
+        line-height: 0;
+      }
+
+      .tv-facade-title {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .tv-facade-note {
+        font-size: 0.8rem;
+        color: var(--text-muted, #cbd6e6);
+      }
+
       @media (max-width: 640px) {
         .tv-chart-card {
           aspect-ratio: 4 / 5;
@@ -63,7 +105,12 @@ import '../styles/crypto-toc.css';
         margin: 0.5rem 0 0;
       }
 
+      /* No es un enlace dentro de un párrafo, es un control suelto: se le da
+         alto de objetivo táctil (44px) sin tocar la tipografía. */
       .tv-open-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
         color: var(--vitra-color-accent, #64ffda);
         font-size: 0.9rem;
         font-weight: 600;
@@ -125,16 +172,23 @@ import '../styles/crypto-toc.css';
         to { opacity: 1; transform: translateY(0); }
       }
 
+      /* 22x32 era el objetivo más pequeño de la página, y es el único modo de
+         cerrar el disclaimer sin aceptarlo. */
       .popup-close-btn {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        top: 0.6rem;
+        right: 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
         background: none;
         border: none;
         color: var(--vitra-color-text-muted, #8892b0);
         font-size: 1.5rem;
         cursor: pointer;
-        padding: 0.25rem;
+        padding: 0;
         line-height: 1;
         transition: color 0.2s;
       }
@@ -188,6 +242,7 @@ import '../styles/crypto-toc.css';
         background: var(--vitra-color-accent, #64ffda);
         color: var(--vitra-color-on-accent, #0a192f);
         border: none;
+        min-height: 44px;
         padding: 0.75rem 1.5rem;
         border-radius: 12px;
         font-weight: 600;
@@ -208,6 +263,7 @@ import '../styles/crypto-toc.css';
 
       .show-popup-btn {
         color: var(--vitra-color-accent, #64ffda);
+        min-height: 44px;
         padding: 0.75rem 1.5rem;
         border-radius: 12px;
         font-weight: 600;
@@ -222,11 +278,14 @@ import '../styles/crypto-toc.css';
     </style>
     
     <div class="popup-overlay" id="disclaimerPopup">
-        <div class="popup-content vitra-glass">
-            <button class="popup-close-btn" id="closePopupBtn">&times;</button>
+        <!-- role="dialog" no es decorativo: sin el, el contenido del aviso
+             quedaba fuera de todo landmark y el boton "×" se anunciaba como
+             "times" en vez de decir que cierra. -->
+        <div class="popup-content vitra-glass" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
+            <button class="popup-close-btn" id="closePopupBtn" aria-label="Cerrar aviso">&times;</button>
             <div class="popup-header">
                 <span class="popup-icon" aria-hidden="true">⚠️</span>
-                <h2>Aviso Importante</h2>
+                <h2 id="disclaimerTitle">Aviso Importante</h2>
             </div>
             <div class="popup-body">
                 <p>
@@ -404,15 +463,26 @@ import '../styles/crypto-toc.css';
                     <button class="show-popup-btn vitra-glass" id="showPopupBtn">Ver disclaimer</button>
                 </div>
 
+                {/* Fachada: el iframe de TradingView trae su propio bucle de
+                    render y ~20 MB de heap. Se carga solo si el visitante lo
+                    pide. El contenedor conserva el mismo aspect-ratio, asi que
+                    al insertarlo no se mueve nada de la pagina. */}
                 <div class="tv-chart-card vitra-glass">
-                    <iframe
-                        class="tv-chart-frame"
-                        src="https://s.tradingview.com/widgetembed/?frameElementId=tv-btc-chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=090c0c&backgroundColor=%23090c0c&gridColor=rgba(71%2C235%2C226%2C0.08)&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%22paneProperties.background%22%3A%22%23090c0c%22%2C%22paneProperties.backgroundType%22%3A%22solid%22%2C%22paneProperties.vertGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22paneProperties.horzGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22scalesProperties.textColor%22%3A%22%23cbd6e6%22%7D&locale=es&utm_source=&utm_medium=widget&utm_campaign=chart"
-                        title="Gráfico BTC/USDT en vivo (TradingView)"
-                        loading="lazy"
-                        allowtransparency="true"
-                        frameborder="0"
-                    ></iframe>
+                    <button
+                        type="button"
+                        class="tv-chart-facade"
+                        id="tvChartFacade"
+                        data-tv-src="https://s.tradingview.com/widgetembed/?frameElementId=tv-btc-chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=090c0c&backgroundColor=%23090c0c&gridColor=rgba(71%2C235%2C226%2C0.08)&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%22paneProperties.background%22%3A%22%23090c0c%22%2C%22paneProperties.backgroundType%22%3A%22solid%22%2C%22paneProperties.vertGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22paneProperties.horzGridProperties.color%22%3A%22rgba(71%2C235%2C226%2C0.08)%22%2C%22scalesProperties.textColor%22%3A%22%23cbd6e6%22%7D&locale=es&utm_source=&utm_medium=widget&utm_campaign=chart"
+                    >
+                        <span class="tv-facade-icon" aria-hidden="true">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 17 9 11 13 15 21 7"/>
+                                <polyline points="15 7 21 7 21 13"/>
+                            </svg>
+                        </span>
+                        <span class="tv-facade-title">Ver gráfico BTC/USDT en vivo</span>
+                        <span class="tv-facade-note">Se carga desde TradingView al pulsar</span>
+                    </button>
                 </div>
 
                 <div class="tv-open-link-wrap">
@@ -508,7 +578,7 @@ import '../styles/crypto-toc.css';
             <p>A diferencia de comprar una acción, donde se adquiere una parte de una empresa, al operar con futuros no se posee el activo subyacente, sino que se asume una obligación: el comprador debe adquirir el activo en la fecha acordada y el vendedor debe entregarlo o liquidar la diferencia en efectivo.</p>
             
             <h3>Futuros en criptomonedas vs. bolsa tradicional</h3>
-            <div class="table-scroll">
+            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla: Futuros en criptomonedas vs. bolsa tradicional">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -597,7 +667,7 @@ import '../styles/crypto-toc.css';
             </ul>
             
             <h3>Tipos de ETFs</h3>
-            <div class="table-scroll">
+            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla: Tipos de ETFs">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -730,7 +800,7 @@ import '../styles/crypto-toc.css';
             </div>
             
             <h3>Días festivos importantes 2026 (Mercados tradicionales)</h3>
-            <div class="table-scroll">
+            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla: Días festivos importantes 2026">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -1304,16 +1374,19 @@ import '../styles/crypto-toc.css';
             <p>Los ETFs, por su parte, ofrecen una forma sencilla y diversificada de invertir en mercados globales, sectores o tendencias, con bajos costos y alta liquidez. Para los principiantes, la clave está en empezar poco a poco, educarse constantemente, diversificar, usar siempre herramientas de gestión de riesgo como stop loss y take profit, y evitar los errores más comunes como el sobreapalancamiento, la falta de planificación y la toma de decisiones emocionales.</p>
             
             <div class="scenario-callout">
-                <h4>💡 Recuerda final</h4>
+                <!-- h3 y no h4: este callout cuelga directo del <h2> de la
+                     conclusión, sin h3 intermedio como los demás. La regla de
+                     abajo le devuelve el aspecto del resto de callouts. -->
+                <h3>💡 Recuerda final</h3>
                 <p>La inversión exitosa es un maratón, no una carrera de velocidad. Con paciencia, disciplina y una estrategia clara, es posible aprovechar las oportunidades que ofrecen los futuros y los ETFs para construir un patrimonio sólido y sostenible en el tiempo. Antes de invertir, consulta siempre fuentes confiables, mantente actualizado sobre las regulaciones de tu país y, si es posible, busca asesoría profesional.</p>
             </div>
             
         </section>
 
+        <p class="liability-note" style="text-align: center; color: var(--text-muted); font-size: 0.85em; margin-top: 6px;">Contenido educativo: evalúa tus decisiones y asume la responsabilidad de cada inversión.</p>
+
     </main>
     </div>
-    
-    <p class="liability-note" style="text-align: center; color: var(--text-muted); font-size: 0.85em; margin-top: 6px;">Contenido educativo: evalúa tus decisiones y asume la responsabilidad de cada inversión.</p>
 
     <script>
         import "../scripts/crypto-toc.js";
@@ -1374,6 +1447,24 @@ import '../styles/crypto-toc.css';
                     ocultarPopup();
                 }
             });
+        }
+
+        // --- Gráfico de TradingView bajo demanda ---
+        // Sustituye la fachada por el iframe real. El contenedor ya reserva el
+        // hueco con aspect-ratio, así que el intercambio no desplaza nada.
+        const tvFacade = document.getElementById('tvChartFacade');
+        if (tvFacade) {
+            tvFacade.addEventListener('click', function () {
+                const src = tvFacade.dataset.tvSrc;
+                if (!src) return;
+                const frame = document.createElement('iframe');
+                frame.className = 'tv-chart-frame';
+                frame.src = src;
+                frame.title = 'Gráfico BTC/USDT en vivo (TradingView)';
+                frame.setAttribute('frameborder', '0');
+                frame.setAttribute('allowtransparency', 'true');
+                tvFacade.replaceWith(frame);
+            }, { once: true });
         }
     </script>
 </Layout>

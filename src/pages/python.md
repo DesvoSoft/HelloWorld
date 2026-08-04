@@ -34,7 +34,7 @@ Se utilizan para almacenar datos que pueden ser usados y manipulados en un progr
 
 <br>
 
-##### Tipos de datos:
+#### Tipos de datos:
 
 - Enteros | `int` | Numeros enteros sin decimales
 - Flotantes | `float` | Numeros con parte decimal

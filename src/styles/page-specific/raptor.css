@@ -7,6 +7,12 @@
    de precisión la legibilidad manda sobre el efecto. Las capas decorativas son
    hermanas del contenido, nunca contenedores suyos. */
 
+/* La sección pasó a <main> por el landmark que faltaba; info-pages.css da 3rem
+   de padding-block a todo <main> y aquí duplicaba el aire del chasis. */
+main.raptor-section {
+  padding-block: 0;
+}
+
 .raptor-section {
   --raptor-font-type: "JetBrains Mono", ui-monospace, "Fira Code", monospace;
   --raptor-font-crt: "VT323", "JetBrains Mono", monospace;
@@ -320,8 +326,9 @@
   gap: 0.1rem;
 }
 
+/* 0.7rem daban 11.2px, por debajo del suelo de 12px del sitio. */
 .raptor-stats .stat-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
@@ -1023,5 +1030,66 @@
 
   .result-stat-value {
     font-size: 1.4rem;
+  }
+}
+
+/* ---------- Objetivos táctiles y fila de controles en móvil ----------
+
+   El cromo del CRT es deliberadamente compacto: en escritorio, con ratón, esos
+   30px de alto están bien. Lo que no funciona es en el dedo, así que las dos
+   correcciones van juntas bajo `pointer: coarse` y el corte de 600px, y el
+   aspecto de escritorio queda intacto.
+*/
+@media (max-width: 600px), (pointer: coarse) {
+  .tty-btn,
+  .raptor-controls select,
+  .raptor-controls button,
+  .hist-block-head select,
+  .hist-actions button,
+  .result-actions button {
+    min-height: 44px;
+  }
+
+  .tty-btn {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* La etiqueta entera es clicable, así que el objetivo es ella y no la caja de
+     15x15 del input. El input sube a 24px, que es el mínimo AA por sí solo. */
+  .raptor-toggle {
+    min-height: 44px;
+  }
+
+  .raptor-toggle input {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* La fila de controles envolvía por donde caía: `modo` acababa junto a
+   `puntuación` y `números` junto a `reiniciar`, sin relación entre lo que
+   quedaba en cada línea. Con una rejilla explícita hay una fila por familia:
+   los dos desplegables, los dos interruptores, y el botón a lo ancho. */
+@media (max-width: 600px) {
+  .raptor-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 0.55rem 0.75rem;
+  }
+
+  .raptor-field {
+    display: flex;
+    min-width: 0;
+  }
+
+  .raptor-field select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .raptor-controls > button {
+    grid-column: 1 / -1;
   }
 }

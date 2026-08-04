@@ -87,8 +87,11 @@ code {
 }
 
 /* Bloques de codigo */
+/* Sin backdrop-filter: java tiene 38 <pre>, o sea 38 capas de composicion
+   desenfocando el fondo a la vez. El fondo ya no se anima, asi que un color
+   solido algo mas opaco se ve igual y no cuesta nada. */
 pre {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--code-bg);
   color: var(--text-body);
   padding: 1.25rem;
   margin: 1.5rem 0;
@@ -99,7 +102,6 @@ pre {
   box-shadow: var(--shadow-1);
   overflow-x: auto;
   border-left: 4px solid var(--accent);
-  backdrop-filter: blur(10px);
   transition: box-shadow var(--vitra-duration-normal, 0.3s) var(--vitra-ease-out, ease), transform var(--vitra-duration-normal, 0.3s) var(--vitra-ease-out, ease);
 }
 
@@ -114,6 +116,47 @@ pre code {
   border-radius: 0;
   font-size: inherit;
   line-height: inherit;
+}
+
+/* Tablas de markdown. El wrapper .table-scroll lo pone rehypeWrapTables
+   (astro.config.mjs); hasta entonces las tablas salian sin estilo ninguno y
+   desbordaban la pagina en java por debajo de 390px. La pista de scroll y el
+   foco viven en responsive.css, junto a las de crypto. */
+.table-scroll {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll table {
+  width: 100%;
+  min-width: 420px;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.92em;
+}
+
+.table-scroll thead tr {
+  background: var(--surface-elevated);
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--surface-border);
+  text-align: left;
+}
+
+.table-scroll th {
+  color: var(--text-strong);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table-scroll tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .exercise {

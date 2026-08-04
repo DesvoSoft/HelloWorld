@@ -1,6 +1,206 @@
 /* ============================
    Responsive Design
-   ============================ */
 
-/* Navbar responsiveness is handled natively by Vitra's
-   .vitra-navbar / .vitra-drawer / .vitra-burger components. */
+   El sitio se escribio desktop-first, asi que este archivo corrige hacia abajo
+   con max-width. Tres cortes y no mas:
+
+     480px   movil estrecho: una sola columna, densidad maxima
+     768px   movil ancho y tablet vertical: una columna con aire
+     1024px  tablet horizontal: es tambien donde el fondo y el hero recuperan
+             el movimiento (ver variables.css y page-specific/home.css)
+
+   Los valores no son custom properties porque las media queries no pueden leer
+   variables CSS. Si cambian, cambian aqui y en esos dos archivos.
+
+   Antes esto eran 209 bytes con un comentario. El responsive dependia por
+   completo de que Vitra y los flexbox se apanaran solos; donde eso no bastaba
+   (areas tactiles, tablas, densidad tipografica) no habia nada que lo
+   corrigiera.
+============================ */
+
+/* ============================
+   1. Areas tactiles
+
+   WCAG 2.5.8 (AA) pide 24x24; 2.5.5 (AAA) pide 44x44. Los controles primarios
+   van a 44 y los densos y decorativos (los puntos del carrusel) a 24, que es
+   lo que se puede dar sin que dos objetivos contiguos se solapen.
+
+   Se agrandan con un pseudoelemento transparente en vez de con padding: el
+   area de pulsacion sube sin mover un pixel del diseno.
+
+   Quedan fuera a proposito los enlaces dentro de un parrafo ("Vitra CSS" y
+   "Astro" en el footer, "Haz la primera" en el historial). La propia norma
+   exceptua los objetivos en linea, y estirarlos romperia el interlineado del
+   texto que los rodea.
+============================ */
+
+.vitra-burger,
+.vitra-drawer-close {
+  position: relative;
+}
+
+.vitra-burger::after,
+.vitra-drawer-close::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.vitra-navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Swiper pinta las flechas en ::after, asi que aqui se agranda la caja en vez
+   de superponer un pseudoelemento. --swiper-navigation-size gobierna el glifo,
+   que se deja como esta.
+
+   El descendiente .swiper es necesario: el CSS de vendor define estas dos
+   clases con la misma especificidad y se carga despues de esta hoja, asi que
+   una regla plana perdia y las flechas seguian midiendo 40x40. */
+.swiper .swiper-button-next,
+.swiper .swiper-button-prev {
+  width: 44px;
+  height: 44px;
+}
+
+.swiper-pagination-bullet {
+  position: relative;
+}
+
+.swiper-pagination-bullet::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+}
+
+/* ============================
+   2. Bloques de codigo y tablas
+
+   Los dos hacen scroll horizontal y ninguno lo anunciaba. En java se leia
+   `System.out.println("Iteracion` cortado en seco: parece un bug de layout
+   aunque tecnicamente no lo sea.
+
+   El desvanecido de los <pre> usa background-attachment:local, que ancla dos
+   mascaras del color del fondo al contenido y dos sombras al marco. Cuando el
+   contenido esta al principio la mascara tapa la sombra izquierda, y al
+   desplazarse la descubre: la pista aparece solo si de verdad hay mas texto.
+   Cero JavaScript.
+============================ */
+
+pre {
+  background-image:
+    linear-gradient(to right, var(--code-bg), rgba(0, 0, 0, 0)),
+    linear-gradient(to left, var(--code-bg), rgba(0, 0, 0, 0)),
+    linear-gradient(to right, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)),
+    linear-gradient(to left, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+  background-position: 0 0, 100% 0, 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 28px 100%, 28px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* La barra de scroll es la otra mitad de la pista, y en las tablas es la unica:
+   ahi el contenido pinta sobre el fondo y el truco de las mascaras no se ve. */
+pre,
+.table-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--vitra-color-accent-h) 40% 45% / 55%) transparent;
+  overscroll-behavior-x: contain;
+}
+
+pre::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb {
+  background: hsl(var(--vitra-color-accent-h) 40% 45% / 55%);
+  border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-track,
+.table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* El wrapper lo genera rehypeWrapTables (astro.config.mjs) alrededor de cada
+   tabla de markdown, y crypto lo escribe a mano. Es focusable, asi que necesita
+   marca de foco propia. */
+.table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================
+   3. Movil: densidad y ritmo
+============================ */
+
+/* Los selectores de esta seccion van prefijados con `body`. Este archivo se
+   importa antes que page-specific/info-pages.css, que define las mismas
+   propiedades sobre pre / hr / h1-h5; una media query no anade especificidad,
+   asi que sin el prefijo perderia por orden de cascada. */
+
+@media (max-width: 768px) {
+  /* El cuerpo se queda en 18px a proposito. Bajarlo alargaria la linea, pero en
+     un sitio para aprender se lee mas de lo que se ojea; el ancho de linea se
+     gana quitando relleno lateral, no cuerpo. */
+
+  /* Las lineas de codigo llegan a 575px dentro de un contenedor de 359. Bajar
+     el cuerpo no elimina el scroll, pero recorta un tercio del recorrido. */
+  body pre {
+    font-size: 0.82em;
+    padding: 1rem 0.9rem;
+    margin: 1.1rem 0;
+    border-radius: 10px;
+  }
+
+  /* hr a 3rem + pre a 1.5rem + h3 apilaban margenes y dejaban huecos verticales
+     vacios entre bloques de codigo. Es buena parte de la sensacion de
+     "descolocado" en las paginas de docs. */
+  body hr {
+    margin: 1.75rem 0;
+  }
+
+  body h1,
+  body h2,
+  body h3,
+  body h4,
+  body h5 {
+    margin: 1.15rem 0 0.65rem;
+  }
+
+  body h1 {
+    margin-top: 1.5rem;
+  }
+
+  body h3 {
+    padding-left: 0.7rem;
+    border-left-width: 3px;
+  }
+
+  body main {
+    padding-block: var(--vitra-space-4, 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  body pre {
+    font-size: 0.78em;
+    padding: 0.85rem 0.75rem;
+  }
+
+  body hr {
+    margin: 1.5rem 0;
+  }
+}

@@ -1,21 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
+// JetBrains Mono para el texto que se teclea: distingue l/1/I y 0/O sin
+// ambigüedad, que es justo lo que no se puede sacrificar en un test de
+// precisión. VT323 solo para el cromo del chasis y los marcadores.
+import '../styles/fonts-raptor.css';
 import '../styles/page-specific/info-pages.css';
 import '../styles/page-specific/raptor.css';
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Raptor - Typing Test" description="Raptor: prueba de velocidad de escritura estilo Monkeytype.">
+
+    {/* Ver raptor-historial: sin precarga, el swap de estas dos fuentes reflowa
+        el chasis despues del primer pintado. Aqui pesa mas todavia, porque el
+        texto que se teclea esta en JetBrains Mono. */}
     <Fragment slot="head">
-        <!-- JetBrains Mono para el texto que se teclea: distingue l/1/I y 0/O sin
-             ambigüedad, que es justo lo que no se puede sacrificar en un test de
-             precisión. VT323 solo para el cromo del chasis y los marcadores. -->
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap"
-            rel="stylesheet"
-        />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/vt323-400-latin.woff2`} crossorigin />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/jetbrains-mono-400-latin.woff2`} crossorigin />
     </Fragment>
 
-    <section class="doc-section raptor-section">
+    <main class="doc-section raptor-section">
         <!-- Chasis CRT. Las capas decorativas (scanlines, brillo) son hermanas del
              contenido y no lo envuelven, para que ningún filtro caiga sobre el
              texto que hay que leer con precisión. -->
@@ -122,7 +127,7 @@ import '../styles/page-specific/raptor.css';
 
             <p class="raptor-bezel-label" aria-hidden="true">DESVOSOFT · MODEL R-1</p>
         </div>
-    </section>
+    </main>
 
     <!-- El mapa de teclado se carga antes que el motor porque este solo lo usa
          al terminar una partida, y así la página del historial puede reutilizar

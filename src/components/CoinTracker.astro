@@ -115,11 +115,13 @@ const uid = coinId;
     height: 100px;
   }
 
+  /* 12px es el suelo de tamaño de texto del sitio: por debajo, en un móvil a
+     brazo extendido, deja de leerse. Antes 0.65rem = 10.4px. */
   .featured-badge {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -170,9 +172,11 @@ const uid = coinId;
     border-radius: 6px;
   }
 
+  /* `all` obliga al navegador a vigilar cada propiedad animable del elemento;
+     aquí solo cambian estas dos en :hover. */
   .clickable {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   .clickable:hover {
@@ -207,7 +211,12 @@ const uid = coinId;
   .price-change.up { color: #4ade80; background: rgba(74, 222, 128, 0.2); }
   .price-change.down { color: #f87171; background: rgba(248, 113, 113, 0.2); }
 
-  .current-price:has(.price-error-msg) {
+  /* El bloque de error lo construye el script con createElement, asi que no
+     lleva el atributo de scope que Astro pone en el marcado del template: sin
+     :global() ninguna de estas reglas llegaba a aplicarse y el fallo de red se
+     veia como un boton del navegador sin estilar. El ancla .current-price si
+     esta en el template, de modo que el escape sigue acotado a esta tarjeta. */
+  .current-price.has-error {
     font-size: 1.1rem;
     display: flex;
     flex-direction: column;
@@ -215,15 +224,16 @@ const uid = coinId;
     gap: 0.6rem;
   }
 
-  .price-error-msg {
+  .current-price :global(.price-error-msg) {
     display: block;
     font-size: 0.95rem;
     font-weight: 500;
     color: var(--vitra-color-text-muted, #94a3b8);
   }
 
-  .price-retry-btn {
+  .current-price :global(.price-retry-btn) {
     margin-top: 0.6rem;
+    min-height: 44px;
     padding: 0.4rem 1rem;
     font-size: 0.85rem;
     font-weight: 600;
@@ -235,7 +245,7 @@ const uid = coinId;
     transition: transform 0.2s, filter 0.2s;
   }
 
-  .price-retry-btn:hover {
+  .current-price :global(.price-retry-btn:hover) {
     transform: translateY(-1px);
     filter: brightness(1.1);
   }
@@ -259,7 +269,7 @@ const uid = coinId;
   }
 
   .gauge-label {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -323,7 +333,8 @@ const uid = coinId;
     display: flex;
     justify-content: space-between;
     margin-top: 0.4rem;
-    font-size: 0.65rem;
+    /* 0.65rem daba 10.4px reales: por debajo del minimo legible en movil. */
+    font-size: 0.75rem;
     color: var(--vitra-color-text-muted, #94a3b8);
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -345,6 +356,59 @@ const uid = coinId;
 </style>
 
 <script>
+  /* Un solo temporizador para todas las tarjetas, en vez de un setInterval por
+     instancia. Ademas se detiene cuando la pestana esta oculta o cuando las
+     tarjetas salen del viewport — la pagina de crypto mide ~26.300 px de alto,
+     asi que lo normal es que esten fuera de pantalla. Antes seguia pidiendo
+     precios a CoinGecko en segundo plano indefinidamente. */
+  const REFRESH_MS = 60000;
+
+  const trackers: { refresh: () => void; visible: boolean; el: HTMLElement }[] = [];
+  let timer: number | undefined;
+  let lastRun = Date.now();
+
+  function anyActive() {
+    return document.visibilityState === 'visible' && trackers.some((t) => t.visible);
+  }
+
+  function tick() {
+    lastRun = Date.now();
+    for (const t of trackers) {
+      if (t.visible) t.refresh();
+    }
+  }
+
+  function sync() {
+    if (anyActive()) {
+      if (timer === undefined) {
+        // Al volver, refresca de inmediato si el dato ya vencio.
+        if (Date.now() - lastRun >= REFRESH_MS) tick();
+        timer = window.setInterval(tick, REFRESH_MS);
+      }
+    } else if (timer !== undefined) {
+      clearInterval(timer);
+      timer = undefined;
+    }
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const tracker = trackers.find((t) => t.el === entry.target);
+        if (tracker) tracker.visible = entry.isIntersecting;
+      }
+      sync();
+    },
+    { rootMargin: '200px' }
+  );
+
+  function register(refresh: () => void, el: HTMLElement) {
+    trackers.push({ refresh, visible: false, el });
+    observer.observe(el);
+  }
+
+  document.addEventListener('visibilitychange', sync);
+
   document.querySelectorAll<HTMLElement>('.coin-tracker-card[data-coin]').forEach((card) => {
     const coinId = card.dataset.coin;
     if (!coinId) return;
@@ -376,6 +440,7 @@ const uid = coinId;
         const sparklineData = data.market_data.sparkline_7d.price;
 
         if (priceEl) {
+          priceEl.classList.remove('has-error');
           priceEl.textContent = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -444,6 +509,7 @@ const uid = coinId;
         console.error(`Error fetching ${coinId} price:`, error);
         if (priceEl) {
           priceEl.innerHTML = '';
+          priceEl.classList.add('has-error');
           const msg = document.createElement('span');
           msg.className = 'price-error-msg';
           msg.textContent = 'No se pudo cargar el precio';
@@ -452,6 +518,7 @@ const uid = coinId;
           retryBtn.className = 'price-retry-btn';
           retryBtn.textContent = 'Reintentar';
           retryBtn.addEventListener('click', () => {
+            priceEl.classList.remove('has-error');
             priceEl.textContent = 'Loading...';
             fetchCoinPrice();
           });
@@ -461,6 +528,6 @@ const uid = coinId;
     }
 
     fetchCoinPrice();
-    setInterval(fetchCoinPrice, 60000);
+    register(fetchCoinPrice, card);
   });
 </script>

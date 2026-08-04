@@ -34,7 +34,7 @@ Java es un lenguaje **fuertemente tipado**: toda variable debe declarar su tipo 
 
 <br>
 
-##### Tipos primitivos:
+#### Tipos primitivos:
 
 - Enteros | `byte`, `short`, `int`, `long` | Números enteros sin decimales
 - Flotantes | `float`, `double` | Números con parte decimal
@@ -43,7 +43,7 @@ Java es un lenguaje **fuertemente tipado**: toda variable debe declarar su tipo 
 
 <br>
 
-##### Declaración de variables:
+#### Declaración de variables:
 
 ```java
 int edad = 25;
@@ -588,7 +588,7 @@ En Java, las funciones se llaman **métodos** y siempre pertenecen a una clase.
 
 <br>
 
-##### Método con valor de retorno:
+#### Método con valor de retorno:
 
 ```java
 public static int suma(int a, int b) {

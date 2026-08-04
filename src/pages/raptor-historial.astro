@@ -1,18 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import '../styles/fonts-raptor.css';
 import '../styles/page-specific/info-pages.css';
 import '../styles/page-specific/raptor.css';
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Raptor - Historial" description="Historial de partidas de Raptor: progresión, récords por configuración y mapa de errores.">
+
+    {/* Estas dos fuentes llegaban despues del primer pintado y el swap reflowaba
+        la pagina entera: era el 0.14 de CLS que quedaba en esta ruta (el resto
+        del sitio ya estaba en 0.00). Precargarlas cierra esa ventana. Solo el
+        subconjunto latin: latin-ext apenas aparece y puede seguir con swap. */}
     <Fragment slot="head">
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap"
-            rel="stylesheet"
-        />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/vt323-400-latin.woff2`} crossorigin />
+        <link rel="preload" as="font" type="font/woff2" href={`${base}fonts/jetbrains-mono-400-latin.woff2`} crossorigin />
     </Fragment>
 
-    <section class="doc-section raptor-section">
+    <main class="doc-section raptor-section">
         <div id="raptorCrt" class="raptor-crt">
             <div class="raptor-screen">
                 <div class="raptor-scanlines" aria-hidden="true"></div>
@@ -83,6 +89,24 @@ import '../styles/page-specific/raptor.css';
                         </section>
                     </div>
 
+                    {/* Los dos bloques de arriba nacen ocultos y el modulo de
+                        historial, que va con defer, decide cual mostrar. Eso
+                        pintaba la pagina sin ninguno de los dos y la hacia
+                        crecer despues: 0.139 de CLS, el ultimo que quedaba en
+                        el sitio. Este script corre antes del primer pintado y
+                        resuelve el caso sin partidas, que es el de la primera
+                        visita. La clave tiene que seguir a la de raptor.js. */}
+                    <script is:inline>
+                        try {
+                            var raw = localStorage.getItem("raptor_history_v2");
+                            if (!raw || !JSON.parse(raw).length) {
+                                document.getElementById("histEmpty").hidden = false;
+                            }
+                        } catch (e) {
+                            /* localStorage bloqueado o JSON corrupto: que decida init(). */
+                        }
+                    </script>
+
                     <div class="hist-actions">
                         <button id="histExportBtn" type="button">exportar json</button>
                         <button id="histClearBtn" class="hist-danger" type="button">borrar todo</button>
@@ -93,7 +117,7 @@ import '../styles/page-specific/raptor.css';
 
             <p class="raptor-bezel-label" aria-hidden="true">DESVOSOFT · MODEL R-1</p>
         </div>
-    </section>
+    </main>
 
     <script>
         import "../scripts/raptor-keyboard.js";

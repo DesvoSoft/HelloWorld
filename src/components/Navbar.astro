@@ -13,20 +13,24 @@ const currentPath = Astro.url.pathname;
 const isActive = (href: string) =>
     href.startsWith("#") ? false : currentPath.replace(/\/?$/, "/") === href;
 ---
-<div class="vitra-navbar vitra-navbar-glass">
+<!-- La barra entera es el landmark, no solo la lista de enlaces: con <nav> por
+     dentro, la marca quedaba fuera de cualquier region y axe la marcaba como
+     contenido huerfano en las nueve paginas. Vitra selecciona por clase, asi
+     que cambiar la etiqueta no toca nada de su CSS ni de su JS. -->
+<nav class="vitra-navbar vitra-navbar-glass" aria-label="Principal">
     <a href="/HelloWorld/" class="vitra-navbar-brand">
         <span class="code-line-logo"></span>Hello World
     </a>
 
     <div class="nav-right-group">
-        <nav class="vitra-navbar-links">
+        <div class="vitra-navbar-links">
             {navLinks.map((link) => (
                 <>
                     <a href={link.href} class="vitra-navbar-link" class:list={{ "is-active": isActive(link.href) }}>{link.label}</a>
                     {link.dividerAfter && <span class="vitra-navbar-divider" aria-hidden="true"></span>}
                 </>
             ))}
-        </nav>
+        </div>
 
         <div class="vitra-navbar-actions">
             <button class="vitra-burger" aria-label="Abrir menú" aria-expanded="false">
@@ -36,10 +40,10 @@ const isActive = (href: string) =>
             </button>
         </div>
     </div>
-</div>
+</nav>
 
 <div class="vitra-drawer-overlay"></div>
-<div class="vitra-drawer vitra-drawer-glass">
+<nav class="vitra-drawer vitra-drawer-glass" aria-label="Menú">
     <div class="vitra-drawer-header">
         <span class="vitra-drawer-title">Hello World</span>
         <button class="vitra-drawer-close" aria-label="Cerrar menú">✕</button>
@@ -52,7 +56,7 @@ const isActive = (href: string) =>
             </>
         ))}
     </div>
-</div>
+</nav>
 
 <style>
     .nav-right-group {

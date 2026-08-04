@@ -137,9 +137,13 @@
   display: block;
 }
 
+/* El SVG lleva viewBox 0 0 320 140 y se estira al ancho del contenedor, así que
+   estos px son unidades de usuario, no píxeles CSS. A 390px de viewport la
+   escala es ~1,05: 9px se renderizaban a 9,0 y quedaban por debajo del suelo de
+   12px del sitio. 12 unidades dan ~12,6 px reales en móvil. */
 .mini-diagram .diagram-label {
   fill: var(--text-muted);
-  font-size: 9px;
+  font-size: 12px;
   font-family: var(--font-main);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -147,7 +151,7 @@
 
 .mini-diagram .diagram-tick {
   fill: var(--text-muted);
-  font-size: 9px;
+  font-size: 12px;
   font-family: var(--font-main);
 }
 
@@ -194,6 +198,15 @@
 
 .scenario-callout strong {
   color: var(--text-strong);
+}
+
+/* El callout de la conclusión usa h3 porque cuelga de un h2; el resto usan h4.
+   Se igualan aquí para que el nivel semántico no cambie el aspecto. */
+.scenario-callout h3 {
+  font-size: clamp(1.2rem, 1rem + 0.5vw, 1.5rem);
+  color: var(--accent);
+  border-left: 0;
+  padding-left: 0;
 }
 
 .trade-checklist {

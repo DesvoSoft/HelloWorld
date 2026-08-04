@@ -1,9 +1,78 @@
 /* ============================
+    SECCION: Escena del hero (parches sobre Vitra)
+
+    Dos animaciones de la escena de Vitra no se pueden componer en GPU y
+    repintan en cada frame. Medido en home en reposo, traza de 5s: 849 layouts,
+    ~1600 recalculos de estilo por segundo y 3878 repintados. Con la escena
+    entera oculta bajan a 2 / 1200 / 14.
+
+    Se apagan solo esas dos. Las demas capas (nubes, cordilleras, halo) animan
+    transform u opacity, que la GPU compone gratis, y se quedan como estan.
+
+    Arreglo de raiz pendiente en DesvoSoft/Vitra: cambiar background-position
+    por translate3d sobre un elemento sobredimensionado, y left/top/width por
+    translate3d + scaleX.
+============================ */
+
+/* Se congela la escena entera y se devuelve el movimiento solo donde se ve y
+   se puede componer en GPU. El resto de capas derivan entre 160 y 480 segundos
+   de recorrido: nadie las percibe moverse, pero se pagan en cada frame.
+
+   Medido en raster por software a 1366x900: escena entera en marcha 52.7 FPS,
+   escena congelada 60. */
+.vitra-scenery-inline .vitra-scenery-sky,
+.vitra-scenery-inline .vitra-scenery-sky::before,
+.vitra-scenery-inline .vitra-scenery-sky::after,
+.vitra-scenery-inline .vitra-scenery-clouds,
+.vitra-scenery-inline .vitra-scenery-stars,
+.vitra-scenery-inline .vitra-scenery-halo,
+.vitra-scenery-inline .vitra-scenery-ridge-far,
+.vitra-scenery-inline .vitra-scenery-ridge-mid,
+.vitra-scenery-inline .vitra-scenery-ridge-near,
+.vitra-scenery-inline .vitra-scenery-grain {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+    /* La cordillera cercana es la unica parallax que de verdad se aprecia, y
+       anima transform, que sale gratis. Se queda. */
+    .vitra-scenery-inline .vitra-scenery-ridge-near {
+        animation: vitra-scenery-drift-near calc(32s / var(--vitra-scenery-speed, 1)) linear infinite;
+    }
+
+    /* Estrella fugaz reescrita. La de Vitra anima left/top/width, que dispara
+       layout en cada frame durante un bucle infinito de 34s. Esta hace el mismo
+       recorrido con transform y opacity, que la GPU compone sin repintar. */
+    .vitra-scenery-inline .vitra-scenery-sky::after {
+        animation: hero-shooting-star 34s linear 4s infinite;
+        will-change: transform, opacity;
+    }
+}
+
+@keyframes hero-shooting-star {
+    0% { opacity: 0; transform: rotate(-35deg) translate3d(0, 0, 0); }
+    1% { opacity: 0.75; }
+    2.5% { opacity: 0; transform: rotate(-35deg) translate3d(-340px, 0, 0); }
+    100% { opacity: 0; transform: rotate(-35deg) translate3d(-340px, 0, 0); }
+}
+
+/* El contenedor de home pasó a <main> por el landmark que faltaba. info-pages.css
+   le da 3rem de padding-block a todo <main>, y aquí solo empujaba la escena
+   hacia abajo: el hero ya trae su propio aire. */
+main.home-container {
+    padding-block: 0;
+}
+
+/* ============================
     SECCION: Swiper (Galeria)
 ============================ */
+/* Las fuentes son 512x512. Sin tope, con slidesPerView 2 y centeredSlides cada
+   slide se llevaba ~550px en escritorio y las imágenes se escalaban hacia
+   arriba: se veían blandas. 1024 deja cada una en 512 clavados. */
 .swiper {
     width: 100%;
-    max-width: 100%;
+    max-width: min(100%, 1024px);
+    margin-inline: auto;
 }
 
 .swiper-slide img {
@@ -51,14 +120,16 @@
     cross-browser — Vitra's own animation-timeline:view()
     reveal only fires in Chromium and has no JS fallback)
 ============================ */
+/* Solo opacity + transform: son las dos propiedades que la GPU compone gratis.
+   Antes esto arrancaba en filter: blur(10px) sobre secciones enteras — la
+   .reveal-scale de home mide 1140x1967, o sea 2.24 megapixeles desenfocados
+   durante 0.9s. El fundido solo da lo mismo a la vista. */
 .reveal,
 .reveal-left,
 .reveal-right,
 .reveal-scale {
     opacity: 0;
-    filter: blur(10px);
     transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
-        filter 0.9s cubic-bezier(0.4, 0, 0.2, 1),
         transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -83,7 +154,6 @@
 .reveal-right.show,
 .reveal-scale.show {
     opacity: 1;
-    filter: blur(0);
     transform: translate(0) scale(1);
 }
 

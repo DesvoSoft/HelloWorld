@@ -34,7 +34,7 @@ Se utilizan para almacenar datos que pueden ser usados y manipulados en un progr
 
 <br>
 
-##### Tipos de datos fundamentales:
+#### Tipos de datos fundamentales:
 
 - Enteros | `int` | Números enteros sin decimales
 - Flotantes | `float`, `double` | Números con parte decimal
@@ -43,7 +43,7 @@ Se utilizan para almacenar datos que pueden ser usados y manipulados en un progr
 
 <br>
 
-##### Declaración de variables:
+#### Declaración de variables:
 
 ```cpp
 int edad = 25;
@@ -165,7 +165,7 @@ Son bloques de código reutilizables que realizan una tarea específica. Se defi
 
 <br>
 
-##### Función simple:
+#### Función simple:
 
 ```cpp
 void saludar(string nombre) {
@@ -177,7 +177,7 @@ saludar("Ana");
 
 <br>
 
-##### Función con valor de retorno:
+#### Función con valor de retorno:
 
 ```cpp
 int suma(int a, int b) {
@@ -190,7 +190,7 @@ cout << "Resultado: " << resultado << endl;
 
 <br>
 
-##### Función con múltiples parámetros:
+#### Función con múltiples parámetros:
 
 ```cpp
 double calcularPromedio(double a, double b, double c) {
@@ -267,7 +267,7 @@ Los punteros son variables que almacenan direcciones de memoria.
 
 <br>
 
-##### Declaración y uso básico:
+#### Declaración y uso básico:
 
 ```cpp
 int numero = 42;
