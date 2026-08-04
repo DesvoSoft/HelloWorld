@@ -41,35 +41,42 @@ function initRaptor() {
       !modeSelect || !resultDisplay || !statTime || !statWpm || !statAcc) return;
 
   // ---------- Bancos de palabras ----------
+  // Vocabulario general, no técnico: es el modo por defecto ("random"), lo
+  // primero que teclea cualquiera que entra a la página, y no tenía ninguna
+  // razón para estar en inglés ni limitado a jerga de programación.
   const baseWordBank = [
-    "hello", "world", "typing", "test", "speed", "practice", "code", "javascript",
-    "programming", "computer", "keyboard", "challenge", "accuracy", "performance",
-    "developer", "function", "variable", "object", "array", "random", "dynamic",
-    "interface", "design", "responsive", "debug", "optimize", "syntax",
-    "algorithm", "data", "structure", "logic", "iteration", "loop", "condition",
-    "event", "listener", "update", "state", "render", "module", "framework",
-    "library", "document", "element", "style", "class", "memory", "compile",
-    "execute", "server", "client", "network", "protocol", "security", "database",
-    "query", "index", "testing", "automation", "integration", "deployment",
-    "version", "control", "repository", "branch", "commit", "merge", "pull", "request",
-    "refactor", "scalable", "maintainable", "clean", "robust", "efficient"
+    "casa", "perro", "gato", "agua", "fuego", "tierra", "aire", "sol", "luna",
+    "estrella", "cielo", "mar", "rio", "montana", "bosque", "ciudad", "calle",
+    "puerta", "ventana", "mesa", "silla", "libro", "papel", "lapiz", "tiempo",
+    "semana", "manana", "tarde", "noche", "amigo", "familia", "trabajo",
+    "escuela", "comida", "fruta", "pan", "leche", "cafe", "musica", "arte",
+    "color", "verde", "azul", "rojo", "negro", "blanco", "grande", "pequeno",
+    "rapido", "lento", "feliz", "triste", "fuerte", "suave", "cerca", "lejos",
+    "arriba", "abajo", "dentro", "fuera", "nuevo", "viejo", "mucho", "poco",
+    "siempre", "nunca", "hoy", "ayer", "camino", "viaje", "historia", "idea",
+    "palabra", "verdad", "mundo", "vida", "gente", "mano", "ojo", "corazon",
+    "cabeza", "viento", "lluvia", "nieve", "playa", "arbol", "flor", "pajaro",
+    "pez", "juego", "sueno", "risa", "silencio", "numero", "dinero"
   ];
 
-  const terryText = "Whats reality I dont know When my bird was looking at my computer monitor I thought That bird has no idea what hes looking at And yet what does the bird do Does he panic No he cant really panic he just does the best he can Is he able to live in a world where hes so ignorant Well he doesnt really have a choice The bird is okay even though he doesnt understand the world Youre that bird looking at the monitor and youre thinking to yourself I can figure this out Maybe you have some bird ideas Maybe thats the best you can do";
+  // Modos de nicho en ingles por diseño (cultura meme de programacion): no se
+  // traducen, pero se reescriben sin contracciones para no exigir el
+  // apostrofe, que ya no hace falta pedirle al usuario.
+  const terryText = "What is reality I do not know When my bird was looking at my computer monitor I thought that bird has no idea what he is looking at And yet what does the bird do Does he panic No he cannot really panic he just does the best he can Is he able to live in a world where he is so ignorant Well he does not really have a choice The bird is okay even though he does not understand the world You are that bird looking at the monitor and you are thinking to yourself I can figure this out Maybe you have some bird ideas Maybe that is the best you can do";
   const terryWords = terryText.split(" ");
 
   const promptPhrases = [
-    "just make it work", "please dont break anything", "ignore all previous instructions",
+    "just make it work", "please do not break anything", "ignore all previous instructions",
     "make it pop", "ship it we are already late", "why is this not working",
     "it works on my machine", "have you tried turning it off and on again",
     "add more logs", "wrap it in try catch", "delete node modules and reinstall",
-    "todo fix this later", "this is temporary i promise", "one more console log wont hurt",
-    "chatgpt wrote this dont judge me", "we will refactor later", "just use global variable",
-    "copy paste from stack overflow", "works in dev breaks in prod", "add comment nobody will read",
-    "commit message fix stuff", "force push pray", "rm rf hope best",
-    "blame intern", "it is not bug it is feature", "cache is problem it always cache",
-    "as ai language model i cannot", "can you fix this real quick", "trust me it is fine",
-    "works me shrug", "act as senior developer", "make it more professional",
+    "todo fix this later", "this is temporary i promise", "one more console log will not hurt",
+    "chatgpt wrote this do not judge me", "we will refactor later", "just use a global variable",
+    "copy paste from stack overflow", "works in dev breaks in prod", "add a comment nobody will read",
+    "commit message fix stuff", "force push and pray", "delete everything and hope for the best",
+    "blame the intern", "it is not a bug it is a feature", "cache is the problem it is always cache",
+    "as an ai language model i cannot", "can you fix this real quick", "trust me it is fine",
+    "it works on my machine shrug", "act as a senior developer", "make it more professional",
     "can you make it better", "why does this only break in production", "who wrote this code",
     "git blame says it was me"
   ];
@@ -221,10 +228,11 @@ function initRaptor() {
     [523.25, 659.25, 783.99].forEach((f, i) => setTimeout(() => playTone(f, 150, "sine", 0.07), i * 110));
   };
 
+  // El emoji de altavoz rompia la estetica monocromo del chasis CRT; el boton
+  // usa el mismo patron de texto + aria-pressed que CRT, no un glifo a color.
   function updateSoundBtn() {
     if (!soundToggleBtn) return;
-    soundToggleBtn.textContent = muted ? "🔇" : "🔊";
-    soundToggleBtn.setAttribute("aria-pressed", String(!muted));
+    soundToggleBtn.setAttribute("aria-pressed", String(muted));
     soundToggleBtn.title = muted ? "Activar sonido" : "Silenciar sonido";
   }
   updateSoundBtn();

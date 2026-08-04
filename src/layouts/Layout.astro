@@ -33,10 +33,12 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
 
 		<title>{pageTitle}</title>
         <link rel="canonical" href={canonicalURL} />
-        {/* public/favicon.svg existia pero nunca se declaraba, asi que el
-            navegador caia al /favicon.ico implicito de la raiz del dominio
-            (fuera de /HelloWorld/) y se llevaba un 404 en cada pagina. */}
-        <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+        {/* favicon.svg era el logo por defecto de Astro, nunca personalizado, y
+            tampoco se declaraba: el navegador caia al /favicon.ico implicito de
+            la raiz del dominio (fuera de /HelloWorld/) y se llevaba un 404 en
+            cada pagina. La esfera de nieve ya existia en public/images/theme.ico
+            sin usar, y coincide con la ilustracion del hero (montana + luna). */}
+        <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
         {noindex && <meta name="robots" content="noindex, nofollow" />}
 
         <meta property="og:type" content="website" />

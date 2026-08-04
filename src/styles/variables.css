@@ -82,6 +82,24 @@
   transform: translateZ(0);
 }
 
+/* Barrido horizontal teal -> azul, mismos tonos que ya usa la franja del
+   navbar (navbar.css), para que el fondo no quede plano detras del wash
+   conico. inset:0 (no -20% como el ::before) porque este si tiene que leerse
+   de borde a borde del viewport. */
+.mesh-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    hsl(var(--vitra-color-accent-h) 70% 45% / 12%) 0%,
+    transparent 35%,
+    transparent 65%,
+    hsl(var(--cool-accent-h) 70% 45% / 12%) 100%
+  );
+  transform: translateZ(0);
+}
+
 /* ============================
    Racionado de backdrop-filter
 

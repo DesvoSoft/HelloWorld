@@ -15,8 +15,8 @@
 
   const MODE_LABELS = {
     random: "random",
-    terry: "terry davis",
-    prompts: "prompts ia",
+    terry: "Terry Davis (en)",
+    prompts: "prompts IA (en)",
     practice: "mis errores"
   };
 
