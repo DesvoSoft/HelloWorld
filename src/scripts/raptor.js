@@ -46,23 +46,27 @@ function initRaptor() {
   // razón para estar en inglés ni limitado a jerga de programación.
   const baseWordBank = [
     "casa", "perro", "gato", "agua", "fuego", "tierra", "aire", "sol", "luna",
-    "estrella", "cielo", "mar", "rio", "montana", "bosque", "ciudad", "calle",
+    "estrella", "cielo", "mar", "rio", "montaña", "bosque", "ciudad", "calle",
     "puerta", "ventana", "mesa", "silla", "libro", "papel", "lapiz", "tiempo",
-    "semana", "manana", "tarde", "noche", "amigo", "familia", "trabajo",
+    "semana", "mañana", "tarde", "noche", "amigo", "familia", "trabajo",
     "escuela", "comida", "fruta", "pan", "leche", "cafe", "musica", "arte",
-    "color", "verde", "azul", "rojo", "negro", "blanco", "grande", "pequeno",
+    "color", "verde", "azul", "rojo", "negro", "blanco", "grande", "pequeño",
     "rapido", "lento", "feliz", "triste", "fuerte", "suave", "cerca", "lejos",
     "arriba", "abajo", "dentro", "fuera", "nuevo", "viejo", "mucho", "poco",
     "siempre", "nunca", "hoy", "ayer", "camino", "viaje", "historia", "idea",
     "palabra", "verdad", "mundo", "vida", "gente", "mano", "ojo", "corazon",
     "cabeza", "viento", "lluvia", "nieve", "playa", "arbol", "flor", "pajaro",
-    "pez", "juego", "sueno", "risa", "silencio", "numero", "dinero"
+    "pez", "juego", "sueño", "risa", "silencio", "numero", "dinero", "año", "niño"
   ];
 
   // Modos de nicho en ingles por diseño (cultura meme de programacion): no se
   // traducen, pero se reescriben sin contracciones para no exigir el
   // apostrofe, que ya no hace falta pedirle al usuario.
-  const terryText = "What is reality I do not know When my bird was looking at my computer monitor I thought that bird has no idea what he is looking at And yet what does the bird do Does he panic No he cannot really panic he just does the best he can Is he able to live in a world where he is so ignorant Well he does not really have a choice The bird is okay even though he does not understand the world You are that bird looking at the monitor and you are thinking to yourself I can figure this out Maybe you have some bird ideas Maybe that is the best you can do";
+  // Puntuacion real de la frase (solo . , ?), no la que inyecta el toggle de
+  // puntuacion mas abajo: ese toggle mete comillas, parentesis y posesivos al
+  // azar, que sobre un texto narrativo ya puntuado queda sin sentido. Por eso
+  // el modo terry se saca del alcance de applyPunctuation en generateWords.
+  const terryText = "What is reality? I do not know. When my bird was looking at my computer monitor, I thought, that bird has no idea what he is looking at. And yet, what does the bird do? Does he panic? No, he cannot really panic, he just does the best he can. Is he able to live in a world where he is so ignorant? Well, he does not really have a choice. The bird is okay, even though he does not understand the world. You are that bird looking at the monitor, and you are thinking to yourself, I can figure this out. Maybe you have some bird ideas. Maybe that is the best you can do.";
   const terryWords = terryText.split(" ");
 
   const promptPhrases = [
@@ -273,6 +277,7 @@ function initRaptor() {
   // v1 intacto en localStorage en vez de migrarlo con números inventados.
   const HISTORY_KEY = "raptor_history_v2";
   const MISTAKES_KEY = "raptor_mistakes_v1";
+  const WORD_STATS_KEY = "raptor_word_stats_v1";
   const HISTORY_LIMIT = 100;
 
   function loadHistory() {
@@ -301,6 +306,44 @@ function initRaptor() {
       cumulative[char] = (cumulative[char] || 0) + count;
     }
     saveMistakeMap(cumulative);
+  }
+
+  // Palabra tal como se ve, sin la puntuacion que le pega decorate() alrededor
+  // (comillas, parentesis, puntos) ni las cifras del toggle de numeros: sin
+  // esto "casa" y "casa," fragmentan el conteo en dos entradas distintas.
+  const WORD_STAT_RE = /^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+$/;
+  function normalizeWordForStats(raw) {
+    const stripped = raw.replace(/^[^a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+|[^a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+$/g, "");
+    return WORD_STAT_RE.test(stripped) ? stripped.toLowerCase() : null;
+  }
+
+  function recordWordStat(rawWord, correct) {
+    const word = normalizeWordForStats(rawWord);
+    if (!word) return;
+    const s = wordStatsSession[word] || (wordStatsSession[word] = { seen: 0, fails: 0 });
+    s.seen++;
+    if (!correct) s.fails++;
+  }
+
+  function loadWordStats() {
+    try {
+      return JSON.parse(localStorage.getItem(WORD_STATS_KEY)) || {};
+    } catch {
+      return {};
+    }
+  }
+  function saveWordStats(map) {
+    localStorage.setItem(WORD_STATS_KEY, JSON.stringify(map));
+  }
+  function mergeWordStats(sessionStats) {
+    const cumulative = loadWordStats();
+    for (const [word, s] of Object.entries(sessionStats)) {
+      const cur = cumulative[word] || { seen: 0, fails: 0 };
+      cur.seen += s.seen;
+      cur.fails += s.fails;
+      cumulative[word] = cur;
+    }
+    saveWordStats(cumulative);
   }
 
   /**
@@ -393,17 +436,61 @@ function initRaptor() {
 
   const displayChar = (ch) => (ch === " " ? "␣" : ch);
 
+  /** Muestreo ponderado: cada entrada sale con probabilidad proporcional a su
+   *  score. Comparten esto tanto el pool de palabras realmente falladas como
+   *  el heurístico de respaldo por densidad de carácter. */
+  function sampleWeighted(pool, count) {
+    const totalScore = pool.reduce((s, x) => s + x.score, 0);
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      let r = Math.random() * totalScore;
+      let pick = pool[pool.length - 1].word;
+      for (const x of pool) {
+        r -= x.score;
+        if (r <= 0) { pick = x.word; break; }
+      }
+      out.push(pick);
+    }
+    return out;
+  }
+
+  /** Palabras concretas que ya fallaste, ordenadas por tasa de fallo. `null`
+   *  si todavía no hay suficiente historial para que el pool no sea ruido. */
+  function buildWeakWordPool(minDistinct) {
+    const stats = loadWordStats();
+    const pool = Object.entries(stats)
+      .filter(([, s]) => s.fails > 0)
+      .map(([word, s]) => ({ word, score: s.fails / Math.max(s.seen, s.fails) }))
+      .sort((a, b) => b.score - a.score);
+    return pool.length >= minDistinct ? pool : null;
+  }
+
   /**
-   * Práctica dirigida. La versión anterior filtraba con
-   * `bank.filter(w => weakChars.some(c => w.includes(c)))` sobre las 8 teclas
-   * más falladas; como esas 8 casi siempre incluyen e/a/t/o, el filtro matcheaba
-   * prácticamente todo el banco y el modo era indistinguible de random.
+   * Práctica dirigida, en dos niveles.
    *
-   * Ahora se puntúa cada palabra por *densidad* de error (fallos acumulados de
-   * sus caracteres / longitud) y se muestrea con probabilidad proporcional a esa
-   * puntuación, así que las palabras cargadas de teclas débiles salen mucho más.
+   * Primero intenta repetir literalmente las palabras que ya fallaste
+   * (raptor_word_stats_v1): es lo más preciso posible y, al depender de un
+   * historial acumulado en vez de recalcularse cada vez desde cero, la
+   * selección es consistente entre partidas en vez de saltar a un vocabulario
+   * distinto cada sesión.
+   *
+   * Si todavía no hay suficientes palabras concretas registradas, cae al
+   * heurístico anterior: puntúa cada palabra del banco base por *densidad* de
+   * error de sus caracteres (fallos acumulados / longitud) y muestrea con
+   * probabilidad proporcional a esa puntuación. La versión de antes de esto
+   * filtraba con `bank.filter(w => weakChars.some(c => w.includes(c)))` sobre
+   * las 8 teclas más falladas; como esas 8 casi siempre incluyen e/a/t/o, el
+   * filtro matcheaba prácticamente todo el banco y el modo era indistinguible
+   * de random.
    */
   function buildPracticeWords(count) {
+    const wordPool = buildWeakWordPool(5);
+    if (wordPool) {
+      const worst = wordPool.slice(0, 6).map((x) => x.word).join("  ");
+      showPracticeHint(`Práctica dirigida a las palabras que fallaste: ${worst}`);
+      return sampleWeighted(wordPool, count);
+    }
+
     const cumulative = loadMistakeMap();
     const totalMistakes = Object.values(cumulative).reduce((s, c) => s + c, 0);
     if (totalMistakes < 5) {
@@ -432,18 +519,7 @@ function initRaptor() {
     // Nos quedamos con el tercio más cargado (mínimo 10 palabras) para que la
     // sesión sea claramente distinta de random, no una versión levemente sesgada.
     const pool = scored.slice(0, Math.max(10, Math.ceil(scored.length / 3)));
-    const totalScore = pool.reduce((s, x) => s + x.score, 0);
-
-    const out = [];
-    for (let i = 0; i < count; i++) {
-      let r = Math.random() * totalScore;
-      let pick = pool[pool.length - 1].word;
-      for (const x of pool) {
-        r -= x.score;
-        if (r <= 0) { pick = x.word; break; }
-      }
-      out.push(pick);
-    }
+    const out = sampleWeighted(pool, count);
 
     const topChars = Object.keys(cumulative)
       .sort((a, b) => errorRate(b, cumulative, presses) - errorRate(a, cumulative, presses))
@@ -504,6 +580,10 @@ function initRaptor() {
   let mistakesCount = {};
   let pressesCount = {};
   let bigramsCount = {};
+  // Por palabra completa (no por tecla): así la práctica dirigida puede
+  // repetir exactamente las palabras que fallaste, no solo palabras que
+  // comparten letras débiles con ellas.
+  let wordStatsSession = {};
   // Última tecla ACERTADA y su instante. En null cuando la cadena está rota
   // (arranque, fallo, corrección o salto de palabra).
   let lastKeyChar = null;
@@ -720,7 +800,12 @@ function initRaptor() {
   function generateWords(count) {
     const mode = modeSelect.value;
     if (mode === "prompts") return decorate(generatePromptWords(count));
-    if (mode === "terry") return decorate(generateTerryWords(count));
+    // El texto de terry ya trae su propia puntuacion real (. , ?): solo se le
+    // aplican numeros si el toggle esta activo, nunca la puntuacion al azar.
+    if (mode === "terry") {
+      const words = generateTerryWords(count);
+      return numbersOn ? applyNumbers(words) : words;
+    }
     if (mode === "practice") return decorate(buildPracticeWords(count));
     return decorate(generateRandomWords(count, baseWordBank));
   }
@@ -768,6 +853,7 @@ function initRaptor() {
     mistakesCount = {};
     pressesCount = {};
     bigramsCount = {};
+    wordStatsSession = {};
     lastKeyChar = null;
 
     scrollOffset = 0;
@@ -899,6 +985,7 @@ function initRaptor() {
     }
 
     wordRecords.push({ word: target, correct });
+    recordWordStat(target, correct);
     if (correct) committedNetChars += target.length + (countSpace ? 1 : 0);
 
     flashWord(wordEls[currentWordIndex], correct);
@@ -1236,6 +1323,7 @@ function initRaptor() {
     mergeMistakes(mistakesCount);
     mergePresses(pressesCount);
     mergeBigrams(bigramsCount);
+    mergeWordStats(wordStatsSession);
 
     const topMistakes = Object.entries(mistakesCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
     // Acumulado, no de la partida: en 30 s ningún par llega a las muestras que

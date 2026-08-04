@@ -11,6 +11,7 @@
   const MISTAKES_KEY = "raptor_mistakes_v1";
   const PRESSES_KEY = "raptor_presses_v1";
   const BIGRAMS_KEY = "raptor_bigrams_v1";
+  const WORD_STATS_KEY = "raptor_word_stats_v1";
   const BIGRAM_MIN_SAMPLES = 4;
 
   const MODE_LABELS = {
@@ -318,7 +319,8 @@
       history,
       mistakes: read(MISTAKES_KEY, {}),
       presses: read(PRESSES_KEY, {}),
-      bigrams: read(BIGRAMS_KEY, {})
+      bigrams: read(BIGRAMS_KEY, {}),
+      wordStats: read(WORD_STATS_KEY, {})
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -340,7 +342,7 @@
       setStatus("Cancelado.");
       return;
     }
-    for (const key of [HISTORY_KEY, MISTAKES_KEY, PRESSES_KEY, BIGRAMS_KEY]) {
+    for (const key of [HISTORY_KEY, MISTAKES_KEY, PRESSES_KEY, BIGRAMS_KEY, WORD_STATS_KEY]) {
       localStorage.removeItem(key);
     }
     setStatus("Historial borrado.");

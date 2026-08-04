@@ -231,6 +231,16 @@ main.raptor-section {
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 }
 
+/* El <select> cerrado hereda el fondo de arriba, pero la lista desplegada la
+   pinta el SO/navegador aparte: sin esto cae al tema claro del sistema con
+   letra clara encima y queda ilegible. option no admite transparencia real en
+   la mayoria de motores, asi que va un solido explicito, no el token con alfa. */
+.raptor-controls select option,
+.hist-block-head select option {
+  background-color: #0e1a2e;
+  color: var(--text-strong);
+}
+
 .raptor-controls select:hover:not(:disabled),
 .raptor-controls button:hover,
 .hist-block-head select:hover:not(:disabled),
