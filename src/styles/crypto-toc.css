@@ -2,16 +2,24 @@
   --toc-ribbon-bg: rgba(255, 255, 255, 0.03);
   /* La cinta es sticky y ya no lleva backdrop-filter, asi que necesita cuerpo
      propio. Opaca del todo, no translucida: a 0.94 el texto de la pagina se
-     leia por detras de los chips del indice. */
-  --toc-ribbon-solid: #08111f;
-  --toc-ribbon-border: var(--vitra-color-border, rgba(76, 157, 245, 0.3));
-  --toc-chip-hover: var(--vitra-color-accent-soft, rgba(76, 157, 245, 0.12));
-  --toc-chip-active: var(--vitra-color-accent-soft, rgba(76, 157, 245, 0.25));
+     leia por detras de los chips del indice. Tenia un azul #08111f suelto,
+     sin relacion con el teal del resto del sitio (navbar, links); se cambia
+     por un tono derivado del mismo hue de acento para que la cinta se lea
+     como parte del navbar y no como un panel aparte. */
+  --toc-ribbon-solid: hsl(var(--vitra-color-accent-h) 22% 7%);
+  /* var(--vitra-color-accent-soft, ...) no existe en ningun lado (ni en
+     Vitra ni en este proyecto), asi que estas reglas caian siempre al azul
+     #4c9df5 del fallback mientras el navbar y los links ya usaban el teal
+     real de --vitra-color-accent. Se construyen directo desde los canales
+     h/s/l del acento, igual que hace navbar.css con su borde. */
+  --toc-ribbon-border: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 22%);
+  --toc-chip-hover: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 12%);
+  --toc-chip-active: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
   --toc-chip-text: var(--vitra-color-text-strong, #f1f7ff);
   --toc-chip-muted: var(--vitra-color-text-muted, rgba(241, 247, 255, 0.65));
-  --toc-submenu-border: var(--vitra-color-border, rgba(76, 157, 245, 0.25));
+  --toc-submenu-border: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 25%);
   --toc-scroll-btn-bg: var(--vitra-color-surface, rgba(255, 255, 255, 0.06));
-  --toc-scroll-btn-hover: var(--vitra-color-accent-soft, rgba(76, 157, 245, 0.2));
+  --toc-scroll-btn-hover: hsl(var(--vitra-color-accent-h) var(--vitra-color-accent-s) var(--vitra-color-accent-l) / 20%);
   --toc-scroll-btn-icon: var(--vitra-color-text, rgba(255, 255, 255, 0.85));
   --toc-eyebrow: var(--vitra-color-text-muted, rgba(255, 255, 255, 0.6));
   --toc-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);

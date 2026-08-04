@@ -68,6 +68,17 @@
   opacity: 0.4;
 }
 
+/* El iframe de TradingView lo crea el script de la pagina en runtime
+   (document.createElement), asi que nunca recibe el atributo de scoping de
+   Astro: una regla equivalente dentro del <style> de crypto.astro no le
+   aplicaria nunca. Tiene que vivir en una hoja sin scope, como esta. */
+.tv-chart-frame {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
 /* Tables */
 .table-scroll {
   overflow-x: auto;
