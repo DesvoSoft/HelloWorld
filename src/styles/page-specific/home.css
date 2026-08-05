@@ -14,22 +14,17 @@
     translate3d + scaleX.
 ============================ */
 
-/* Se congela la escena entera y se devuelve el movimiento solo donde se ve y
-   se puede componer en GPU. El resto de capas derivan entre 160 y 480 segundos
-   de recorrido: nadie las percibe moverse, pero se pagan en cada frame.
-
-   Medido en raster por software a 1366x900: escena entera en marcha 52.7 FPS,
-   escena congelada 60. */
-.vitra-scenery-inline .vitra-scenery-sky,
-.vitra-scenery-inline .vitra-scenery-sky::before,
-.vitra-scenery-inline .vitra-scenery-sky::after,
-.vitra-scenery-inline .vitra-scenery-clouds,
+/* Solo dos animaciones de Vitra resultaron caras en el perfilado (ver arriba):
+   las estrellas cercanas, que animan background-position sobre un SVG
+   enmascarado de 2200x700, y la estrella fugaz original, que anima
+   width/left/top. El resto (nubes, cordilleras, halo, estrellas lejanas)
+   solo anima transform u opacity — la GPU las compone gratis — y se habian
+   congelado igual por error: la nota de arriba decia que se quedaban en
+   marcha y el codigo las apagaba todas. Se devuelve el movimiento a esas y
+   se deja congelado solo lo que de verdad costaba. */
 .vitra-scenery-inline .vitra-scenery-stars,
-.vitra-scenery-inline .vitra-scenery-halo,
-.vitra-scenery-inline .vitra-scenery-ridge-far,
-.vitra-scenery-inline .vitra-scenery-ridge-mid,
-.vitra-scenery-inline .vitra-scenery-ridge-near,
-.vitra-scenery-inline .vitra-scenery-grain {
+.vitra-scenery-inline .vitra-scenery-sky::after,
+.vitra-scenery-inline .vitra-scenery-ridge-near {
     animation: none;
 }
 
