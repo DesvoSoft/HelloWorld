@@ -2,7 +2,7 @@
 layout: ../layouts/MarkdownLayout.astro
 title: Fundamentos de Java
 description: "Fundamentos de Java: sintaxis, tipos de datos y programación orientada a objetos. Guía práctica para empezar a programar en Java."
-videoUrl: https://www.youtube.com/embed/eIrMbAQSU34?autoplay=1&controls=0&loop=0&vq=hd1080
+videoUrl: https://www.youtube.com/embed/rrt96GysGfI?autoplay=1&controls=0&loop=0&vq=hd1080
 buttonText: EMPEZAR
 ---
 
