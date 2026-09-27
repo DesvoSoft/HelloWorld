@@ -8,19 +8,19 @@ buttonText: JUST DO IT
 
 # Python
 
-## Fundamentos de la Programacion
+## Fundamentos de la Programación
 
 ### Operadores
 
 #### Operadores Aritméticos
 
-Se usan para realizar operaciones matemáticas básicas. Incluyen `+` (suma), `-` (resta), `*` (multiplicacion), `/` (division), `//` (division entera), `%` (modulo: devuelve el residuo de una division), y `**` (potenciacion).
+Se usan para realizar operaciones matemáticas básicas. Incluyen `+` (suma), `-` (resta), `*` (multiplicación), `/` (división), `//` (división entera), `%` (módulo: devuelve el residuo de una división), y `**` (potenciación).
 
-#### Operadores de Comparacion
+#### Operadores de Comparación
 
 Comparan dos valores y devuelven un valor booleano (True o False). Incluyen `==` (igual a), `!=` (diferente de), `>` (mayor que), `<` (menor que), `>=` (mayor o igual que), y `<=` (menor o igual que).
 
-#### Operadores Logicos
+#### Operadores Lógicos
 
 Se usan para combinar condiciones. Incluyen `and` (y), `or` (o), y `not` (no).
 
@@ -36,8 +36,8 @@ Se utilizan para almacenar datos que pueden ser usados y manipulados en un progr
 
 #### Tipos de datos:
 
-- Enteros | `int` | Numeros enteros sin decimales
-- Flotantes | `float` | Numeros con parte decimal
+- Enteros | `int` | Números enteros sin decimales
+- Flotantes | `float` | Números con parte decimal
 - Cadenas de texto | `str` | Secuencias de caracteres
 - Booleanos | `True` / `False` |
 
@@ -49,14 +49,14 @@ Se utilizan para almacenar datos que pueden ser usados y manipulados en un progr
 
 #### Listas
 
-Son colecciones ordenadas de elementos que pueden ser de cualquier tipo. Se crean usando corchetes `[]` y se pueden modificar después de su creacion.
+Son colecciones ordenadas de elementos que pueden ser de cualquier tipo. Se crean usando corchetes `[]` y se pueden modificar después de su creación.
 
 <br>
 
 #### Métodos de listas en Python
 
-Python tiene métodos utiles para manipular elementos en listas.
-A continuacion una breve descripcion y ejemplos de algunos de los métodos más comunes:
+Python tiene métodos útiles para manipular elementos en listas.
+A continuación una breve descripción y ejemplos de algunos de los métodos más comunes:
 
 <br>
 
@@ -87,7 +87,7 @@ print(lista)  # Salida: [1, 2, 3, 4, 5]
 
 ##### insert(i, x)
 
-Inserta un elemento en una posicion especifica.
+Inserta un elemento en una posición específica.
 
 ```python
 lista = [1, 2, 3]
@@ -111,7 +111,7 @@ print(lista)  # Salida: [1, 3, 2]
 
 ##### pop([i])
 
-Elimina y devuelve el elemento en la posicion i. Si no se especifica i, elimina y devuelve el ultimo elemento.
+Elimina y devuelve el elemento en la posición i. Si no se especifica i, elimina y devuelve el último elemento.
 
 ```python
 lista = [1, 2, 3]
@@ -136,7 +136,7 @@ print(lista)  # Salida: []
 
 ##### index(x[, start[, end]])
 
-Devuelve el indice de la primera ocurrencia de x.
+Devuelve el índice de la primera ocurrencia de x.
 
 ```python
 lista = [1, 2, 3, 2]
@@ -148,7 +148,7 @@ print(indice)  # Salida: 1
 
 ##### count(x)
 
-Devuelve el numero de veces que x aparece en la lista.
+Devuelve el número de veces que x aparece en la lista.
 
 ```python
 lista = [1, 2, 3, 2, 2]
@@ -160,7 +160,7 @@ print(conteo)  # Salida: 3
 
 ##### sort(key=None, reverse=False)
 
-Ordena la lista in-place. Ordena por defecto en orden ascendente. Se puede especificar una funcion de clave y un orden inverso.
+Ordena la lista in-place. Ordena por defecto en orden ascendente. Se puede especificar una función de clave y un orden inverso.
 
 ```python
 def ordenar_por_inverso(x):
@@ -187,13 +187,13 @@ print(lista)  # Salida: [3, 2, 1]
 
 #### Slicing (Corte) en Listas
 
-El slicing en Python es una forma de obtener partes especificas de una lista. Imagina que tienes una lista como una fila de bloques de construccion y quieres tomar solo algunos bloques.
+El slicing en Python es una forma de obtener partes específicas de una lista. Imagina que tienes una lista como una fila de bloques de construcción y quieres tomar solo algunos bloques.
 
 <br>
 
 ##### Ejemplo de Slicing
 
-Supongamos que tienes esta lista de numeros:
+Supongamos que tienes esta lista de números:
 
 ```python
 numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -201,27 +201,27 @@ numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 <br>
 
-- **Obtener los primeros 3 numeros:**
+- **Obtener los primeros 3 números:**
   ```python
   primeros_tres = numeros[:3]  # [0, 1, 2]
   ```
-  Aqui, `:3` significa “desde el principio hasta el indice 3 (sin incluirlo)”.
+  Aquí, `:3` significa “desde el principio hasta el índice 3 (sin incluirlo)”.
 
 <br>
 
-- **Obtener los ultimos 3 numeros:**
+- **Obtener los últimos 3 números:**
   ```python
   ultimos_tres = numeros[-3:]  # [7, 8, 9]
   ```
-  Aqui, `-3:` significa “desde el indice -3 (tercer ultimo) hasta el final”.
+  Aquí, `-3:` significa “desde el índice -3 (tercer último) hasta el final”.
 
 <br>
 
-- **Obtener numeros del indice 3 al 6:**
+- **Obtener números del índice 3 al 6:**
   ```python
   intermedio = numeros[3:7]  # [3, 4, 5, 6]
   ```
-  Aqui, `3:7` significa “desde el indice 3 hasta el indice 7 (sin incluirlo)”.
+  Aquí, `3:7` significa “desde el índice 3 hasta el índice 7 (sin incluirlo)”.
 
 <br>
 
@@ -229,11 +229,11 @@ numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 Puedes usar slicing para saltar elementos usando un tercer valor llamado “paso”.
 
-- **Obtener cada segundo numero:**
+- **Obtener cada segundo número:**
   ```python
   cada_segundo = numeros[::2]  # [0, 2, 4, 6, 8]
   ```
-  Aqui, `::2` significa “toma cada segundo numero”.
+  Aquí, `::2` significa “toma cada segundo número”.
 
 <br>
 
@@ -241,7 +241,7 @@ Puedes usar slicing para saltar elementos usando un tercer valor llamado “paso
   ```python
   al_reves = numeros[::-1]  # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
   ```
-  Aqui, `[::-1]` significa “toma todos los elementos, pero al revés”.
+  Aquí, `[::-1]` significa “toma todos los elementos, pero al revés”.
 
 <br>
 <hr>
@@ -251,19 +251,19 @@ Puedes usar slicing para saltar elementos usando un tercer valor llamado “paso
 
 #### Condicionales
 
-Estructura `if`, `elif`, `else`: Las declaraciones condicionales permiten ejecutar codigo basado en ciertas condiciones.
+Estructura `if`, `elif`, `else`: Las declaraciones condicionales permiten ejecutar código basado en ciertas condiciones.
 
 <br>
 
 #### Condicionales Anidadas
 
-Las condiciones pueden anidarse dentro de otras condiciones para evaluar multiples criterios.
+Las condiciones pueden anidarse dentro de otras condiciones para evaluar múltiples criterios.
 
 <br>
 
-#### Uso de Operadores Logicos en Condicionales
+#### Uso de Operadores Lógicos en Condicionales
 
-Los operadores and, or, y not se pueden usar para combinar multiples condiciones en una declaracion if.
+Los operadores and, or, y not se pueden usar para combinar múltiples condiciones en una declaración if.
 
 <br>
 <hr>
@@ -273,7 +273,7 @@ Los operadores and, or, y not se pueden usar para combinar multiples condiciones
 
 #### Ciclo while
 
-Un bucle `while` repite un bloque de codigo mientras una condicion sea verdadera. Es util cuando no se sabe de antemano cuántas veces se debe repetir el bucle.
+Un bucle `while` repite un bloque de código mientras una condición sea verdadera. Es útil cuando no se sabe de antemano cuántas veces se debe repetir el bucle.
 
 Ejemplo básico de ciclo `while`:
 
@@ -284,15 +284,15 @@ while contador <= 5:
     contador += 1
 ```
 
-Este bucle imprimirá los numeros del 1 al 5. La variable `contador` se incrementa en 1 en cada iteracion.
+Este bucle imprimirá los números del 1 al 5. La variable `contador` se incrementa en 1 en cada iteración.
 
 <br>
 
-#### Ciclo while con una condicion de salida
+#### Ciclo while con una condición de salida
 
-El bucle `while` también se puede utilizar con una condicion de salida para detenerse cuando se alcanza un cierto estado.
+El bucle `while` también se puede utilizar con una condición de salida para detenerse cuando se alcanza un cierto estado.
 
-Ejemplo de ciclo `while` con una condicion de salida:
+Ejemplo de ciclo `while` con una condición de salida:
 
 ```python
 respuesta = ""
@@ -301,13 +301,13 @@ while respuesta != "salir":
     print("Escribiste:", respuesta)
 ```
 
-Este bucle pedirá al usuario que ingrese un texto hasta que escriba "salir". En cada iteracion, se imprime lo que el usuario escribio.
+Este bucle pedirá al usuario que ingrese un texto hasta que escriba "salir". En cada iteración, se imprime lo que el usuario escribió.
 
 <br>
 
 #### Ciclo for
 
-Un bucle `for` se utiliza para iterar sobre una secuencia (como una lista o un rango de numeros). A diferencia del ciclo `while`, el numero de iteraciones está determinado por la cantidad de elementos en la secuencia.
+Un bucle `for` se utiliza para iterar sobre una secuencia (como una lista o un rango de números). A diferencia del ciclo `while`, el número de iteraciones está determinado por la cantidad de elementos en la secuencia.
 
 Ejemplo básico de ciclo `for`:
 
@@ -316,7 +316,7 @@ for i in range(5):
     print(i)
 ```
 
-Este bucle imprimirá los numeros del 0 al 4.
+Este bucle imprimirá los números del 0 al 4.
 
 <br>
 <hr>
@@ -324,9 +324,9 @@ Este bucle imprimirá los numeros del 0 al 4.
 
 ### Funciones
 
-Son bloques de codigo reutilizables que realizan una tarea especifica. Se definen usando la palabra clave `def` seguida del nombre de la funcion y paréntesis. Dentro de los paréntesis, se pueden incluir parámetros, que son variables que la funcion puede recibir como entrada.
+Son bloques de código reutilizables que realizan una tarea específica. Se definen usando la palabra clave `def` seguida del nombre de la función y paréntesis. Dentro de los paréntesis, se pueden incluir parámetros, que son variables que la función puede recibir como entrada.
 
-Ejemplo de una funcion simple:
+Ejemplo de una función simple:
 
 ```python
 def saludar(nombre):
@@ -335,15 +335,15 @@ def saludar(nombre):
 saludar("Steve")
 ```
 
-Este codigo define una funcion llamada `saludar` que toma un parámetro `nombre` e imprime un mensaje de saludo. Luego, la funcion se llama con el argumento `"Steve"`, y se imprimirá `Hola, Steve!`.
+Este código define una función llamada `saludar` que toma un parámetro `nombre` e imprime un mensaje de saludo. Luego, la función se llama con el argumento `"Steve"`, y se imprimirá `Hola, Steve!`.
 
 <br>
 
 #### Funciones con valor de retorno
 
-Las funciones pueden devolver un valor usando la palabra clave `return`. Esto permite que la funcion envie datos de vuelta al lugar donde fue llamada. Utilizar funciones con valor de retorno es util cuando necesitas el resultado de un cálculo o una operacion para usarlo en otro lugar del programa.
+Las funciones pueden devolver un valor usando la palabra clave `return`. Esto permite que la función envíe datos de vuelta al lugar donde fue llamada. Utilizar funciones con valor de retorno es útil cuando necesitas el resultado de un cálculo o una operación para usarlo en otro lugar del programa.
 
-Ejemplo de una funcion con valor de retorno:
+Ejemplo de una función con valor de retorno:
 
 ```python
 def suma(a, b):
@@ -353,15 +353,15 @@ resultado = suma(3, 5)
 print(resultado)
 ```
 
-Este codigo define una funcion `suma` que toma dos parámetros, `a` y `b`, y devuelve su suma. El resultado de la funcion se almacena en la variable `resultado`, que luego se imprime (mostrará `8`).
+Este código define una función `suma` que toma dos parámetros, `a` y `b`, y devuelve su suma. El resultado de la función se almacena en la variable `resultado`, que luego se imprime (mostrará `8`).
 
 <br>
 
-#### Funciones con multiples valores de retorno
+#### Funciones con múltiples valores de retorno
 
-Las funciones también pueden devolver multiples valores utilizando tuplas. Esto es util cuando necesitas devolver más de un valor desde una funcion.
+Las funciones también pueden devolver múltiples valores utilizando tuplas. Esto es útil cuando necesitas devolver más de un valor desde una función.
 
-Ejemplo de una funcion que devuelve multiples valores:
+Ejemplo de una función que devuelve múltiples valores:
 
 ```python
 def operaciones(a, b):
@@ -374,7 +374,7 @@ print("Suma:", resultado_suma)
 print("Resta:", resultado_resta)
 ```
 
-Este codigo define una funcion `operaciones` que toma dos parámetros y devuelve la suma y la resta de esos parámetros. Los resultados se almacenan en dos variables separadas y luego se imprimen.
+Este código define una función `operaciones` que toma dos parámetros y devuelve la suma y la resta de esos parámetros. Los resultados se almacenan en dos variables separadas y luego se imprimen.
 
 <br>
 <hr>
