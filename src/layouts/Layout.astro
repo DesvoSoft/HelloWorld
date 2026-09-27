@@ -4,6 +4,7 @@ import '../styles/variables.css';
 import '../styles/responsive.css';
 import '../styles/navbar.css';
 import Navbar from '../components/Navbar.astro';
+import ogImage from '../assets/gallery/1.webp';
 
 // Terceros auto-hospedados desde public/. Antes venian de jsdelivr, lo que
 // anadia un salto DNS+TLS bloqueante y dejaba el CSS del sitio a merced de que
@@ -20,7 +21,11 @@ interface Props {
 const { title, description = "DesvoSoft: Aprende Git, Python y más en este sitio sobre herramientas del nuevo mundo digital.", useSwiper = false, noindex = false } = Astro.props;
 const pageTitle = `${title} · DesvoSoft`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
+// Las imagenes de galeria viven en src/assets/ y Astro las emite con nombre
+// hasheado en /_astro/, asi que no existe ninguna ruta /images/gallery/ en el
+// despliegue. Importar la imagen y resolverla con new URL() sobre Astro.site
+// es lo unico que produce una og:image que exista de verdad.
+const ogImageURL = new URL(ogImage.src, Astro.site);
 ---
 
 <!doctype html>
@@ -36,8 +41,9 @@ const ogImageURL = new URL('/HelloWorld/images/gallery/1.webp', Astro.site);
         {/* favicon.svg era el logo por defecto de Astro, nunca personalizado, y
             tampoco se declaraba: el navegador caia al /favicon.ico implicito de
             la raiz del dominio (fuera de /HelloWorld/) y se llevaba un 404 en
-            cada pagina. La esfera de nieve ya existia en public/images/theme.ico
-            sin usar, y coincide con la ilustracion del hero (montana + luna). */}
+            cada pagina. Por eso se declara explicitamente el favicon de la raiz
+            del proyecto, que si existe y es la ilustracion del hero
+            (montana + luna). */}
         <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
         {noindex && <meta name="robots" content="noindex, nofollow" />}
 

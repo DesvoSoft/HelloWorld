@@ -17,11 +17,11 @@ const uid = coinId;
     {featured && <span class="featured-badge">Indicador principal</span>}
     <div class="tracker-header">
       <div class="coin-info">
-        <div class="coin-icon clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} style={`background:${color}22; color:${color};`} title={`Click to view ${name} on CoinGecko`}>
+        <a class="coin-icon clickable" href={`https://www.coingecko.com/en/coins/${coinId}`} target="_blank" rel="noopener noreferrer" style={`background:${color}22; color:${color};`} aria-label={`Ver ${name} en CoinGecko`}>
           <span class="coin-symbol-mark">{symbol[0]}</span>
-        </div>
-        <span class="coin-name clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} title={`Click to view ${name} on CoinGecko`}>{name}</span>
-        <span class="coin-symbol clickable" data-coingecko-link={`https://www.coingecko.com/en/coins/${coinId}`} title={`Click to view ${name} on CoinGecko`}>{symbol}</span>
+        </a>
+        <a class="coin-name clickable" href={`https://www.coingecko.com/en/coins/${coinId}`} target="_blank" rel="noopener noreferrer">{name}</a>
+        <a class="coin-symbol clickable" href={`https://www.coingecko.com/en/coins/${coinId}`} target="_blank" rel="noopener noreferrer">{symbol}</a>
       </div>
     </div>
 
@@ -422,13 +422,6 @@ const uid = coinId;
     const stop1 = card.querySelector<SVGStopElement>('[data-grad-stop1]');
     const gaugeMarker = card.querySelector<HTMLElement>('[data-gauge-marker]');
     const gaugeStatus = card.querySelector<HTMLElement>('[data-gauge-status]');
-
-    card.querySelectorAll<HTMLElement>('[data-coingecko-link]').forEach((el) => {
-      el.addEventListener('click', () => {
-        const url = el.dataset.coingeckoLink;
-        if (url) window.open(url, '_blank');
-      });
-    });
 
     async function fetchCoinPrice() {
       try {
